@@ -2,6 +2,12 @@
   "name": "@virajp/linter",
   "version": "1.0.0",
   "description": "A linter for JavaScript, TypeScript, CSS, HTML, Markdown, YAML, TOML, and more.",
+  "homepage": "https://github.com/virajp/eslint-pack",
+  "author": {
+    "name": "Viraj Patel",
+    "email": "askviraj@gmail.com",
+    "url": "https://github.com/virajp"
+  },
   "dependencies": {
     "@eslint/css": "latest",
     "@eslint/js": "latest",
