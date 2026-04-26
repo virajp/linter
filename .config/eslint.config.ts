@@ -13,6 +13,13 @@ import globals from "globals";
 import tseslint from "typescript-eslint";
 import * as yamlParser from "yaml-eslint-parser";
 
+const JSONC_FILES = [
+  "**/tsconfig.json",
+  "**/tsconfig.*.json",
+  "**/tsconfig-strict.json",
+  "**/.vscode/*.json",
+];
+
 export default defineConfig([
   // Basic ignores matching your monorepo structure
   globalIgnores([
@@ -85,7 +92,7 @@ export default defineConfig([
   {
     extends: [ json.configs.recommended ],
     files: ["**/*.json"],
-    ignores: ["**/tsconfig.json", "**/tsconfig-strict.json", "**/.vscode/*.json"],
+    ignores: JSONC_FILES,
     language: "json/json",
     name: "json",
     plugins: { json },
@@ -96,7 +103,7 @@ export default defineConfig([
    */
   {
     extends: [ json.configs.recommended ],
-    files: ["**/*.jsonc", "**/tsconfig.json", "**/tsconfig-strict.json", "**/.vscode/*.json"],
+    files: ["**/*.jsonc", ...JSONC_FILES],
     language: "json/jsonc",
     languageOptions: {
       allowTrailingCommas: true,
