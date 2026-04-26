@@ -13,7 +13,6 @@ npm.package_manager = "bun"
 [tools]
 # Runtime and build tools
 bun = { version = "latest" }
-biome = { version = "latest" }
 dprint = { version = "latest" }
 hk = { version = "latest" }
 pkl = { version = "latest" }
