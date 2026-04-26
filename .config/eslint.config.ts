@@ -18,13 +18,6 @@ export default defineConfig([
   globalIgnores([
     "**/node_modules/",
     "**/dist/",
-    "**/build/",
-    "**/.astro/",
-    "**/.turbo/",
-    "**/.claude/**/*.md",
-    "**/.github/**/*.md",
-    "**/.planning/",
-    "**/pnpm-lock.yaml",
   ]),
 
   /**
@@ -42,7 +35,7 @@ export default defineConfig([
         ...globals.node,
       },
     },
-    name: "typescript/javascript",
+    name: "javascript",
   },
 
   /**
@@ -63,7 +56,7 @@ export default defineConfig([
         ...globals.node,
       },
     },
-    name: "typescript/javascript",
+    name: "typescript",
   },
 
   /**
