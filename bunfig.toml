@@ -1,0 +1,29 @@
+# Disable telemetry to prevent Bun from collecting usage data
+telemetry = false
+
+# Disable automatic .env file loading
+env = false
+
+[console]
+# Configure the console to display a maximum depth of 4 when inspecting objects
+depth = 4
+
+[install]
+# Only install package versions published at least 3 days ago
+minimumReleaseAge = 259200
+# These packages will bypass the 3-day minimum age requirement
+minimumReleaseAgeExcludes = ["@types/bun", "typescript"]
+
+[install.cache]
+# when true, always resolve the latest versions from the registry
+disableManifest = true
+
+[install.security]
+# Configure a security scanner to scan packages for vulnerabilities before installation.
+scanner = "@bun-security-scanner/osv"
+
+[run]
+# equivalent to `bun --bun` for all `bun run` commands
+bun = true
+# Suppresses the output of the command being run by bun run or bun.
+silent = true
