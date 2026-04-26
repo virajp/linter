@@ -1,0 +1,90 @@
+{
+  // "[packageJson]": {
+  //   "editor.codeActionsOnSave": {
+  //     "source.sort.json": "never"
+  //   }
+  // },
+  "diffEditor.ignoreTrimWhitespace": false,
+  "diffEditor.renderSideBySide": false,
+  "editor.codeActions.triggerOnFocusChange": false,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "never",
+    "source.sort.json": "explicit"
+  },
+  "editor.defaultFormatter": "dbaeumer.vscode-eslint",
+  "editor.formatOnSave": true,
+  "editor.quickSuggestions": {
+    "comments": true,
+    "other": true,
+    "strings": true
+  },
+  "editor.suggest.insertMode": "replace",
+  "eslint.enable": true,
+  "eslint.format.enable": true,
+  "eslint.lintTask.enable": true,
+  "eslint.lintTask.options": "--config '.config/eslint.config.ts'",
+  "eslint.onIgnoredFiles": "off",
+  "explorer.fileNesting.enabled": true,
+  "explorer.fileNesting.expand": false,
+  "explorer.fileNesting.patterns": {
+    "package.json": "bun.lock,bunfig.toml,tsconfig.json"
+  },
+  // "files.associations": {
+  //   "package.json": "packageJson"
+  // },
+  "files.autoGuessEncoding": true,
+  "files.exclude": {
+    "**/*.log": true,
+    "**/dist/": true,
+    "**/node_modules/": true
+  },
+  "files.watcherExclude": {
+    "**/*.log": true,
+    "**/dist/": false,
+    "**/node_modules/": true
+  },
+  "github.copilot.chat.commitMessageGeneration.instructions": [
+    {
+      "file": "~/.github/git-commit-guidelines.md"
+    }
+  ],
+  "js/ts.preferences.importModuleSpecifier": "non-relative",
+  "js/ts.preferences.includePackageJsonAutoImports": "on",
+  "js/ts.preferences.quoteStyle": "double",
+  "js/ts.suggest.autoImports": false,
+  "js/ts.suggest.paths": true,
+  "js/ts.tsdk.promptToUseWorkspaceVersion": true,
+  "js/ts.tsserver.experimental.enableProjectDiagnostics": true,
+  "js/ts.updateImportsOnFileMove.enabled": "never",
+  "outline.showKeys": true,
+  "search.exclude": {
+    "**/.turbo/": true,
+    "**/*.code-search": true,
+    "**/*.log": true,
+    "**/coverage/": true,
+    "**/dist/": true,
+    "**/node_modules/": true
+  },
+  "template-string-converter.autoRemoveTemplateString": true,
+  "template-string-converter.convertOutermostQuotes": true,
+  "template-string-converter.convertWithinTemplateString": true,
+  "template-string-converter.quoteType": "both",
+  "template-string-converter.validLanguages": [
+    "javascript",
+    "typescript"
+  ],
+  "todo-tree.general.tags": [
+    "TODO",
+    "FIXME",
+    "HACK",
+    "REVIEW",
+    "NOTE",
+    "REFACTOR",
+    "REMOVE"
+  ],
+  "todo-tree.highlights.defaultHighlight": {
+    "hideFromActivityBar": true,
+    "hideFromStatusBar": false,
+    "type": "text-and-comment"
+  }
+}
