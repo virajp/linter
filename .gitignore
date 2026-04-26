@@ -1,0 +1,121 @@
+# ============================================================
+# macOS
+# ============================================================
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# ============================================================
+# Node / Bun / TypeScript
+# ============================================================
+dist/
+*.bak
+.env
+.env.*
+
+# Turbo
+.turbo
+
+# Logs
+**/*.log
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+.pnpm-debug.log*
+pnpm-debug.log*
+
+# Wrangler
+.dev.*
+.dev.vars
+.dev.vars.*
+.wrangler/
+
+# Diagnostic reports
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Coverage
+lib-cov
+coverage/
+*.lcov
+.nyc_output
+
+# Dependency directories
+node_modules/
+jspm_packages/
+web_modules/
+
+# Package manager caches
+.npm
+.pnpm-store/
+
+# pnpm deploy output
+deploy/
+
+# Caches
+.stylelintcache
+.rpt2_cache/
+.rts2_cache_cjs/
+.rts2_cache_es/
+.rts2_cache_umd/
+.webpack-cache/
+.cache
+.parcel-cache
+.fusebox/
+.grunt
+.lock-wscript
+build/Release
+
+# TypeScript
+*.tsbuildinfo
+.tsbuildinfo
+tsconfig.tsbuildinfo
+tsconfig.build.tsbuildinfo
+
+# Misc build outputs
+*.tgz
+.node_repl_history
+
+# Framework outputs
+.next
+out
+.nuxt
+.astro/
+.vuepress/dist
+.temp
+.docusaurus
+.serverless/
+.dynamodb/
+.tern-port
+.vscode-test
+
+# ============================================================
+# Claude / AI tooling
+# ============================================================
+.claude/settings.local.json
+
+# oh-my-claudecode (OMC)
+.omc/state/
+.omc/sessions/
+.omc/artifacts/
+.omc/autopilot/
+*/**/.omc/
+
+# Superpowers
+.superpowers/
+
+# ============================================================
+# HK (pre-commit hooks)
+# ============================================================
+.hk/
