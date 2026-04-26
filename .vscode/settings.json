@@ -9,7 +9,7 @@
   "editor.codeActions.triggerOnFocusChange": false,
   "editor.codeActionsOnSave": {
     "source.organizeImports": "never",
-    "source.sort.json": "explicit"
+    "source.sort.json": "never"
   },
   "editor.defaultFormatter": "dbaeumer.vscode-eslint",
   "editor.formatOnSave": true,

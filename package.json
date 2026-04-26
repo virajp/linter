@@ -18,6 +18,7 @@
     "eslint-plugin-astro": "latest",
     "eslint-plugin-toml": "latest",
     "eslint-plugin-yml": "latest",
+    "prettier": "latest",
     "typescript-eslint": "latest"
   },
   "devDependencies": {
