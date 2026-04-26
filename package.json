@@ -1,8 +1,8 @@
 {
-  "name": "@virajp/linter",
+  "name": "@virajp/lf-cli",
   "version": "1.0.0",
-  "description": "A linter for JavaScript, TypeScript, CSS, HTML, Markdown, YAML, TOML, and more.",
-  "homepage": "https://github.com/virajp/eslint-pack",
+  "description": "A linter & formatter CLI for JavaScript, TypeScript, Astro, JSON, JSONC, CSS, HTML, Markdown, YAML, TOML, and more.",
+  "homepage": "https://github.com/virajp/lf-cli",
   "author": {
     "name": "Viraj Patel",
     "email": "askviraj@gmail.com",
