@@ -1,0 +1,26 @@
+[settings]
+lockfile = true
+all_compile = false
+activate_aggressive = true
+gpg_verify = true
+paranoid = true
+raw = true
+status.missing_tools = "always"
+task.disable_spec_from_run_scripts = true
+task.timings = true
+npm.package_manager = "bun"
+
+[tools]
+# Runtime and build tools
+bun = { version = "latest" }
+biome = { version = "latest" }
+dprint = { version = "latest" }
+
+[tasks.init]
+hide = true
+description = "Initialize mise tasks"
+run = "find .config/mise/tasks/ -name '*' -type f -exec chmod 755 {} \\;"
+
+[env]
+_.path = { path = "node_modules/.bin", tools = true }
+DISABLE_TELEMETRY = 1

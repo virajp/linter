@@ -1,0 +1,37 @@
+#!/usr/bin/env zsh
+#MISE description="Check or format files"
+
+#USAGE flag "--debug" help="emit debug logs"
+#USAGE flag "--fix" help="apply fixes"
+#USAGE arg "[files]" var=#true help="files to be processed"
+
+set -e
+source "${0%/*}/_helpers"
+
+# Convert to bash array:
+eval "files=($usage_files)"
+
+print_header "Formatting files ..."
+# Use as array:
+for f in "${files[@]}"; do
+  echo "- Processing: $f"
+done
+
+[[ "${usage_debug:-false}" == "true" ]] && LOG_LEVEL="debug" || LOG_LEVEL="warn"
+[[ "${usage_fix:-false}" == "true" ]] && CMD="fmt" || CMD="check"
+
+dprint ${CMD} \
+  --config $MISE_PROJECT_ROOT/dprint.json \
+  --allow-no-files \
+  --log-level ${LOG_LEVEL} \
+  ${files[@]}
+
+# Filter the files array for anything ending in /package.json or exactly package.json
+[[ "${#files[@]}" -gt 0 ]] && target_packages=(${(M)files:#*(^|/)package.json}) || target_packages=("**/package.json")
+
+if (( ${#target_packages} > 0 )); then
+  print_header "Sorting package.json files ..."
+  bunx --bun sort-package-json "${target_packages[@]}"
+fi
+
+print_header "Formatting done"

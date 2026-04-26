@@ -1,0 +1,10 @@
+#!/usr/bin/env zsh
+#MISE description="Run tsc to check for type errors in the project"
+
+set -e
+source "${0%/*}/_helpers"
+
+print_header "Running tsc to check for type errors ..."
+bunx --bun tsc --noEmit
+
+print_header "All checks completed."

@@ -1,0 +1,19 @@
+#!/usr/bin/env zsh
+#MISE description="Security check"
+#MISE dir="."
+
+#USAGE flag "--debug" help="emit debug logs"
+
+set -e
+source "${0%/*}/_helpers"
+
+# Get the folder name
+FOLDER_NAME=$(basename "$PWD")
+
+print_header "Scanning files using grype (${FOLDER_NAME}) ..."
+
+[[ "${usage_debug:-false}" == "true" ]] && FLAGS="-vv" || FLAGS=""
+
+grype . --name ${FOLDER_NAME} ${FLAGS}
+
+print_header "Scanning done"

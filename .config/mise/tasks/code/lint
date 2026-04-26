@@ -1,0 +1,37 @@
+#!/usr/bin/env zsh
+#MISE description="Lint files"
+#MISE dir="{{ config_root }}"
+
+#USAGE flag "--debug" help="emit debug logs"
+#USAGE flag "--fix" help="apply fixes"
+#USAGE arg "[files]" var=#true
+
+set -e
+source "${0%/*}/_helpers"
+
+cd $MISE_PROJECT_ROOT
+
+# Convert to bash array:
+eval "files=($usage_files)"
+
+print_header "Linting files $(pwd) ..."
+# Use as array:
+for f in "${files[@]}"; do
+  echo "- Processing: $f"
+done
+
+[[ "${usage_debug:-false}" == "true" ]] && LOG_LEVEL="--debug" || LOG_LEVEL=""
+[[ "${usage_fix:-false}" == "true" ]] && FIX="--fix" || FIX=""
+[[ "${usage_fix:-false}" == "true" ]] && CMD="fmt" || CMD="check"
+
+bunx --bun eslint \
+  --no-config-lookup \
+  --config $MISE_PROJECT_ROOT/.config/eslint.config.ts \
+  --color \
+  --pass-on-no-patterns \
+  --concurrency "auto" \
+  ${LOG_LEVEL} \
+  ${FIX} \
+  ${files[@]}
+
+print_header "Linting done"
