@@ -15,11 +15,16 @@ npm.package_manager = "bun"
 bun = { version = "latest" }
 biome = { version = "latest" }
 dprint = { version = "latest" }
+hk = { version = "latest" }
+pkl = { version = "latest" }
 
 [tasks.init]
 hide = true
 description = "Initialize mise tasks"
 run = "find .config/mise/tasks/ -name '*' -type f -exec chmod 755 {} \\;"
+
+[shell_alias]
+setup = "mise run setup:all"
 
 [env]
 _.path = { path = "node_modules/.bin", tools = true }

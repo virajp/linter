@@ -1,0 +1,9 @@
+#!/usr/bin/env zsh
+#MISE description="Upgrade dependencies"
+#MISE hide=true
+
+set -e
+source "${0%/*}/_helpers"
+
+# print_header "Install node modules ..."
+bun install --recursive

@@ -1,0 +1,9 @@
+#!/usr/bin/env zsh
+#MISE description="Install hk hooks"
+#MISE hide=true
+
+set -e
+source "${0%/*}/_helpers"
+
+print_header "Installing hk hooks ..."
+hk install --mise

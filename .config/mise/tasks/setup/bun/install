@@ -1,0 +1,19 @@
+#!/usr/bin/env zsh
+#MISE description="Install dependencies"
+
+set -e
+source "${0%/*}/_helpers"
+
+# Cleanup before upgrade
+mise run setup:bun:cleanup
+
+# Upgrade and install dependencies
+mise run setup:bun:upgrade || true
+
+# Check for outdated packages after upgrade
+mise run setup:bun:outdated
+
+# Run audit after upgrade
+mise run setup:bun:audit || true
+
+print_header "Installation complete!"

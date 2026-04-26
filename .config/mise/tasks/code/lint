@@ -14,7 +14,7 @@ cd $MISE_PROJECT_ROOT
 # Convert to bash array:
 eval "files=($usage_files)"
 
-print_header "Linting files $(pwd) ..."
+print_header "Linting files ..."
 # Use as array:
 for f in "${files[@]}"; do
   echo "- Processing: $f"
@@ -22,7 +22,7 @@ done
 
 [[ "${usage_debug:-false}" == "true" ]] && LOG_LEVEL="--debug" || LOG_LEVEL=""
 [[ "${usage_fix:-false}" == "true" ]] && FIX="--fix" || FIX=""
-[[ "${usage_fix:-false}" == "true" ]] && CMD="fmt" || CMD="check"
+[[ ${#files[@]} -eq 0 ]] && files=("**/*")
 
 bunx --bun eslint \
   --no-config-lookup \

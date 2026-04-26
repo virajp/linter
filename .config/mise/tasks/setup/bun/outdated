@@ -1,0 +1,9 @@
+#!/usr/bin/env zsh
+#MISE description="Run bun outdated"
+
+set -e
+source "${0%/*}/_helpers"
+
+# Check for outdated packages across all workspaces
+print_header "Check for outdated packages ..."
+bun outdated --recursive || true
