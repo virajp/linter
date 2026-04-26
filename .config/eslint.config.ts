@@ -27,20 +27,36 @@ export default defineConfig([
     "**/pnpm-lock.yaml",
   ]),
 
-  js.configs.recommended,
-  ...tseslint.configs.recommended,
-  ...yaml.configs["flat/recommended"],
-  ...markdown.configs.recommended,
-  ...astro.configs.recommended,
-  ...eslintPluginToml.configs.recommended,
-
   /**
-   * Javascript/Typescript
+   * Javascript
    */
   {
     files: [
-      "**/*.{js,mjs,cjs,ts,mts,cts,tsx}",
+      "**/*.{js,mjs,cjs,jsx}",
     ],
+    plugins: { js },
+    extends: [ js.configs.recommended ],
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.node,
+      },
+    },
+    name: "typescript/javascript",
+  },
+
+  /**
+   * Typescript
+   */
+  {
+    files: [
+      "**/*.{ts,mts,cts,tsx}",
+    ],
+    extends: [
+      js.configs.recommended,
+      tseslint.configs.recommended,
+    ],
+    plugins: { js, tseslint },
     languageOptions: {
       globals: {
         ...globals.browser,
@@ -57,6 +73,11 @@ export default defineConfig([
     files: [
       "**/*.astro",
     ],
+    plugins: { astro },
+    extends: [
+      js.configs.recommended,
+      astro.configs.recommended,
+    ],
     languageOptions: {
       globals: {
         ...globals.astro,
@@ -69,7 +90,7 @@ export default defineConfig([
    * JSON files
    */
   {
-    extends: ["json/recommended"],
+    extends: [ json.configs.recommended ],
     files: ["**/*.json"],
     ignores: ["**/tsconfig.json", "**/tsconfig-strict.json", "**/.vscode/*.json"],
     language: "json/json",
@@ -81,7 +102,7 @@ export default defineConfig([
    * JSON with comments
    */
   {
-    extends: ["json/recommended"],
+    extends: [ json.configs.recommended ],
     files: ["**/*.jsonc", "**/tsconfig.json", "**/tsconfig-strict.json", "**/.vscode/*.json"],
     language: "json/jsonc",
     languageOptions: {
@@ -99,6 +120,7 @@ export default defineConfig([
     files: ["**/*.md"],
     name: "markdown",
     plugins: { markdown },
+    extends: [ markdown.configs.recommended ],
     // Use processor to avoid the ESLint v10.2.0 getLoc() error
     processor: "markdown/markdown",
   },
@@ -111,10 +133,7 @@ export default defineConfig([
     language: "css/css",
     name: "css",
     plugins: { css },
-    rules: {
-      // Use the recommended rules from the official plugin
-      ...css.configs.recommended.rules,
-    },
+    extends: [ css.configs.recommended ],
   },
 
   /**
@@ -122,6 +141,7 @@ export default defineConfig([
    */
   {
     files: ["**/*.yaml", "**/*.yml"],
+    extends: [ yaml.configs["flat/recommended"] ],
     languageOptions: {
       parser: yamlParser,
     },
@@ -136,9 +156,11 @@ export default defineConfig([
    */
   {
     files: ["*.toml", "**/*.toml"],
+    extends: [ eslintPluginToml.configs.recommended ],
     plugins: {
       toml: eslintPluginToml,
     },
+    name: "toml",
     language: "toml/toml",
   },
 
