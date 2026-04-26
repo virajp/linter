@@ -2,6 +2,7 @@ import css from "@eslint/css";
 import js from "@eslint/js";
 import json from "@eslint/json";
 import markdown from "@eslint/markdown";
+import html from "@html-eslint/eslint-plugin";
 import astro from "eslint-plugin-astro";
 import eslintPluginToml from 'eslint-plugin-toml';
 import yaml from "eslint-plugin-yml";
@@ -155,13 +156,26 @@ export default defineConfig([
    * TOML files
    */
   {
-    files: ["*.toml", "**/*.toml"],
+    files: ["**/*.toml"],
     extends: [ eslintPluginToml.configs.recommended ],
     plugins: {
       toml: eslintPluginToml,
     },
     name: "toml",
     language: "toml/toml",
+  },
+
+  /**
+   * HTML files
+   */
+  {
+    files: ["**/*.html"],
+    extends: [ html.configs.recommended ],
+    plugins: {
+      html,
+    },
+    name: "html",
+    language: "html/html",
   },
 
 ]);

@@ -13,6 +13,7 @@
     "@eslint/js": "latest",
     "@eslint/json": "latest",
     "@eslint/markdown": "latest",
+    "@html-eslint/eslint-plugin": "latest",
     "eslint": "latest",
     "eslint-plugin-astro": "latest",
     "eslint-plugin-toml": "latest",
