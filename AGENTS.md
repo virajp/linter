@@ -17,9 +17,10 @@ single, opinionated flat config covering many file types:
 The main export lives in `src/eslint.config.ts`. It uses the **ESLint flat
 config** format (`eslint/config`, `defineConfig`, `globalIgnores`).
 
-`src/index.ts` is the CLI launcher. It spawns the bundled ESLint binary with the
-bundled flat config (`dist/eslint.config.js`), linting the current working
-directory.
+`src/index.ts` is the CLI launcher. It reads `.config/linter.yaml` from the
+target repo (if present), builds the ESLint config by merging YAML overrides
+with the bundled base config via `createConfig()`, and runs ESLint's
+programmatic API (`new ESLint()`) on the current working directory.
 
 ## Toolchain
 
@@ -145,14 +146,51 @@ working directory).
 1. `npx`/`bunx` installs `@askviraj/linter-cli` and its dependencies in a
    temporary/local `node_modules`.
 2. The `bin` entry (`dist/index.js`) launches a thin wrapper that:
-   - Resolves the bundled `eslint` binary from the package's own dependencies.
-   - Points ESLint to the bundled `dist/eslint.config.js` via `--config`.
-   - Uses `--no-config-lookup` so the target repo's local `eslint.config.js` is
-     ignored.
-   - Spawns ESLint with `cwd: process.cwd()` so files are resolved relative to
-     where the command is run.
+   - Reads `.config/linter.yaml` from the target repo (if present) to load user
+     customizations.
+   - Builds the ESLint config by merging YAML overrides with the bundled base
+     config via `createConfig()`.
+   - Uses ESLint's programmatic API (`new ESLint()`) with
+     `overrideConfigFile: true` and the built config as `overrideConfig`.
+   - Runs `eslint.lintFiles()` on the current working directory.
 3. ESLint loads plugins via the config's bare-specifier imports; Node resolves
    them from the package's `node_modules/`, not the target repo's.
+
+### VS Code Integration
+
+The package exports `@askviraj/linter-cli/auto` for use with the
+`dbaeumer.vscode-eslint` extension.
+
+In your target repo, run:
+
+```bash
+npx @askviraj/linter-cli --init
+```
+
+This scaffolds:
+
+- `eslint.config.mjs` — imports `@askviraj/linter-cli/auto`
+- `.config/linter.yaml` — your customization file
+- `.vscode/settings.json` — enables flat config mode
+
+The VS Code extension discovers `eslint.config.mjs` and loads the auto-config,
+which reads `.config/linter.yaml` and returns the merged ESLint config.
+
+### Customizing Rules
+
+Edit `.config/linter.yaml` in your target repo:
+
+```yaml
+ignores:
+  - "**/generated/**"
+
+overrides:
+  typescript:
+    rules:
+      "@typescript-eslint/no-explicit-any": "error"
+```
+
+Run `bun dist/index.js --fix` or let the VS Code extension pick up changes.
 
 ## Code Style & Conventions
 
