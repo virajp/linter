@@ -76,8 +76,11 @@ interface ParsedArgs {
     cache: boolean;
     quiet: boolean;
     version: boolean;
+    help: boolean;
   };
   cacheLocation: string | undefined;
+  format: string | undefined;
+  maxWarnings: number | undefined;
   positional: string[];
 }
 
@@ -89,8 +92,11 @@ function parseArgs(rawArgs: string[]): ParsedArgs {
     cache: false,
     quiet: false,
     version: false,
+    help: false,
   };
   let cacheLocation: string | undefined;
+  let format: string | undefined;
+  let maxWarnings: number | undefined;
   const positional: string[] = [];
 
   for (let i = 0; i < rawArgs.length; i++) {
@@ -118,17 +124,39 @@ function parseArgs(rawArgs: string[]): ParsedArgs {
       case "-v":
         flags.version = true;
         break;
+      case "--help":
+      case "-h":
+        flags.help = true;
+        break;
       case "--cache-location": {
         const next = rawArgs[++i];
-        if (next === undefined) {
+        if (!next) {
           console.error("--cache-location requires a path argument");
           process.exit(1);
         }
         cacheLocation = next;
         break;
       }
+      case "--format":
+      case "-f": {
+        const next = rawArgs[++i];
+        if (!next) {
+          console.error("--format requires a format name");
+          process.exit(1);
+        }
+        format = next;
+        break;
+      }
+      case "--max-warnings": {
+        const next = rawArgs[++i];
+        if (!next || Number.isNaN(Number(next))) {
+          console.error("--max-warnings requires a number");
+          process.exit(1);
+        }
+        maxWarnings = Number(next);
+        break;
+      }
       case "--":
-        // Push all remaining args as positional
         for (let j = i + 1; j < rawArgs.length; j++) {
           const remaining = rawArgs[j];
           if (remaining !== undefined) {
@@ -147,7 +175,7 @@ function parseArgs(rawArgs: string[]): ParsedArgs {
     }
   }
 
-  return { flags, cacheLocation, positional };
+  return { flags, cacheLocation, format, maxWarnings, positional };
 }
 
 function showVersion(): void {
@@ -216,10 +244,30 @@ function showVersion(): void {
 
 async function main(): Promise<void> {
   const rawArgs = process.argv.slice(2);
-  const { flags, cacheLocation, positional } = parseArgs(rawArgs);
+  const { flags, cacheLocation, format, maxWarnings, positional } = parseArgs(
+    rawArgs,
+  );
 
   if (flags.version) {
     showVersion();
+    process.exit(0);
+  }
+
+  if (flags.help) {
+    console.log(`@askviraj/linter-cli [options] [files...]
+
+Options:
+  --init              Scaffold eslint.config.mjs and .config/linter.yaml
+  --force             Overwrite existing files when used with --init
+  --fix               Automatically fix problems
+  --cache             Only check changed files
+  --cache-location    Path to the cache file or directory
+  --quiet             Report errors only
+  --format, -f        Use a specific output format
+  --max-warnings      Number of warnings to trigger nonzero exit code
+  --version, -v       Show version
+  --help, -h          Show help
+`);
     process.exit(0);
   }
 
@@ -237,6 +285,7 @@ async function main(): Promise<void> {
     fix: flags.fix,
     cache: flags.cache,
     cacheLocation,
+    errorOnUnmatchedPattern: false,
   });
 
   let results;
@@ -252,18 +301,23 @@ async function main(): Promise<void> {
     await ESLint.outputFixes(results);
   }
 
-  if (flags.quiet) {
-    results = ESLint.getErrorResults(results);
-  }
-
-  const formatter = await eslint.loadFormatter();
+  const formatter = await eslint.loadFormatter(format);
   const output = await formatter.format(results);
   if (output) {
     console.log(output);
   }
 
+  if (flags.quiet) {
+    results = ESLint.getErrorResults(results);
+  }
+
   const errorCount = results.reduce((sum, r) => sum + r.errorCount, 0);
-  process.exit(errorCount > 0 ? 1 : 0);
+  const warningCount = results.reduce((sum, r) => sum + r.warningCount, 0);
+  const failed = errorCount > 0
+    || (maxWarnings !== undefined
+      && maxWarnings >= 0
+      && warningCount > maxWarnings);
+  process.exit(failed ? 1 : 0);
 }
 
 main().catch(e => {
