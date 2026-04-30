@@ -43,10 +43,15 @@ function mergeVsCodeSettings(existingPath: string): string {
         unknown
       >;
     }
-    catch {
-      console.warn(
-        `Warning: ${existingPath} exists but is invalid JSON; replacing.`,
-      );
+    catch (e) {
+      if (e instanceof SyntaxError) {
+        console.warn(
+          `Warning: ${existingPath} exists but is invalid JSON; replacing.`,
+        );
+      }
+      else {
+        throw e;
+      }
     }
   }
   const merged = { ...existing, ...VSCODE_SETTINGS };
