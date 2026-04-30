@@ -1,4 +1,7 @@
-import { readFileSync } from "node:fs";
+import {
+  existsSync,
+  readFileSync,
+} from "node:fs";
 import { resolve } from "node:path";
 import { parse } from "yaml";
 
@@ -12,12 +15,8 @@ export function findLinterYaml(startDir: string): string | undefined {
   let dir = startDir;
   while (true) {
     const candidate = resolve(dir, ".config", "linter.yaml");
-    try {
-      readFileSync(candidate);
+    if (existsSync(candidate)) {
       return candidate;
-    }
-    catch {
-      // not found
     }
     const parent = resolve(dir, "..");
     if (parent === dir) {

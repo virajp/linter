@@ -47,7 +47,7 @@
     "prepublishOnly": "bun run build"
   },
   "overrides": {
-    "yaml": "2.8.3"
+    "yaml": "latest"
   },
   "dependencies": {
     "@eslint/css": "latest",
@@ -64,7 +64,7 @@
     "eslint-plugin-yml": "latest",
     "globals": "latest",
     "typescript-eslint": "latest",
-    "yaml": "2.8.3"
+    "yaml": "latest"
   },
   "devDependencies": {
     "@bun-security-scanner/osv": "latest",
