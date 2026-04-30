@@ -1,16 +1,10 @@
 #!/usr/bin/env zsh
 #MISE description="Publish package to npm registry"
-#MISE dir="{{ config_root }}"
 
 #USAGE flag "--dry-run" help="Preview the tarball without publishing"
 
 set -e
 source "${0%/*}/_helpers"
-
-# Fallback for running outside of mise
-if [[ -z "${MISE_PROJECT_ROOT:-}" ]]; then
-  MISE_PROJECT_ROOT="$(cd "${0%/*}/../../.." && pwd)"
-fi
 
 cd $MISE_PROJECT_ROOT
 

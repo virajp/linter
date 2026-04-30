@@ -1,6 +1,5 @@
 #!/usr/bin/env zsh
 #MISE description="Lint files"
-#MISE dir="{{ config_root }}"
 
 #USAGE flag "--debug" help="emit debug logs"
 #USAGE flag "--fix" help="apply fixes"
