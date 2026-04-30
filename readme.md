@@ -40,7 +40,7 @@ bunx --bun @virajp/linter-cli --cache
 - **Astro** — `.astro`
 - **JSON / JSONC** — `.json`, `.jsonc`, `tsconfig.json`, `.vscode/*.json`
 - **Markdown** — `.md`
-- **CSS** — `.css`
+- **CSS / Tailwind CSS** — `.css`
 - **YAML** — `.yaml`, `.yml`
 - **TOML** — `.toml`
 - **HTML** — `.html`
