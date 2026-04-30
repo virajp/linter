@@ -35,6 +35,10 @@
     "url": "https://github.com/virajp"
   },
   "type": "module",
+  "exports": {
+    ".": "./dist/index.js",
+    "./auto": "./dist/auto.js"
+  },
   "main": "dist/index.js",
   "bin": {
     "@askviraj/linter-cli": "dist/index.js"
@@ -45,9 +49,6 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "prepublishOnly": "bun run build"
-  },
-  "overrides": {
-    "yaml": "latest"
   },
   "dependencies": {
     "@eslint/css": "latest",

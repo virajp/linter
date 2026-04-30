@@ -39,11 +39,12 @@ export function loadYamlOptions(startDir: string): LinterYamlRaw {
     parsed = parse(content) as Record<string, unknown> || {};
   }
   catch (e) {
-    console.error(
-      `Failed to parse ${yamlPath}:`,
-      e instanceof Error ? e.message : e,
+    throw new Error(
+      `Failed to parse ${yamlPath}: ${
+        e instanceof Error ? e.message : String(e)
+      }`,
+      { cause: e },
     );
-    process.exit(1);
   }
 
   const knownKeys = new Set(["ignores", "overrides", "configs"]);
