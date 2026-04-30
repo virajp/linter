@@ -70,5 +70,8 @@
     "@types/bun": "latest",
     "sort-package-json": "latest",
     "typescript": "latest"
+  },
+  "peerDependencies": {
+    "eslint": "^10.0.0"
   }
 }
