@@ -8,6 +8,19 @@
     "email": "askviraj@gmail.com",
     "url": "https://github.com/virajp"
   },
+  "type": "module",
+  "main": "dist/index.js",
+  "bin": {
+    "@virajp/linter-cli": "dist/index.js"
+  },
+  "files": [
+    "dist/",
+    "src/"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "prepublishOnly": "bun run build"
+  },
   "overrides": {
     "yaml": "2.8.3"
   },
@@ -30,6 +43,7 @@
   "devDependencies": {
     "@bun-security-scanner/osv": "latest",
     "@types/bun": "latest",
-    "sort-package-json": "latest"
+    "sort-package-json": "latest",
+    "typescript": "latest"
   }
 }

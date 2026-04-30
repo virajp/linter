@@ -24,6 +24,7 @@
         "@bun-security-scanner/osv": "latest",
         "@types/bun": "latest",
         "sort-package-json": "latest",
+        "typescript": "latest",
       },
     },
   },
