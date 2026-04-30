@@ -21,8 +21,7 @@
     "@virajp/linter-cli": "dist/index.js"
   },
   "files": [
-    "dist/",
-    "src/"
+    "dist/"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
