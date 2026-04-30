@@ -1,32 +1,87 @@
 # Linter CLI
 
-Linter CLI is a collection of ESLint configurations and plugins for various file
-types, including JavaScript, TypeScript, YAML, Markdown, Astro, and TOML. It
-contains opinionated configurations that help you maintain code quality and
-consistency across your projects.
+A self-contained linter CLI for JavaScript, TypeScript, Astro, JSON, JSONC, CSS,
+HTML, Markdown, YAML, TOML, and more.
 
-## Features
+Linter CLI bundles ESLint and all its plugins so you don't have to install them
+in every repo. Run it anywhere with `npx` or `bunx` and it lints the current
+directory using an opinionated flat config.
 
-- **JavaScript and TypeScript**: Provides recommended configurations for both
-  JavaScript and TypeScript projects, ensuring that your code adheres to
-  industry standards and best practices.
+## Usage
 
-- **YAML**: Includes configurations for YAML files, helping you maintain
-  consistency and catch potential issues in your YAML configurations.
+```bash
+# Via Bun
+bunx --bun @virajp/linter-cli
 
-- **Markdown**: Offers linting for Markdown files, ensuring that your
-  documentation is well-formatted and free of common mistakes.
+# Via Node
+npx @virajp/linter-cli
+```
 
-- **Astro**: Provides linting for Astro projects, helping you maintain
-  consistency and catch potential issues in your Astro components.
+With no file arguments, it lints the current directory. All arguments are passed
+through to ESLint:
 
-- **TOML**: Includes configurations for TOML files, ensuring that your
-  configurations are well-structured and free of common mistakes.
+```bash
+# Lint specific files or directories
+bunx --bun @virajp/linter-cli src/ lib/
 
-- **CSS**: Provides linting for CSS files, helping you maintain consistency and
-  catch potential issues in your stylesheets.
+# Auto-fix issues
+bunx --bun @virajp/linter-cli --fix
 
-- **JSON**: Offers linting for JSON files, ensuring that your configurations are
-  well-structured and free of common mistakes.
+# Quiet mode (errors only)
+bunx --bun @virajp/linter-cli --quiet
+
+# Cache for faster re-runs
+bunx --bun @virajp/linter-cli --cache
+```
+
+## Supported File Types
+
+- **JavaScript / TypeScript** — `.js`, `.ts`, `.jsx`, `.tsx`, `.mjs`, `.cjs`
+- **Astro** — `.astro`
+- **JSON / JSONC** — `.json`, `.jsonc`, `tsconfig.json`, `.vscode/*.json`
+- **Markdown** — `.md`
+- **CSS** — `.css`
+- **YAML** — `.yaml`, `.yml`
+- **TOML** — `.toml`
+- **HTML** — `.html`
+
+## How It Works
+
+When you run `npx @virajp/linter-cli` or `bunx --bun @virajp/linter-cli`:
+
+1. The package is installed with all its dependencies in a temporary or local
+   `node_modules`.
+2. The bundled CLI entry point (`dist/index.js`) launches a thin wrapper that:
+   - Resolves the bundled `eslint` binary from the package's own dependencies.
+   - Points ESLint to the bundled flat config (`dist/eslint.config.js`).
+   - Ignores any local `eslint.config.js` in the target repo.
+   - Spawns ESLint with `cwd` set to the directory where the command is run.
+3. ESLint loads plugins via the config's imports; Node resolves them from the
+   package's `node_modules/`, not the target repo's.
 
 ## Installation
+
+No installation is required — `npx` and `bunx` handle it automatically. If you
+prefer to install it locally:
+
+```bash
+bun add -D @virajp/linter-cli
+# or
+npm install -D @virajp/linter-cli
+```
+
+Then run it with:
+
+```bash
+bunx @virajp/linter-cli
+# or
+npx @virajp/linter-cli
+```
+
+## Configuration
+
+Linter CLI uses its own bundled ESLint flat config. It does **not** read any
+`eslint.config.js` or `.eslintrc` files from the target repo. This ensures
+consistent linting rules across all projects.
+
+If you need custom rules, you can extend or fork this package.
