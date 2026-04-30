@@ -85,3 +85,7 @@ Linter CLI uses its own bundled ESLint flat config. It does **not** read any
 consistent linting rules across all projects.
 
 If you need custom rules, you can extend or fork this package.
+
+## License
+
+MIT — see [LICENSE](./LICENSE) for details.

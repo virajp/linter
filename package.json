@@ -28,6 +28,7 @@
     "type": "git",
     "url": "git+https://github.com/virajp/linter-cli.git"
   },
+  "license": "MIT",
   "author": {
     "name": "Viraj Patel",
     "email": "askviraj@gmail.com",
