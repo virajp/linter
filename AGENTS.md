@@ -176,6 +176,8 @@ When extending `src/eslint.config.ts`:
 
 ## Security / Hooks
 
+- NEVER commit without explicit instructions from the user. Always ask for
+  confirmation before committing.
 - **gitleaks** is configured in `.config/gitleaks.toml`.
 - **pre-commit** hooks run formatting and linting checks.
 - Commit messages follow conventional commits (see
