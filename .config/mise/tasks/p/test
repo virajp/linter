@@ -1,0 +1,14 @@
+#!/usr/bin/env zsh
+#MISE description="Test the build output"
+#MISE dir="{{ config_root }}"
+#MISE depends=["p:build"]
+
+set -e
+source "${0%/*}/_helpers"
+
+cd $MISE_PROJECT_ROOT
+
+print_header "Running self-lint..."
+bun dist/index.js --fix
+
+print_header "Test complete"

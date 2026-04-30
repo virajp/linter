@@ -1,0 +1,13 @@
+#!/usr/bin/env zsh
+#MISE description="Build the CLI"
+#MISE dir="{{ config_root }}"
+
+set -e
+source "${0%/*}/_helpers"
+
+cd $MISE_PROJECT_ROOT
+
+print_header "Building package..."
+bun run build
+
+print_header "Build complete"

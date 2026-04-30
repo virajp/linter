@@ -1,0 +1,14 @@
+#!/usr/bin/env zsh
+#MISE description="Preview the tarball"
+#MISE dir="{{ config_root }}"
+#MISE depends=["p:test"]
+
+set -e
+source "${0%/*}/_helpers"
+
+cd $MISE_PROJECT_ROOT
+
+print_header "Previewing tarball..."
+bun pm pack
+
+print_header "Preview complete"

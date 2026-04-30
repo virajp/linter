@@ -1,0 +1,14 @@
+#!/usr/bin/env zsh
+#MISE description="Publish package to npm registry"
+#MISE dir="{{ config_root }}"
+#MISE depends=["p:preview"]
+
+set -e
+source "${0%/*}/_helpers"
+
+cd $MISE_PROJECT_ROOT
+
+print_header "Publishing to npm registry..."
+bun publish --access public
+
+print_header "Publish complete"
