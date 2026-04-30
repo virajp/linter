@@ -1,8 +1,8 @@
-# Agent Context: @virajp/linter-cli
+# Agent Context: @askviraj/linter-cli
 
 ## What This Project Is
 
-`@virajp/linter-cli` is an **ESLint configuration package** that exports a
+`@askviraj/linter-cli` is an **ESLint configuration package** that exports a
 single, opinionated flat config covering many file types:
 
 - JavaScript / TypeScript (`js`, `ts`, `jsx`, `tsx`, `mjs`, `cjs`)
@@ -77,10 +77,10 @@ or any plugins.
 
 ```bash
 # Via Bun
-bunx --bun @virajp/linter-cli
+bunx --bun @askviraj/linter-cli
 
 # Via Node (npx)
-npx @virajp/linter-cli
+npx @askviraj/linter-cli
 ```
 
 ### Arguments
@@ -89,16 +89,16 @@ All arguments are passed through to ESLint:
 
 ```bash
 # Lint specific files
-bunx --bun @virajp/linter-cli src/ lib/
+bunx --bun @askviraj/linter-cli src/ lib/
 
 # Auto-fix issues
-bunx --bun @virajp/linter-cli --fix
+bunx --bun @askviraj/linter-cli --fix
 
 # Quiet mode (errors only)
-bunx --bun @virajp/linter-cli --quiet
+bunx --bun @askviraj/linter-cli --quiet
 
 # Cache for faster re-runs
-bunx --bun @virajp/linter-cli --cache
+bunx --bun @askviraj/linter-cli --cache
 ```
 
 When no file arguments are provided, the CLI defaults to `.` (the current
@@ -106,7 +106,7 @@ working directory).
 
 ### How It Works
 
-1. `npx`/`bunx` installs `@virajp/linter-cli` and its dependencies in a
+1. `npx`/`bunx` installs `@askviraj/linter-cli` and its dependencies in a
    temporary/local `node_modules`.
 2. The `bin` entry (`dist/index.js`) launches a thin wrapper that:
    - Resolves the bundled `eslint` binary from the package's own dependencies.

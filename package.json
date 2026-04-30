@@ -1,5 +1,5 @@
 {
-  "name": "@virajp/linter-cli",
+  "name": "@askviraj/linter-cli",
   "version": "1.0.0",
   "description": "A linter & formatter CLI for JavaScript, TypeScript, Astro, JSON, JSONC, CSS, HTML, Markdown, YAML, TOML, and more.",
   "homepage": "https://github.com/virajp/linter-cli",
@@ -18,7 +18,7 @@
   "type": "module",
   "main": "dist/index.js",
   "bin": {
-    "@virajp/linter-cli": "dist/index.js"
+    "@askviraj/linter-cli": "dist/index.js"
   },
   "files": [
     "dist/"

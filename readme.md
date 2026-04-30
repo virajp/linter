@@ -11,10 +11,10 @@ directory using an opinionated flat config.
 
 ```bash
 # Via Bun
-bunx --bun @virajp/linter-cli
+bunx --bun @askviraj/linter-cli
 
 # Via Node
-npx @virajp/linter-cli
+npx @askviraj/linter-cli
 ```
 
 With no file arguments, it lints the current directory. All arguments are passed
@@ -22,16 +22,16 @@ through to ESLint:
 
 ```bash
 # Lint specific files or directories
-bunx --bun @virajp/linter-cli src/ lib/
+bunx --bun @askviraj/linter-cli src/ lib/
 
 # Auto-fix issues
-bunx --bun @virajp/linter-cli --fix
+bunx --bun @askviraj/linter-cli --fix
 
 # Quiet mode (errors only)
-bunx --bun @virajp/linter-cli --quiet
+bunx --bun @askviraj/linter-cli --quiet
 
 # Cache for faster re-runs
-bunx --bun @virajp/linter-cli --cache
+bunx --bun @askviraj/linter-cli --cache
 ```
 
 ## Supported File Types
@@ -47,7 +47,7 @@ bunx --bun @virajp/linter-cli --cache
 
 ## How It Works
 
-When you run `npx @virajp/linter-cli` or `bunx --bun @virajp/linter-cli`:
+When you run `npx @askviraj/linter-cli` or `bunx --bun @askviraj/linter-cli`:
 
 1. The package is installed with all its dependencies in a temporary or local
    `node_modules`.
@@ -65,17 +65,17 @@ No installation is required — `npx` and `bunx` handle it automatically. If you
 prefer to install it locally:
 
 ```bash
-bun add -D @virajp/linter-cli
+bun add -D @askviraj/linter-cli
 # or
-npm install -D @virajp/linter-cli
+npm install -D @askviraj/linter-cli
 ```
 
 Then run it with:
 
 ```bash
-bunx @virajp/linter-cli
+bunx @askviraj/linter-cli
 # or
-npx @virajp/linter-cli
+npx @askviraj/linter-cli
 ```
 
 ## Configuration
