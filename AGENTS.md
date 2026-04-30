@@ -102,7 +102,23 @@ npx @askviraj/linter-cli
 
 ### Arguments
 
-All arguments are passed through to ESLint:
+The CLI supports a curated set of flags. Unknown flags are rejected to prevent
+conflicts with internal config management.
+
+| Flag                      | Description                                            |
+| ------------------------- | ------------------------------------------------------ |
+| `--init`                  | Scaffold `eslint.config.mjs` and `.config/linter.yaml` |
+| `--force`                 | Overwrite existing files (with `--init`)               |
+| `--fix`                   | Automatically fix problems                             |
+| `--cache`                 | Only check changed files                               |
+| `--cache-location <path>` | Path to the cache file or directory                    |
+| `--no-ignore`             | Disable use of ignore files                            |
+| `--quiet`                 | Report errors only                                     |
+| `--format`, `-f`          | Use a specific output format                           |
+| `--max-warnings <n>`      | Number of warnings to trigger nonzero exit code        |
+| `--version`, `-v`         | Show version                                           |
+| `--help`, `-h`            | Show help                                              |
+| positional args           | Files or directories to lint (default: `.`)            |
 
 ```bash
 # Lint specific files
@@ -116,6 +132,9 @@ bunx --bun @askviraj/linter-cli --quiet
 
 # Cache for faster re-runs
 bunx --bun @askviraj/linter-cli --cache
+
+# Scaffold config files
+bunx --bun @askviraj/linter-cli --init
 ```
 
 When no file arguments are provided, the CLI defaults to `.` (the current

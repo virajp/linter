@@ -75,6 +75,7 @@ interface ParsedArgs {
     fix: boolean;
     cache: boolean;
     quiet: boolean;
+    ignore: boolean;
     version: boolean;
     help: boolean;
   };
@@ -91,6 +92,7 @@ function parseArgs(rawArgs: string[]): ParsedArgs {
     fix: false,
     cache: false,
     quiet: false,
+    ignore: true,
     version: false,
     help: false,
   };
@@ -119,6 +121,9 @@ function parseArgs(rawArgs: string[]): ParsedArgs {
         break;
       case "--quiet":
         flags.quiet = true;
+        break;
+      case "--no-ignore":
+        flags.ignore = false;
         break;
       case "--version":
       case "-v":
@@ -262,6 +267,7 @@ Options:
   --fix               Automatically fix problems
   --cache             Only check changed files
   --cache-location    Path to the cache file or directory
+  --no-ignore         Disable use of ignore files
   --quiet             Report errors only
   --format, -f        Use a specific output format
   --max-warnings      Number of warnings to trigger nonzero exit code
@@ -286,6 +292,7 @@ Options:
     cache: flags.cache,
     cacheLocation,
     errorOnUnmatchedPattern: false,
+    ignore: flags.ignore,
   });
 
   let results;
@@ -301,14 +308,14 @@ Options:
     await ESLint.outputFixes(results);
   }
 
+  if (flags.quiet) {
+    results = ESLint.getErrorResults(results);
+  }
+
   const formatter = await eslint.loadFormatter(format);
   const output = await formatter.format(results);
   if (output) {
     console.log(output);
-  }
-
-  if (flags.quiet) {
-    results = ESLint.getErrorResults(results);
   }
 
   const errorCount = results.reduce((sum, r) => sum + r.errorCount, 0);
