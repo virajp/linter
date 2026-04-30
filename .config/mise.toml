@@ -12,10 +12,14 @@ npm.package_manager = "bun"
 
 [tools]
 # Runtime and build tools
+node = { version = "latest" }
 bun = { version = "latest" }
 pre-commit = { version = "latest" }
 dprint = { version = "latest" }
 taplo = { version = "latest" }
+
+# AI Tools
+"pipx:kimi-cli" = { depends = ["uv"], uvx = "true", version = "latest" }
 
 [tasks.init]
 hide = true
