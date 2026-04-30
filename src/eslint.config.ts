@@ -365,6 +365,7 @@ export default defineConfig([
   },
   {
     // This matches the virtual files created by the markdown plugin
+    name: "markdown-typescript",
     files: [
       "**/*.md/*.ts",
       "**/*.md/*.tsx",
