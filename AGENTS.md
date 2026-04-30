@@ -59,10 +59,14 @@ format code with dprint. Always prefix commands with `mise x --` when executing
 from an AI agent to ensure proper context and access to all tools and
 dependencies. </IMPORTANT_NOTE>
 
-| Script           | Command                                      |
-| ---------------- | -------------------------------------------- |
-| `build`          | `bun run build` — Compiles `src/` to `dist/` |
-| `prepublishOnly` | Auto-runs `build` before publishing          |
+| Script           | Command                                         |
+| ---------------- | ----------------------------------------------- |
+| `build`          | `bun run build` — Compiles `src/` to `dist/`    |
+| `prepublishOnly` | Auto-runs `build` before publishing             |
+| `publish`        | `mise run publish` — Build, lint, pack, publish |
+
+Use `mise run publish --dry-run` to preview the tarball without actually
+publishing.
 
 Additional tasks are executed via **mise** or directly with Bun:
 
