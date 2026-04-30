@@ -8,10 +8,10 @@ source "${0%/*}/_helpers"
 
 cd $MISE_PROJECT_ROOT
 
-print_header "Publishing to npm registry..."
-bun publish --access public
-
 print_header "Bumping version..."
 mise x -- npm version patch -m "ops: bump version to %s"
+
+print_header "Publishing to npm registry..."
+bun publish --access public
 
 print_header "Publish complete"
