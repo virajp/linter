@@ -1,34 +1,34 @@
 [settings]
-lockfile = true
-all_compile = false
-activate_aggressive = true
-gpg_verify = true
-paranoid = true
-raw = true
-status.missing_tools = "always"
+activate_aggressive                = true
+all_compile                        = false
+gpg_verify                         = true
+lockfile                           = true
+npm.package_manager                = "bun"
+paranoid                           = true
+raw                                = true
+status.missing_tools               = "always"
 task.disable_spec_from_run_scripts = true
-task.timings = true
-npm.package_manager = "bun"
+task.timings                       = true
 
 [tools]
 # Runtime and build tools
-node = { version = "latest" }
-bun = { version = "latest" }
+bun        = { version = "latest" }
+dprint     = { version = "latest" }
+node       = { version = "latest" }
 pre-commit = { version = "latest" }
-dprint = { version = "latest" }
-taplo = { version = "latest" }
+taplo      = { version = "latest" }
 
 # AI Tools
-"pipx:kimi-cli" = { depends = ["uv"], uvx = "true", version = "latest" }
+"pipx:kimi-cli" = { depends = [ "uv" ], uvx = "true", version = "latest" }
 
 [tasks.init]
-hide = true
 description = "Initialize mise tasks"
-run = "find .config/mise/tasks/ -name '*' -type f -exec chmod 755 {} \\;"
+hide        = true
+run         = "find .config/mise/tasks/ -name '*' -type f -exec chmod 755 {} \\;"
 
 [shell_alias]
 setup = "mise run setup:all"
 
 [env]
-_.path = { path = "node_modules/.bin", tools = true }
 DISABLE_TELEMETRY = 1
+_.path            = { path = "node_modules/.bin", tools = true }

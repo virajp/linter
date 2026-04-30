@@ -12,7 +12,7 @@ depth = 4
 # Only install package versions published at least 3 days ago
 minimumReleaseAge = 259200
 # These packages will bypass the 3-day minimum age requirement
-minimumReleaseAgeExcludes = ["@types/bun", "typescript"]
+minimumReleaseAgeExcludes = [ "@types/bun", "typescript" ]
 
 [install.cache]
 # when true, always resolve the latest versions from the registry
