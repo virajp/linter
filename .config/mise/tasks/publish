@@ -1,0 +1,34 @@
+#!/usr/bin/env zsh
+#MISE description="Publish package to npm registry"
+#MISE dir="{{ config_root }}"
+
+#USAGE flag "--dry-run" help="Preview the tarball without publishing"
+
+set -e
+source "${0%/*}/_helpers"
+
+# Fallback for running outside of mise
+if [[ -z "${MISE_PROJECT_ROOT:-}" ]]; then
+  MISE_PROJECT_ROOT="$(cd "${0%/*}/../../.." && pwd)"
+fi
+
+cd $MISE_PROJECT_ROOT
+
+print_header "Building package..."
+bun run build
+
+print_header "Running self-lint..."
+bun dist/index.js --fix
+
+print_header "Previewing tarball..."
+bun pm pack
+
+if [[ "${usage_dry_run:-false}" == "true" ]]; then
+  print_warn "Dry run complete. No package was published."
+  exit 0
+fi
+
+print_header "Publishing to npm registry..."
+bun publish --access public
+
+print_header "Publish complete"
