@@ -1,11 +1,17 @@
 #!/usr/bin/env node
-import { spawnSync } from "node:child_process";
-import { readFileSync } from "node:fs";
+import { ESLint } from "eslint";
+import {
+  readFileSync,
+} from "node:fs";
 import { createRequire } from "node:module";
 import {
   dirname,
   resolve,
 } from "node:path";
+import { fileURLToPath } from "node:url";
+import { createConfig } from "./config-factory.js";
+import { loadYamlOptions } from "./config-loader.js";
+import { runInit } from "./init.js";
 
 function getPackageVersion(
   name: string,
@@ -59,42 +65,82 @@ function getPackageVersion(
 
   return undefined;
 }
-import { fileURLToPath } from "node:url";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
 const require = createRequire(import.meta.url);
 
-// Resolve the ESLint binary from this package's own dependencies.
-const eslintPkg = require.resolve("eslint/package.json");
-const eslintBin = resolve(dirname(eslintPkg), "bin/eslint.js");
-
-// Resolve the bundled flat-config shipped alongside this CLI.
-const configPath = resolve(__dirname, "eslint.config.js");
-
-const rawArgs = process.argv.slice(2);
-
-// Separate flags from positional file arguments.
-const flags: string[] = [];
-const positional: string[] = [];
-let seenDoubleDash = false;
-
-for (const arg of rawArgs) {
-  if (seenDoubleDash) {
-    positional.push(arg);
-  }
-  else if (arg === "--") {
-    seenDoubleDash = true;
-  }
-  else if (arg.startsWith("-")) {
-    flags.push(arg);
-  }
-  else {
-    positional.push(arg);
-  }
+interface ParsedArgs {
+  flags: {
+    init: boolean;
+    force: boolean;
+    fix: boolean;
+    cache: boolean;
+    quiet: boolean;
+    version: boolean;
+  };
+  cacheLocation: string | undefined;
+  positional: string[];
 }
 
-// Handle version flags before spawning ESLint.
-if (flags.includes("--version") || flags.includes("-v")) {
+function parseArgs(rawArgs: string[]): ParsedArgs {
+  const flags: ParsedArgs["flags"] = {
+    init: false,
+    force: false,
+    fix: false,
+    cache: false,
+    quiet: false,
+    version: false,
+  };
+  let cacheLocation: string | undefined;
+  const positional: string[] = [];
+
+  for (let i = 0; i < rawArgs.length; i++) {
+    const arg = rawArgs[i];
+    if (arg === undefined) {
+      break;
+    }
+    switch (arg) {
+      case "--init":
+        flags.init = true;
+        break;
+      case "--force":
+        flags.force = true;
+        break;
+      case "--fix":
+        flags.fix = true;
+        break;
+      case "--cache":
+        flags.cache = true;
+        break;
+      case "--quiet":
+        flags.quiet = true;
+        break;
+      case "--version":
+      case "-v":
+        flags.version = true;
+        break;
+      case "--cache-location": {
+        const next = rawArgs[++i];
+        if (next === undefined) {
+          console.error("--cache-location requires a path argument");
+          process.exit(1);
+        }
+        cacheLocation = next;
+        break;
+      }
+      default:
+        if (arg.startsWith("-")) {
+          console.error(`Unknown flag: ${arg}`);
+          process.exit(1);
+        }
+        positional.push(arg);
+        break;
+    }
+  }
+
+  return { flags, cacheLocation, positional };
+}
+
+function showVersion(): void {
   let ownVersion: string | undefined;
   let deps: Record<string, string> | undefined;
 
@@ -156,32 +202,64 @@ if (flags.includes("--version") || flags.includes("-v")) {
       console.log(`${name} v${version}`);
     }
   }
-
-  process.exit(0);
 }
 
-// Default to the current working directory when no files are specified.
-const targets = positional.length > 0 ? positional : ["."];
+async function main(): Promise<void> {
+  const rawArgs = process.argv.slice(2);
+  const { flags, cacheLocation, positional } = parseArgs(rawArgs);
 
-const args = [
-  "--no-config-lookup",
-  "--config",
-  configPath,
-  "--pass-on-no-patterns",
-  "--exit-on-fatal-error",
-  "--no-error-on-unmatched-pattern",
-  ...flags,
-  ...targets,
-];
+  if (flags.version) {
+    showVersion();
+    process.exit(0);
+  }
 
-const result = spawnSync(process.execPath, [eslintBin, ...args], {
-  cwd: process.cwd(),
-  stdio: "inherit",
-});
+  if (flags.init) {
+    runInit({ force: flags.force });
+    process.exit(0);
+  }
 
-if (result.error) {
-  console.error(result.error);
+  const targets = positional.length > 0 ? positional : ["."];
+  const config = createConfig(loadYamlOptions(process.cwd()));
+
+  const eslint = new ESLint({
+    overrideConfigFile: true,
+    overrideConfig: config,
+    fix: flags.fix,
+    cache: flags.cache,
+    cacheLocation,
+  });
+
+  let results;
+  try {
+    results = await eslint.lintFiles(targets);
+  }
+  catch (e) {
+    if (e instanceof Error && e.message.includes("No files matching")) {
+      process.exit(0);
+    }
+    console.error(e instanceof Error ? e.message : e);
+    process.exit(1);
+  }
+
+  if (flags.fix) {
+    await ESLint.outputFixes(results);
+  }
+
+  if (flags.quiet) {
+    results = ESLint.getErrorResults(results);
+  }
+
+  const formatter = await eslint.loadFormatter();
+  const output = await formatter.format(results);
+  if (output) {
+    console.log(output);
+  }
+
+  const errorCount = results.reduce((sum, r) => sum + r.errorCount, 0);
+  process.exit(errorCount > 0 ? 1 : 0);
+}
+
+main().catch(e => {
+  console.error(e instanceof Error ? e.message : e);
   process.exit(1);
-}
-
-process.exit(result.status ?? 0);
+});

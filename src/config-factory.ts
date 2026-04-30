@@ -15,7 +15,7 @@ export function createConfig(
   }
 
   for (const base of baseConfig) {
-    const clone = structuredClone(base) as Linter.Config;
+    const clone: Linter.Config = { ...base };
     const override = base.name ? options.overrides?.[base.name] : undefined;
     if (override?.rules) {
       clone.rules = {
