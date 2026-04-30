@@ -127,6 +127,16 @@ function parseArgs(rawArgs: string[]): ParsedArgs {
         cacheLocation = next;
         break;
       }
+      case "--":
+        // Push all remaining args as positional
+        for (let j = i + 1; j < rawArgs.length; j++) {
+          const remaining = rawArgs[j];
+          if (remaining !== undefined) {
+            positional.push(remaining);
+          }
+        }
+        i = rawArgs.length;
+        break;
       default:
         if (arg.startsWith("-")) {
           console.error(`Unknown flag: ${arg}`);
@@ -234,9 +244,6 @@ async function main(): Promise<void> {
     results = await eslint.lintFiles(targets);
   }
   catch (e) {
-    if (e instanceof Error && e.message.includes("No files matching")) {
-      process.exit(0);
-    }
     console.error(e instanceof Error ? e.message : e);
     process.exit(1);
   }
