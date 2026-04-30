@@ -10,31 +10,12 @@ convention:
     - ops
     - docs
     - merge
-  commitScopes:
-    - service # projects/service
-    - worker # projects/worker
-    - web # projects/web
-    - common # projects/common
-  releaseTagGlobPattern: '^(?:dev|prod)-(?:service|worker|web)-v\d{1,4}$'
-
-changelog:
-  commitTypes:
-    - feat
-    - fix
-    - refactor
-  includeInvalidCommits: false
-  commitIgnoreRegexPattern: '^[wW][iI][pP]\b'
-  headlines:
-    feat: Features
-    fix: Bug Fixes
-    perf: Performance Improvements
-    merge: Merges
-    breakingChange: BREAKING CHANGES
+  commitScopes: []
 
   # GitHub
-  commitUrl: https://github.com/95octane/apiService/commit/%commit%
-  commitRangeUrl: https://github.com/95octane/apiService/compare/%from%...%to%?diff=split
+  commitUrl: https://github.com/virajp/linter-cli/commit/%commit%
+  commitRangeUrl: https://github.com/virajp/linter-cli/compare/%from%...%to%?diff=split
 
   # GitHub Issues
   issueRegexPattern: "#[0-9]+"
-  issueUrl: https://github.com/95octane/apiService/issues/%issue%
+  issueUrl: https://github.com/virajp/linter-cli/issues/%issue%
