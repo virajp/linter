@@ -78,7 +78,7 @@ bun install
 mise run code:format
 
 # Run linter (self-consuming)
-mise run code:lint
+bun dist/index.js --fix
 ```
 
 The `mise.toml` defines `setup = "mise run setup:all"` as a shell alias.
