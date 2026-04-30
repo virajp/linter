@@ -1,9 +1,9 @@
-# ESLint Pack
+# Linter CLI
 
-ESLint Pack is a collection of ESLint configurations and plugins for various
-file types, including JavaScript, TypeScript, YAML, Markdown, Astro, and TOML.
-It provides a comprehensive set of rules and best practices to help developers
-maintain code quality and consistency across their projects.
+Linter CLI is a collection of ESLint configurations and plugins for various file
+types, including JavaScript, TypeScript, YAML, Markdown, Astro, and TOML. It
+contains opinionated configurations that help you maintain code quality and
+consistency across your projects.
 
 ## Features
 
