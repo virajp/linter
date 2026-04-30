@@ -2,6 +2,25 @@
   "name": "@askviraj/linter-cli",
   "version": "1.0.0",
   "description": "A linter & formatter CLI for JavaScript, TypeScript, Astro, JSON, JSONC, CSS, HTML, Markdown, YAML, TOML, and more.",
+  "keywords": [
+    "lint",
+    "linting",
+    "linter",
+    "eslint",
+    "cli",
+    "command-line",
+    "interface",
+    "javascript",
+    "typescript",
+    "astro",
+    "json",
+    "jsonc",
+    "css",
+    "html",
+    "markdown",
+    "yaml",
+    "toml"
+  ],
   "homepage": "https://github.com/virajp/linter-cli",
   "bugs": {
     "url": "https://github.com/virajp/linter-cli/issues"

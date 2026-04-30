@@ -1,3 +1,4 @@
+#!/usr/bin/env node
 import { spawnSync } from "node:child_process";
 import { createRequire } from "node:module";
 import {
@@ -56,5 +57,10 @@ const result = spawnSync(process.execPath, [eslintBin, ...args], {
   cwd: process.cwd(),
   stdio: "inherit",
 });
+
+if (result.error) {
+  console.error(result.error);
+  process.exit(1);
+}
 
 process.exit(result.status ?? 0);
