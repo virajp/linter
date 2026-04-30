@@ -36,14 +36,18 @@ const VSCODE_SETTINGS: Record<string, unknown> = {
 
 function mergeVsCodeSettings(existingPath: string): string {
   let existing: Record<string, unknown> = {};
-  try {
-    existing = JSON.parse(readFileSync(existingPath, "utf-8")) as Record<
-      string,
-      unknown
-    >;
-  }
-  catch {
-    // file doesn't exist or is invalid
+  if (existsSync(existingPath)) {
+    try {
+      existing = JSON.parse(readFileSync(existingPath, "utf-8")) as Record<
+        string,
+        unknown
+      >;
+    }
+    catch {
+      console.warn(
+        `Warning: ${existingPath} exists but is invalid JSON; replacing.`,
+      );
+    }
   }
   const merged = { ...existing, ...VSCODE_SETTINGS };
   return JSON.stringify(merged, null, 2) + "\n";
@@ -65,7 +69,16 @@ export function runInit(options: InitOptions = {}): void {
     );
     process.exit(1);
   }
-  writeFileSync(eslintConfigPath, ESLINT_CONFIG_MJS);
+  try {
+    writeFileSync(eslintConfigPath, ESLINT_CONFIG_MJS);
+  }
+  catch (e) {
+    console.error(
+      `Failed to write ${eslintConfigPath}:`,
+      e instanceof Error ? e.message : e,
+    );
+    process.exit(1);
+  }
 
   // 2. .config/linter.yaml
   const configDir = resolve(cwd, ".config");
@@ -79,7 +92,16 @@ export function runInit(options: InitOptions = {}): void {
     );
     process.exit(1);
   }
-  writeFileSync(linterYamlPath, LINTER_YAML);
+  try {
+    writeFileSync(linterYamlPath, LINTER_YAML);
+  }
+  catch (e) {
+    console.error(
+      `Failed to write ${linterYamlPath}:`,
+      e instanceof Error ? e.message : e,
+    );
+    process.exit(1);
+  }
 
   // 3. .vscode/settings.json
   const vscodeDir = resolve(cwd, ".vscode");
@@ -87,7 +109,16 @@ export function runInit(options: InitOptions = {}): void {
     mkdirSync(vscodeDir, { recursive: true });
   }
   const settingsPath = resolve(vscodeDir, "settings.json");
-  writeFileSync(settingsPath, mergeVsCodeSettings(settingsPath));
+  try {
+    writeFileSync(settingsPath, mergeVsCodeSettings(settingsPath));
+  }
+  catch (e) {
+    console.error(
+      `Failed to write ${settingsPath}:`,
+      e instanceof Error ? e.message : e,
+    );
+    process.exit(1);
+  }
 
   console.log("Initialized @askviraj/linter-cli:");
   console.log(`  - ${eslintConfigPath}`);
