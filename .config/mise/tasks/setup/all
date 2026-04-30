@@ -22,6 +22,6 @@ mise upgrade --local || true
 
 mise run setup:bun:install
 
-mise run setup:hk
+mise run setup:precommit
 
 echo "Setup complete!"

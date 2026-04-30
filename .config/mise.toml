@@ -13,9 +13,9 @@ npm.package_manager = "bun"
 [tools]
 # Runtime and build tools
 bun = { version = "latest" }
+pre-commit = { version = "latest" }
 dprint = { version = "latest" }
-hk = { version = "latest" }
-pkl = { version = "latest" }
+taplo = { version = "latest" }
 
 [tasks.init]
 hide = true

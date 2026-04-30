@@ -1,5 +1,5 @@
 {
-  "name": "@virajp/lf-cli",
+  "name": "@virajp/linter-cli",
   "version": "1.0.0",
   "description": "A linter & formatter CLI for JavaScript, TypeScript, Astro, JSON, JSONC, CSS, HTML, Markdown, YAML, TOML, and more.",
   "homepage": "https://github.com/virajp/lf-cli",
@@ -8,21 +8,28 @@
     "email": "askviraj@gmail.com",
     "url": "https://github.com/virajp"
   },
+  "overrides": {
+    "yaml": "2.8.3"
+  },
   "dependencies": {
     "@eslint/css": "latest",
     "@eslint/js": "latest",
     "@eslint/json": "latest",
     "@eslint/markdown": "latest",
     "@html-eslint/eslint-plugin": "latest",
+    "@poupe/eslint-plugin-tailwindcss": "latest",
+    "@typescript-eslint/parser": "latest",
+    "astro-eslint-parser": "latest",
     "eslint": "latest",
     "eslint-plugin-astro": "latest",
     "eslint-plugin-toml": "latest",
     "eslint-plugin-yml": "latest",
-    "prettier": "latest",
+    "globals": "latest",
     "typescript-eslint": "latest"
   },
   "devDependencies": {
     "@bun-security-scanner/osv": "latest",
-    "@types/bun": "latest"
+    "@types/bun": "latest",
+    "sort-package-json": "latest"
   }
 }

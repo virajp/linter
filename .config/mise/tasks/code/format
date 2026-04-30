@@ -12,10 +12,6 @@ source "${0%/*}/_helpers"
 eval "files=($usage_files)"
 
 print_header "Formatting files ..."
-# Use as array:
-for f in "${files[@]}"; do
-  echo "- Processing: $f"
-done
 
 [[ "${usage_debug:-false}" == "true" ]] && LOG_LEVEL="debug" || LOG_LEVEL="warn"
 [[ "${usage_fix:-false}" == "true" ]] && CMD="fmt" || CMD="check"

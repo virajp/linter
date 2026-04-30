@@ -1,0 +1,101 @@
+default_install_hook_types:
+  - pre-commit
+  - commit-msg
+
+repos:
+  - repo: local
+    hooks:
+      - id: fix-git-local-config
+        name: Fix local git-config
+        description: Prevents local .git/config from overriding global user and
+          signing settings.
+        entry: mise x -- mise run code:git-config --fix
+        language: system
+        pass_filenames: false
+        always_run: true
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: no-commit-to-branch
+        name: Prevent committing to main branch
+        args: [ "--branch", "main" ]
+        stages: [ pre-commit ]
+      - id: check-shebang-scripts-are-executable
+        name: Check that scripts with shebangs are executable
+        stages: [ pre-commit ]
+      - id: check-executables-have-shebangs
+        name: Check that executables have shebangs
+        stages: [ pre-commit ]
+      - id: check-merge-conflict
+        name: Check for merge conflicts
+        stages: [ pre-commit ]
+      - id: detect-private-key
+        name: Detect private keys
+        stages: [ pre-commit ]
+      - id: end-of-file-fixer
+        name: Ensure files end with a newline
+        stages: [ pre-commit ]
+      - id: trailing-whitespace
+        name: Remove trailing whitespace
+        stages: [ pre-commit ]
+      - id: check-added-large-files
+        name: Check for added large files (>1MB)
+        args: [ "--maxkb=1024" ]
+        stages: [ pre-commit ]
+      - id: check-symlinks
+        name: Check for broken symlinks
+        stages: [ pre-commit ]
+      - id: destroyed-symlinks
+        name: Check for destroyed symlinks
+        stages: [ pre-commit ]
+
+  - repo: local
+    hooks:
+      - id: package-json-sorter
+        name: Package.json sorter
+        entry: mise x -- bun --bun sort-package-json
+        files: (^|.*/)package\.json$
+        language: system
+        stages: [ pre-commit ]
+
+  - repo: local
+    hooks:
+      - id: formatter
+        name: Formatter
+        entry: mise x -- dprint fmt --allow-no-files --log-level warn
+        exclude: (^|.*/)package\.json$
+        language: system
+        stages: [ pre-commit ]
+
+  - repo: local
+    hooks:
+      - id: linter
+        name: Linter
+        entry: mise x -- bun --bun eslint
+          --no-config-lookup
+          --config src/eslint.config.ts
+          --pass-on-no-patterns
+          --concurrency 1
+          --exit-on-fatal-error
+          --no-error-on-unmatched-pattern
+          --quiet
+          --fix
+        language: system
+        stages: [ pre-commit ]
+
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.0
+    hooks:
+      - id: gitleaks
+        name: Check for secrets
+        args: [ --config, .config/gitleaks.toml ]
+        stages: [ pre-commit ]
+
+  - repo: https://github.com/qoomon/git-conventional-commits
+    rev: v2.9.0
+    hooks:
+      - id: conventional-commits
+        name: Conventional commits
+        args: [ --config, .config/git-conventional-commits.yaml ]
+        stages: [ commit-msg ]

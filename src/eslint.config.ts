@@ -4,7 +4,7 @@ import json from "@eslint/json";
 import markdown from "@eslint/markdown";
 import html from "@html-eslint/eslint-plugin";
 import astro from "eslint-plugin-astro";
-import eslintPluginToml from 'eslint-plugin-toml';
+import eslintPluginToml from "eslint-plugin-toml";
 import yaml from "eslint-plugin-yml";
 import {
   defineConfig,
@@ -36,7 +36,7 @@ export default defineConfig([
       "**/*.{js,mjs,cjs,jsx}",
     ],
     plugins: { js },
-    extends: [ js.configs.recommended ],
+    extends: [js.configs.recommended],
     languageOptions: {
       globals: {
         ...globals.browser,
@@ -91,7 +91,7 @@ export default defineConfig([
    * JSON files
    */
   {
-    extends: [ json.configs.recommended ],
+    extends: [json.configs.recommended],
     files: ["**/*.json"],
     ignores: JSONC_FILES,
     language: "json/json",
@@ -103,7 +103,7 @@ export default defineConfig([
    * JSON with comments
    */
   {
-    extends: [ json.configs.recommended ],
+    extends: [json.configs.recommended],
     files: ["**/*.jsonc", ...JSONC_FILES],
     language: "json/jsonc",
     languageOptions: {
@@ -121,7 +121,7 @@ export default defineConfig([
     files: ["**/*.md"],
     name: "markdown",
     plugins: { markdown },
-    extends: [ markdown.configs.recommended ],
+    extends: [markdown.configs.recommended],
     // Use processor to avoid the ESLint v10.2.0 getLoc() error
     processor: "markdown/markdown",
   },
@@ -134,7 +134,7 @@ export default defineConfig([
     language: "css/css",
     name: "css",
     plugins: { css },
-    extends: [ css.configs.recommended ],
+    extends: [css.configs.recommended],
   },
 
   /**
@@ -142,7 +142,7 @@ export default defineConfig([
    */
   {
     files: ["**/*.yaml", "**/*.yml"],
-    extends: [ yaml.configs["flat/recommended"] ],
+    extends: [yaml.configs["flat/recommended"]],
     languageOptions: {
       parser: yamlParser,
     },
@@ -157,7 +157,7 @@ export default defineConfig([
    */
   {
     files: ["**/*.toml"],
-    extends: [ eslintPluginToml.configs.recommended ],
+    extends: [eslintPluginToml.configs.recommended],
     plugins: {
       toml: eslintPluginToml,
     },
@@ -170,12 +170,11 @@ export default defineConfig([
    */
   {
     files: ["**/*.html"],
-    extends: [ html.configs.recommended ],
+    extends: [html.configs.recommended],
     plugins: {
       html,
     },
     name: "html",
     language: "html/html",
   },
-
 ]);
