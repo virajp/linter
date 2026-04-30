@@ -16,8 +16,12 @@ export function createConfig(
 
   for (const base of baseConfig) {
     const clone: Linter.Config = { ...base };
-    if (base.name && options.overrides?.[base.name]) {
-      clone.rules = { ...base.rules, ...options.overrides[base.name].rules };
+    const override = base.name ? options.overrides?.[base.name] : undefined;
+    if (override?.rules) {
+      clone.rules = {
+        ...base.rules,
+        ...override.rules as Linter.Config["rules"],
+      };
     }
     configs.push(clone);
   }
