@@ -54,10 +54,10 @@ directory.
 are loaded. For example, to run the lint task, use
 `mise x -- mise run code:lint` instead of directly invoking
 `mise run code:lint`. Similarly, any tool that is installed via `mise` will be
-available in the `mise x` environment, so you can run `mise x -- dprint fmt` to
-format code with dprint. Always prefix commands with `mise x --` when executing
-from an AI agent to ensure proper context and access to all tools and
-dependencies. </IMPORTANT_NOTE>
+available in the `mise x` environment, so you can run
+`mise x -- mise run code:format` to format code. Always prefix commands with
+`mise x --` when executing from an AI agent to ensure proper context and access
+to all tools and dependencies. </IMPORTANT_NOTE>
 
 | Script           | Command                                         |
 | ---------------- | ----------------------------------------------- |
@@ -75,10 +75,10 @@ Additional tasks are executed via **mise** or directly with Bun:
 bun install
 
 # Run formatter
-dprint fmt
+mise run code:format
 
 # Run linter (self-consuming)
-bun dist/index.js --fix
+mise run code:lint
 ```
 
 The `mise.toml` defines `setup = "mise run setup:all"` as a shell alias.
@@ -169,7 +169,7 @@ When extending `src/eslint.config.ts`:
    - `languageOptions` / `language` as needed
 4. Run `bun install`, then `bun run build`.
 5. Verify with `bun dist/index.js --fix`.
-6. Format with `dprint fmt`.
+6. Format with `mise run code:format`.
 
 ## Security / Hooks
 
