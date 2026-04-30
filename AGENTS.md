@@ -49,6 +49,16 @@ directory.
 
 ## Scripts / Tasks
 
+<IMPORTANT_NOTE> While running commands from AI agent, use
+`mise x -- mise run <task>` to ensure the correct environment and dependencies
+are loaded. For example, to run the lint task, use
+`mise x -- mise run code:lint` instead of directly invoking
+`mise run code:lint`. Similarly, any tool that is installed via `mise` will be
+available in the `mise x` environment, so you can run `mise x -- dprint fmt` to
+format code with dprint. Always prefix commands with `mise x --` when executing
+from an AI agent to ensure proper context and access to all tools and
+dependencies. </IMPORTANT_NOTE>
+
 | Script           | Command                                      |
 | ---------------- | -------------------------------------------- |
 | `build`          | `bun run build` — Compiles `src/` to `dist/` |
