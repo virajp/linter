@@ -1,11 +1,11 @@
-# Testing Setup Design for @askviraj/linter-cli
+# Testing Setup Design for @virajp/linter
 
 ## Overview
 
-Create a comprehensive testing setup for `@askviraj/linter-cli` that validates
-the CLI against all supported file types and CLI flags before publishing. Tests
-are both functional (asserting specific lint violations are caught) and smoke
-tests (asserting flag behavior and exit codes).
+Create a comprehensive testing setup for `@virajp/linter` that validates the CLI
+against all supported file types and CLI flags before publishing. Tests are both
+functional (asserting specific lint violations are caught) and smoke tests
+(asserting flag behavior and exit codes).
 
 ## Goals
 
@@ -27,7 +27,7 @@ tests (asserting flag behavior and exit codes).
 
 ### Directory Structure
 
-```
+```text
 tests/
 ├── fixtures/                    # Comprehensive static fixture files
 │   ├── javascript/

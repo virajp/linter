@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "@askviraj/linter-cli",
+      "name": "@virajp/linter",
       "dependencies": {
         "@eslint/css": "latest",
         "@eslint/js": "latest",

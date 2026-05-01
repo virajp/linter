@@ -1,5 +1,5 @@
 export function runHelp(): void {
-  console.log(`@askviraj/linter-cli [options] [files...]
+  console.log(`@virajp/linter [options] [files...]
 
 Options:
   --init              Scaffold eslint.config.mjs and .config/linter.yaml

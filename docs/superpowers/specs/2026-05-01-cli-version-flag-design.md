@@ -2,7 +2,7 @@
 
 ## Goal
 
-Add version-reporting flags to the `@askviraj/linter-cli` launcher so users can
+Add version-reporting flags to the `@virajp/linter` launcher so users can
 quickly identify which versions of the wrapper, ESLint core, and all bundled
 ESLint plugins and parsers are in use.
 

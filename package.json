@@ -20,13 +20,13 @@
     "yaml",
     "toml"
   ],
-  "homepage": "https://github.com/virajp/linter-cli",
+  "homepage": "https://github.com/virajp/linter",
   "bugs": {
-    "url": "https://github.com/virajp/linter-cli/issues"
+    "url": "https://github.com/virajp/linter/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/virajp/linter-cli.git"
+    "url": "git+https://github.com/virajp/linter.git"
   },
   "license": "MIT",
   "author": {
@@ -41,7 +41,7 @@
   },
   "main": "dist/index.js",
   "bin": {
-    "linter-cli": "dist/index.js"
+    "linter": "dist/index.js"
   },
   "files": [
     "dist/"

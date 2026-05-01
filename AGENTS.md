@@ -1,9 +1,9 @@
-# Agent Context: @askviraj/linter-cli
+# Agent Context: @virajp/linter
 
 ## What This Project Is
 
-`@askviraj/linter-cli` is an **ESLint configuration package** that exports a
-single, opinionated flat config covering many file types:
+`@virajp/linter` is an **ESLint configuration package** that exports a single,
+opinionated flat config covering many file types:
 
 - JavaScript / TypeScript (`js`, `ts`, `jsx`, `tsx`, `mjs`, `cjs`)
 - Astro (`.astro`)
@@ -95,10 +95,10 @@ or any plugins.
 
 ```bash
 # Via Bun
-bunx --bun @askviraj/linter-cli
+bunx --bun @virajp/linter
 
 # Via Node (npx)
-npx @askviraj/linter-cli
+npx @virajp/linter
 ```
 
 ### Arguments
@@ -123,19 +123,19 @@ conflicts with internal config management.
 
 ```bash
 # Lint specific files
-bunx --bun @askviraj/linter-cli src/ lib/
+bunx --bun @virajp/linter src/ lib/
 
 # Auto-fix issues
-bunx --bun @askviraj/linter-cli --fix
+bunx --bun @virajp/linter --fix
 
 # Quiet mode (errors only)
-bunx --bun @askviraj/linter-cli --quiet
+bunx --bun @virajp/linter --quiet
 
 # Cache for faster re-runs
-bunx --bun @askviraj/linter-cli --cache
+bunx --bun @virajp/linter --cache
 
 # Scaffold config files
-bunx --bun @askviraj/linter-cli --init
+bunx --bun @virajp/linter --init
 ```
 
 When no file arguments are provided, the CLI defaults to `.` (the current
@@ -143,7 +143,7 @@ working directory).
 
 ### How It Works
 
-1. `npx`/`bunx` installs `@askviraj/linter-cli` and its dependencies in a
+1. `npx`/`bunx` installs `@virajp/linter` and its dependencies in a
    temporary/local `node_modules`.
 2. The `bin` entry (`dist/index.js`) launches a thin wrapper that:
    - Reads `.config/linter.yaml` from the target repo (if present) to load user
@@ -158,18 +158,18 @@ working directory).
 
 ### VS Code Integration
 
-The package exports `@askviraj/linter-cli/auto` for use with the
+The package exports `@virajp/linter/auto` for use with the
 `dbaeumer.vscode-eslint` extension.
 
 In your target repo, run:
 
 ```bash
-npx @askviraj/linter-cli --init
+npx @virajp/linter --init
 ```
 
 This scaffolds:
 
-- `eslint.config.mjs` — imports `@askviraj/linter-cli/auto`
+- `eslint.config.mjs` — imports `@virajp/linter/auto`
 - `.config/linter.yaml` — your customization file
 - `.vscode/settings.json` — enables flat config mode
 

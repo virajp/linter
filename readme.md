@@ -11,10 +11,10 @@ directory using an opinionated flat config.
 
 ```bash
 # Via Bun
-bunx --bun @askviraj/linter-cli
+bunx --bun @virajp/linter
 
 # Via Node
-npx @askviraj/linter-cli
+npx @virajp/linter
 ```
 
 With no file arguments, it lints the current directory. The CLI supports a
@@ -22,19 +22,19 @@ curated set of flags:
 
 ```bash
 # Lint specific files or directories
-bunx --bun @askviraj/linter-cli src/ lib/
+bunx --bun @virajp/linter src/ lib/
 
 # Auto-fix issues
-bunx --bun @askviraj/linter-cli --fix
+bunx --bun @virajp/linter --fix
 
 # Quiet mode (errors only)
-bunx --bun @askviraj/linter-cli --quiet
+bunx --bun @virajp/linter --quiet
 
 # Cache for faster re-runs
-bunx --bun @askviraj/linter-cli --cache
+bunx --bun @virajp/linter --cache
 
 # Scaffold config files
-bunx --bun @askviraj/linter-cli --init
+bunx --bun @virajp/linter --init
 ```
 
 | Flag                      | Description                                            |
@@ -64,7 +64,7 @@ bunx --bun @askviraj/linter-cli --init
 
 ## How It Works
 
-When you run `npx @askviraj/linter-cli` or `bunx --bun @askviraj/linter-cli`:
+When you run `npx @virajp/linter` or `bunx --bun @virajp/linter`:
 
 1. The package is installed with all its dependencies in a temporary or local
    `node_modules`.
@@ -85,33 +85,33 @@ No installation is required — `npx` and `bunx` handle it automatically. If you
 prefer to install it locally:
 
 ```bash
-bun add -D @askviraj/linter-cli
+bun add -D @virajp/linter
 # or
-npm install -D @askviraj/linter-cli
+npm install -D @virajp/linter
 ```
 
 Then run it with:
 
 ```bash
-bunx @askviraj/linter-cli
+bunx @virajp/linter
 # or
-npx @askviraj/linter-cli
+npx @virajp/linter
 ```
 
 ## VS Code Integration
 
-The package exports `@askviraj/linter-cli/auto` for use with the
+The package exports `@virajp/linter/auto` for use with the
 `dbaeumer.vscode-eslint` extension.
 
 In your target repo, run:
 
 ```bash
-npx @askviraj/linter-cli --init
+npx @virajp/linter --init
 ```
 
 This scaffolds:
 
-- `eslint.config.mjs` — imports `@askviraj/linter-cli/auto`
+- `eslint.config.mjs` — imports `@virajp/linter/auto`
 - `.config/linter.yaml` — your customization file
 - `.vscode/settings.json` — enables flat config mode
 
@@ -132,7 +132,7 @@ overrides:
       "@typescript-eslint/no-explicit-any": "error"
 ```
 
-Run `bunx --bun @askviraj/linter-cli --fix` or let the VS Code extension pick up
+Run `bunx --bun @virajp/linter --fix` or let the VS Code extension pick up
 changes.
 
 ## Configuration

@@ -439,15 +439,11 @@ const x = 1;
 ```
 ````
 
-````
+````markdown
 `tests/fixtures/markdown/fenced-code-lang.md`:
+
 ```markdown
 # Missing Language
-````
-
-const x = 1;
-
-```
 ```
 
 - [ ] **Step 2: Create YAML fixtures**
@@ -742,7 +738,7 @@ describe("createConfig", () => {
   test("adds ignores when provided", () => {
     const config = createConfig({ ignores: ["**/dist/**"] });
     const ignoresConfig = config.find(
-      c => c.name === "@askviraj/linter-cli/ignores",
+      c => c.name === "@virajp/linter/ignores",
     );
     expect(ignoresConfig).toBeDefined();
   });
@@ -750,7 +746,7 @@ describe("createConfig", () => {
   test("applies overrides by preset name", () => {
     const config = createConfig({
       overrides: {
-        "@askviraj/linter-cli/typescript": {
+        "@virajp/linter/typescript": {
           rules: {
             "@typescript-eslint/no-explicit-any": "error",
           },
@@ -758,7 +754,7 @@ describe("createConfig", () => {
       },
     });
     const tsConfig = config.find(
-      c => c.name === "@askviraj/linter-cli/typescript",
+      c => c.name === "@virajp/linter/typescript",
     );
     expect(tsConfig?.rules?.["@typescript-eslint/no-explicit-any"]).toBe(
       "error",
@@ -837,7 +833,7 @@ describe("runInit", () => {
     const path = `${tmpDir}/eslint.config.mjs`;
     expect(existsSync(path)).toBe(true);
     const content = readFileSync(path, "utf-8");
-    expect(content).toContain("@askviraj/linter-cli/auto");
+    expect(content).toContain("@virajp/linter/auto");
   });
 
   test("creates .config/linter.yaml", () => {
@@ -845,7 +841,7 @@ describe("runInit", () => {
     const path = `${tmpDir}/.config/linter.yaml`;
     expect(existsSync(path)).toBe(true);
     const content = readFileSync(path, "utf-8");
-    expect(content).toContain("@askviraj/linter-cli");
+    expect(content).toContain("@virajp/linter");
   });
 
   test("creates .vscode/settings.json", () => {
@@ -1374,7 +1370,7 @@ describe("init command", () => {
   test("generated eslint.config.mjs exports from auto", async () => {
     await runCli(["--init"], tmpDir);
     const content = readFileSync(`${tmpDir}/eslint.config.mjs`, "utf-8");
-    expect(content).toContain("@askviraj/linter-cli/auto");
+    expect(content).toContain("@virajp/linter/auto");
   });
 
   test("generated .vscode/settings.json enables flat config", async () => {
@@ -1549,3 +1545,4 @@ paths, code, and commands.
 
 **3. Type consistency:** `CliResult`, `FIXTURES`, helper function signatures are
 consistent across all tasks.
+````
