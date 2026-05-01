@@ -1,6 +1,18 @@
 {
   "name": "@virajp/linter",
-  "version": "1.0.0",
+  "version": "1.0.2",
+  "description": "A linter & formatter CLI for JavaScript, TypeScript, Astro, JSON, JSONC, CSS, HTML, Markdown, YAML, TOML, and more.",
   "license": "MIT",
-  "exports": "./mod.ts"
+  "exports": {
+    ".": "./dist/index.js",
+    "./auto": "./dist/auto.js"
+  },
+  "publish": {
+    "include": [
+      "dist/",
+      "README.md",
+      "LICENSE",
+      "package.json"
+    ]
+  }
 }

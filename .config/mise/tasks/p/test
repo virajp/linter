@@ -1,6 +1,5 @@
 #!/usr/bin/env zsh
 #MISE description="Run all tests (unit + integration)"
-#MISE dir="{{ config_root }}"
 
 set -e
 source "${0%/*}/_helpers"

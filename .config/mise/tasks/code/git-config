@@ -1,6 +1,5 @@
 #!/usr/bin/env zsh
 #MISE description="Validate git-config"
-#MISE dir="."
 
 #USAGE flag "--fix" help="Remove forbidden configs from local git-config"
 

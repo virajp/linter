@@ -1,6 +1,5 @@
 #!/usr/bin/env zsh
 #MISE description="Build the CLI"
-#MISE dir="{{ config_root }}"
 
 set -e
 source "${0%/*}/_helpers"

@@ -52,7 +52,7 @@
     "test": "bun test tests/unit",
     "test:all": "bun run build && bun test",
     "test:integration": "bun run build && bun test tests/integration",
-    "version": "node -e \"const fs=require('fs'); const j=JSON.parse(fs.readFileSync('jsr.json','utf8')); j.version=require('./package.json').version; fs.writeFileSync('jsr.json', JSON.stringify(j,null,2)+'\\n');\" && git add jsr.json"
+    "version": "bun -e \"const fs=require('fs'); const j=JSON.parse(fs.readFileSync('jsr.json','utf8')); j.version=require('./package.json').version; fs.writeFileSync('jsr.json', JSON.stringify(j,null,2)+'\\n');\" && git add jsr.json package.json"
   },
   "dependencies": {
     "@eslint/css": "1.1.0",
@@ -75,6 +75,7 @@
   "devDependencies": {
     "@bun-security-scanner/osv": "1.0.0",
     "@types/bun": "1.3.13",
+    "@types/node": "25.6.0",
     "sort-package-json": "3.6.1",
     "typescript": "6.0.3"
   },

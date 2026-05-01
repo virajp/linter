@@ -1,6 +1,5 @@
 #!/usr/bin/env zsh
 #MISE description="Format, lint, scan all code"
-#MISE dir="."
 
 #USAGE flag "--debug" help="emit debug logs"
 

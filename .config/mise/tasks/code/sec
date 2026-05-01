@@ -1,6 +1,5 @@
 #!/usr/bin/env zsh
 #MISE description="Security check"
-#MISE dir="."
 
 #USAGE flag "--debug" help="emit debug logs"
 

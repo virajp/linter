@@ -21,6 +21,7 @@
     "target": "ESNext",
     "types": [
       "bun",
+      "node",
     ],
     "verbatimModuleSyntax": true,
   },
