@@ -64,6 +64,7 @@
     "eslint-plugin-toml": "latest",
     "eslint-plugin-yml": "latest",
     "globals": "latest",
+    "jsonc-parser": "latest",
     "typescript-eslint": "latest",
     "yaml": "latest"
   },
