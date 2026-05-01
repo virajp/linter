@@ -1,4 +1,11 @@
 import {
+  applyEdits,
+  findNodeAtLocation,
+  getNodeValue,
+  modify,
+  parseTree,
+} from "jsonc-parser";
+import {
   existsSync,
   mkdirSync,
   readFileSync,
@@ -34,124 +41,6 @@ const VSCODE_SETTINGS: Record<string, unknown> = {
   "eslint.useFlatConfig": true,
 };
 
-/**
- * Strip JSONC comments (line and block comments) while preserving comments
- * inside strings. This is a minimal, safe implementation for VS Code settings files.
- */
-function stripJsonComments(content: string): string {
-  let result = "";
-  let i = 0;
-
-  while (i < content.length) {
-    const ch = content[i];
-    const next = content[i + 1];
-
-    if (ch === "\"") {
-      // String literal: copy verbatim until closing quote (handling escapes)
-      result += ch;
-      i++;
-      while (i < content.length) {
-        const sch = content[i];
-        result += sch;
-        if (sch === "\\") {
-          i++;
-          if (i < content.length) {
-            result += content[i];
-          }
-        }
-        else if (sch === "\"") {
-          break;
-        }
-        i++;
-      }
-      i++;
-    }
-    else if (ch === "/" && next === "/") {
-      // Line comment: skip to end of line
-      while (i < content.length && content[i] !== "\n") {
-        i++;
-      }
-    }
-    else if (ch === "/" && next === "*") {
-      // Block comment: skip to */
-      i += 2;
-      while (i < content.length) {
-        if (content[i] === "*" && content[i + 1] === "/") {
-          i += 2;
-          break;
-        }
-        i++;
-      }
-    }
-    else {
-      result += ch;
-      i++;
-    }
-  }
-
-  return result;
-}
-
-/**
- * Strip trailing commas from JSON content while preserving commas inside strings.
- * VS Code settings files allow trailing commas, but JSON.parse does not.
- */
-function stripTrailingCommas(content: string): string {
-  let result = "";
-  let i = 0;
-
-  while (i < content.length) {
-    const ch = content[i];
-
-    if (ch === "\"") {
-      // String literal: copy verbatim until closing quote (handling escapes)
-      result += ch;
-      i++;
-      while (i < content.length) {
-        const sch = content[i];
-        result += sch;
-        if (sch === "\\") {
-          i++;
-          if (i < content.length) {
-            result += content[i];
-          }
-        }
-        else if (sch === "\"") {
-          break;
-        }
-        i++;
-      }
-      i++;
-    }
-    else if (ch === ",") {
-      // Look ahead for ] or } (with optional whitespace)
-      let j = i + 1;
-      while (j < content.length) {
-        const cj = content[j];
-        if (cj === undefined || !/[\s]/.test(cj)) {
-          break;
-        }
-        j++;
-      }
-      const cj = content[j];
-      if (cj !== undefined && (cj === "]" || cj === "}")) {
-        // Skip the trailing comma
-        i++;
-      }
-      else {
-        result += ch;
-        i++;
-      }
-    }
-    else {
-      result += ch;
-      i++;
-    }
-  }
-
-  return result;
-}
-
 interface FileAction {
   path: string;
   action:
@@ -163,10 +52,43 @@ interface FileAction {
     | "failed";
 }
 
-function mergeVsCodeSettings(existingPath: string): Record<string, unknown> {
-  const raw = readFileSync(existingPath, "utf-8");
-  const cleaned = stripTrailingCommas(stripJsonComments(raw));
-  return JSON.parse(cleaned) as Record<string, unknown>;
+/**
+ * Read an existing .vscode/settings.json and update/add eslint.useFlatConfig.
+ * Uses jsonc-parser so comments, trailing commas, and formatting are preserved.
+ */
+function updateVsCodeSettings(existingPath: string): {
+  content: string;
+  action: "updated" | "up-to-date";
+} {
+  const text = readFileSync(existingPath, "utf-8");
+  const root = parseTree(text);
+
+  if (!root) {
+    // Completely unparseable — fall back to a fresh object.
+    return {
+      content: JSON.stringify(VSCODE_SETTINGS, null, 2) + "\n",
+      action: "updated",
+    };
+  }
+
+  const node = findNodeAtLocation(root, ["eslint.useFlatConfig"]);
+  if (node) {
+    const value = getNodeValue(node);
+    if (value === true) {
+      return { content: text, action: "up-to-date" };
+    }
+    // Replace existing value.
+    const edits = modify(text, ["eslint.useFlatConfig"], true, {
+      formattingOptions: { tabSize: 2, insertSpaces: true, eol: "\n" },
+    });
+    return { content: applyEdits(text, edits), action: "updated" };
+  }
+
+  // Property missing — add it.
+  const edits = modify(text, ["eslint.useFlatConfig"], true, {
+    formattingOptions: { tabSize: 2, insertSpaces: true, eol: "\n" },
+  });
+  return { content: applyEdits(text, edits), action: "updated" };
 }
 
 export interface InitOptions {
@@ -237,13 +159,12 @@ export function runInit(options: InitOptions = {}): void {
   const settingsPath = resolve(vscodeDir, "settings.json");
   if (existsSync(settingsPath)) {
     try {
-      const existing = mergeVsCodeSettings(settingsPath);
-      if (existing["eslint.useFlatConfig"] === true) {
+      const result = updateVsCodeSettings(settingsPath);
+      if (result.action === "up-to-date") {
         actions.push({ path: settingsPath, action: "up-to-date" });
       }
       else {
-        const merged = { ...existing, ...VSCODE_SETTINGS };
-        writeFileSync(settingsPath, JSON.stringify(merged, null, 2) + "\n");
+        writeFileSync(settingsPath, result.content);
         actions.push({ path: settingsPath, action: "updated" });
       }
     }
