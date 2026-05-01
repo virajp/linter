@@ -60,9 +60,10 @@ describe("lint file types", () => {
   });
 
   test("lints invalid astro with errors", async () => {
-    copyFixture(FIXTURES.astro.unclosedTag, tmpDir);
+    copyFixture(FIXTURES.astro.deprecatedResolve, tmpDir);
     const result = await runCli(["--no-ignore", "."], tmpDir);
     expect(result.exitCode).toBe(1);
+    expect(result.stdout).toContain("astro/no-deprecated-astro-resolve");
   });
 
   test("lints valid json with no errors", async () => {

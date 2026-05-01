@@ -13,7 +13,7 @@ export const FIXTURES = {
   },
   astro: {
     valid: "astro/valid.astro",
-    unclosedTag: "astro/unclosed-tag.astro",
+    deprecatedResolve: "astro/deprecated-resolve.astro",
   },
   json: {
     valid: "json/valid.json",
