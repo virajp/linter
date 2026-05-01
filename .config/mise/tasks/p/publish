@@ -13,7 +13,7 @@ print_header "Tagging release v${CURRENT_VERSION}..."
 git tag --sign "v${CURRENT_VERSION}" -m "ops: bump version to v${CURRENT_VERSION}"
 
 print_header "Publishing to npm registry..."
-npm publish
+npm publish --access public
 
 print_header "Bumping version post-publish..."
 mise x -- npm version patch --no-git-tag-version
