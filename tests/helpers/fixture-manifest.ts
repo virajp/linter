@@ -7,9 +7,9 @@ export const FIXTURES = {
   },
   typescript: {
     valid: "typescript/valid.ts",
-    explicitAny: "typescript/explicit-any.ts",
-    unusedParams: "typescript/unused-params.ts",
-    preferConst: "typescript/prefer-const.ts",
+    noRequireImports: "typescript/no-require-imports.ts",
+    noUnusedVars: "typescript/no-unused-vars.ts",
+    preferAsConst: "typescript/prefer-as-const.ts",
   },
   astro: {
     valid: "astro/valid.astro",
