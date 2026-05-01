@@ -1,4 +1,4 @@
-// debugger-statement.js - should trigger no-debugger (auto-fixable)
+// debugger-statement.js - should trigger no-debugger
 export function debug() {
   debugger;
   return 1;
