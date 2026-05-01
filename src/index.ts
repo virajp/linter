@@ -9,9 +9,9 @@ import {
   resolve,
 } from "node:path";
 import { fileURLToPath } from "node:url";
+import { runInit } from "./cli/commands/init.js";
 import { createConfig } from "./config-factory.js";
 import { loadYamlOptions } from "./config-loader.js";
-import { runInit } from "./init.js";
 
 function getPackageVersion(
   name: string,
