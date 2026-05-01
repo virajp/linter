@@ -4,6 +4,7 @@ export const FIXTURES = {
     unusedVars: "javascript/unused-vars.js",
     noUndef: "javascript/no-undef.js",
     debuggerStatement: "javascript/debugger-statement.js",
+    consoleWarn: "javascript/console-warn.js",
   },
   typescript: {
     valid: "typescript/valid.ts",
