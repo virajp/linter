@@ -1,147 +1,171 @@
-# Linter CLI
+# @virajp/linter
 
 A self-contained linter CLI for JavaScript, TypeScript, Astro, JSON, JSONC, CSS,
-HTML, Markdown, YAML, TOML, and more.
+HTML, Markdown, YAML, TOML, and more. It bundles ESLint and all plugins so you
+don't have to install them in every project.
 
-Linter CLI bundles ESLint and all its plugins so you don't have to install them
-in every repo. Run it anywhere with `npx` or `bunx` and it lints the current
-directory using an opinionated flat config.
+## Features
 
-## Usage
+- **Zero-config** — Works out of the box with an opinionated flat config
+- **Self-contained** — Bundles ESLint and all plugins; no peer dependency
+  headaches
+- **Multi-language** — One command lints 10+ file types
+- **Fast** — Optional caching and native Bun support
+- **VS Code ready** — First-class integration with the official ESLint extension
+
+## Installation
+
+No installation required for one-off use:
 
 ```bash
 # Via Bun
-bunx --bun @virajp/linter
+bunx --bun jsr run @virajp/linter
 
-# Via Node
-npx @virajp/linter
+# Via npx
+npx jsr run @virajp/linter
 ```
 
-With no file arguments, it lints the current directory. The CLI supports a
-curated set of flags:
+Install locally for faster repeated runs:
 
 ```bash
+# With Bun
+bunx --bun jsr add --save-dev @virajp/linter
+
+# With npm
+npx jsr add --save-dev @virajp/linter
+```
+
+## Quick Start
+
+```bash
+# Lint the current directory
+bunx --bun @virajp/linter
+
 # Lint specific files or directories
-bunx --bun @virajp/linter src/ lib/
+bunx --bun @virajp/linter src/ tests/
 
 # Auto-fix issues
 bunx --bun @virajp/linter --fix
 
-# Quiet mode (errors only)
-bunx --bun @virajp/linter --quiet
-
-# Cache for faster re-runs
-bunx --bun @virajp/linter --cache
-
-# Scaffold config files
+# Scaffold config files for your project
 bunx --bun @virajp/linter --init
 ```
 
-| Flag                      | Description                                            |
-| ------------------------- | ------------------------------------------------------ |
-| `--init`                  | Scaffold `eslint.config.mjs` and `.config/linter.yaml` |
-| `--force`                 | Overwrite existing files (with `--init`)               |
-| `--fix`                   | Automatically fix problems                             |
-| `--cache`                 | Only check changed files                               |
-| `--cache-location <path>` | Path to the cache file or directory                    |
-| `--no-ignore`             | Disable use of ignore files                            |
-| `--quiet`                 | Report errors only                                     |
-| `--format`, `-f`          | Use a specific output format                           |
-| `--max-warnings <n>`      | Number of warnings to trigger nonzero exit code        |
-| `--version`, `-v`         | Show version                                           |
-| `--help`, `-h`            | Show help                                              |
-
 ## Supported File Types
 
-- **JavaScript / TypeScript** — `.js`, `.ts`, `.jsx`, `.tsx`, `.mjs`, `.cjs`
-- **Astro** — `.astro`
-- **JSON / JSONC** — `.json`, `.jsonc`, `tsconfig.json`, `.vscode/*.json`
-- **Markdown** — `.md`
-- **CSS / Tailwind CSS** — `.css`
-- **YAML** — `.yaml`, `.yml`
-- **TOML** — `.toml`
-- **HTML** — `.html`
+| Language   | Extensions                                  |
+| ---------- | ------------------------------------------- |
+| JavaScript | `.js`, `.mjs`, `.cjs`, `.jsx`               |
+| TypeScript | `.ts`, `.mts`, `.cts`, `.tsx`               |
+| Astro      | `.astro`                                    |
+| JSON       | `.json`                                     |
+| JSONC      | `.jsonc`, `tsconfig.json`, `.vscode/*.json` |
+| Markdown   | `.md`                                       |
+| CSS        | `.css`                                      |
+| YAML       | `.yaml`, `.yml`                             |
+| TOML       | `.toml`                                     |
+| HTML       | `.html`                                     |
 
-## How It Works
+## CLI Reference
 
-When you run `npx @virajp/linter` or `bunx --bun @virajp/linter`:
+| Flag                      | Short | Description                                                                      |
+| ------------------------- | ----- | -------------------------------------------------------------------------------- |
+| `--init`                  |       | Scaffold `eslint.config.mjs`, `.config/linter.yaml`, and `.vscode/settings.json` |
+| `--force`                 |       | Overwrite existing files when used with `--init`                                 |
+| `--fix`                   |       | Automatically fix problems                                                       |
+| `--cache`                 |       | Only check changed files                                                         |
+| `--cache-location <path>` |       | Path to the cache file or directory                                              |
+| `--no-ignore`             |       | Disable use of ignore files                                                      |
+| `--quiet`                 |       | Report errors only                                                               |
+| `--debug`                 |       | Enable ESLint debug logging                                                      |
+| `--format`, `-f <name>`   |       | Use a specific output format                                                     |
+| `--max-warnings <n>`      |       | Number of warnings to trigger nonzero exit code                                  |
+| `--version`, `-v`         |       | Show version and plugin versions                                                 |
+| `--help`, `-h`            |       | Show help                                                                        |
 
-1. The package is installed with all its dependencies in a temporary or local
-   `node_modules`.
-2. The bundled CLI entry point (`dist/index.js`) launches a thin wrapper that:
-   - Reads `.config/linter.yaml` from the target repo (if present) to load user
-     customizations.
-   - Builds the ESLint config by merging YAML overrides with the bundled base
-     config via `createConfig()`.
-   - Uses ESLint's programmatic API (`new ESLint()`) with
-     `overrideConfigFile: true` and the built config as `overrideConfig`.
-   - Runs `eslint.lintFiles()` on the current working directory.
-3. ESLint loads plugins via the config's imports; Node resolves them from the
-   package's `node_modules/`, not the target repo's.
+Positional arguments are treated as file or directory targets. Defaults to `.`
+when none are provided. Use `--` to pass file names that look like flags (for
+example, `linter -- --fix.js`).
 
-## Installation
+## Configuration
 
-No installation is required — `npx` and `bunx` handle it automatically. If you
-prefer to install it locally:
+### `.config/linter.yaml`
 
-```bash
-bun add -D @virajp/linter
-# or
-npm install -D @virajp/linter
+Create this file in your repo to customize the bundled config:
+
+```yaml
+version: 1
+
+ignores:
+  - "**/generated/**"
+  - "**/*.d.ts"
+
+overrides:
+  typescript:
+    rules:
+      "@typescript-eslint/no-explicit-any": "error"
+
+configs:
+  - name: "custom"
+    files: [ "**/*.test.ts" ]
+    rules:
+      "no-console": "off"
 ```
 
-Then run it with:
+#### Supported keys
 
-```bash
-bunx @virajp/linter
-# or
-npx @virajp/linter
-```
+| Key         | Type                        | Description                                               |
+| ----------- | --------------------------- | --------------------------------------------------------- |
+| `version`   | `number \| string`          | **Required.** Schema version (currently `1`).             |
+| `ignores`   | `string[]`                  | Additional global ignore patterns.                        |
+| `overrides` | `Record<string, { rules }>` | Rule overrides keyed by preset name.                      |
+| `configs`   | `unknown[]`                 | Raw ESLint config objects appended after the base config. |
+
+#### Preset names for `overrides`
+
+Use these names in the `overrides` section:
+
+- `javascript`
+- `typescript`
+- `astro`
+- `json`
+- `jsonc`
+- `markdown`
+- `markdown-typescript`
+- `yaml`
+- `toml`
+- `html`
+- `css`
+
+### Scaffolding
+
+Run `--init` to create the following files in your project:
+
+- `eslint.config.mjs` — imports `@virajp/linter/auto`
+- `.config/linter.yaml` — your customization file
+- `.vscode/settings.json` — enables flat config mode
+
+Use `--force` to overwrite existing files.
 
 ## VS Code Integration
 
 The package exports `@virajp/linter/auto` for use with the
 `dbaeumer.vscode-eslint` extension.
 
-In your target repo, run:
+After running `--init`, VS Code discovers `eslint.config.mjs` and loads the
+bundled config automatically. Edit `.config/linter.yaml` to customize rules; the
+extension picks up changes without restarting.
 
-```bash
-npx @virajp/linter --init
-```
+## How It Works
 
-This scaffolds:
-
-- `eslint.config.mjs` — imports `@virajp/linter/auto`
-- `.config/linter.yaml` — your customization file
-- `.vscode/settings.json` — enables flat config mode
-
-The VS Code extension discovers `eslint.config.mjs` and loads the auto-config,
-which reads `.config/linter.yaml` and returns the merged ESLint config.
-
-## Customizing Rules
-
-Edit `.config/linter.yaml` in your target repo:
-
-```yaml
-ignores:
-  - "**/generated/**"
-
-overrides:
-  typescript:
-    rules:
-      "@typescript-eslint/no-explicit-any": "error"
-```
-
-Run `bunx --bun @virajp/linter --fix` or let the VS Code extension pick up
-changes.
-
-## Configuration
-
-Linter CLI uses its own bundled ESLint flat config as the base. By default, it
-does not read any `eslint.config.js` or `.eslintrc` files from the target repo.
-
-For per-repo customization, use `.config/linter.yaml` (see
-[Customizing Rules](#customizing-rules)) or scaffold with `--init`.
+1. `npx` or `bunx` installs `@virajp/linter` and its dependencies in a temporary
+   or local `node_modules`.
+2. The bundled CLI reads `.config/linter.yaml` from the target repo (if present)
+   to load user customizations.
+3. It builds the ESLint config by merging YAML overrides with the bundled base
+   config.
+4. ESLint's programmatic API lints the current working directory. Plugins are
+   resolved from the package's own `node_modules`, not the target repo's.
 
 ## License
 

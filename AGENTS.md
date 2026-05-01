@@ -1,3 +1,5 @@
+<!-- From: /Users/virajpatel/Projects/github.com/virajp/linter/AGENTS.md -->
+
 # Agent Context: @virajp/linter
 
 ## What This Project Is
@@ -14,13 +16,13 @@ opinionated flat config covering many file types:
 - TOML (`.toml`)
 - HTML (`.html`)
 
-The main export lives in `src/eslint.config.ts`. It uses the **ESLint flat
-config** format (`eslint/config`, `defineConfig`, `globalIgnores`).
+The main export lives in `src/index.ts` and is the CLI launcher. It reads
+`.config/linter.yaml` from the target repo (if present), builds the ESLint
+config by merging YAML overrides with the bundled base config via
+`createConfig()`, and runs ESLint's programmatic API (`new ESLint()`) on the
+current working directory.
 
-`src/index.ts` is the CLI launcher. It reads `.config/linter.yaml` from the
-target repo (if present), builds the ESLint config by merging YAML overrides
-with the bundled base config via `createConfig()`, and runs ESLint's
-programmatic API (`new ESLint()`) on the current working directory.
+`src/auto.ts` exports a pre-built config for VS Code consumption.
 
 ## Toolchain
 
@@ -106,20 +108,21 @@ npx @virajp/linter
 The CLI supports a curated set of flags. Unknown flags are rejected to prevent
 conflicts with internal config management.
 
-| Flag                      | Description                                            |
-| ------------------------- | ------------------------------------------------------ |
-| `--init`                  | Scaffold `eslint.config.mjs` and `.config/linter.yaml` |
-| `--force`                 | Overwrite existing files (with `--init`)               |
-| `--fix`                   | Automatically fix problems                             |
-| `--cache`                 | Only check changed files                               |
-| `--cache-location <path>` | Path to the cache file or directory                    |
-| `--no-ignore`             | Disable use of ignore files                            |
-| `--quiet`                 | Report errors only                                     |
-| `--format`, `-f`          | Use a specific output format                           |
-| `--max-warnings <n>`      | Number of warnings to trigger nonzero exit code        |
-| `--version`, `-v`         | Show version                                           |
-| `--help`, `-h`            | Show help                                              |
-| positional args           | Files or directories to lint (default: `.`)            |
+| Flag                      | Short | Description                                                           |
+| ------------------------- | ----- | --------------------------------------------------------------------- |
+| `--init`                  |       | Scaffold `eslint.config.mjs` and `.config/linter.yaml`                |
+| `--force`                 |       | Overwrite existing files (with `--init`)                              |
+| `--fix`                   |       | Automatically fix problems                                            |
+| `--cache`                 |       | Only check changed files                                              |
+| `--cache-location <path>` |       | Path to the cache file or directory                                   |
+| `--no-ignore`             |       | Disable use of ignore files                                           |
+| `--quiet`                 |       | Report errors only                                                    |
+| `--debug`                 |       | Enable ESLint debug logging (`eslint:*,-eslint:code-path,eslintrc:*`) |
+| `--format`, `-f`          |       | Use a specific output format                                          |
+| `--max-warnings <n>`      |       | Number of warnings to trigger nonzero exit code                       |
+| `--version`, `-v`         |       | Show version and plugin versions                                      |
+| `--help`, `-h`            |       | Show help                                                             |
+| positional args           |       | Files or directories to lint (default: `.`)                           |
 
 ```bash
 # Lint specific files
@@ -141,6 +144,9 @@ bunx --bun @virajp/linter --init
 When no file arguments are provided, the CLI defaults to `.` (the current
 working directory).
 
+Use `--` to pass file names that look like flags. For example:
+`linter -- --fix.js`.
+
 ### How It Works
 
 1. `npx`/`bunx` installs `@virajp/linter` and its dependencies in a
@@ -152,7 +158,8 @@ working directory).
      config via `createConfig()`.
    - Uses ESLint's programmatic API (`new ESLint()`) with
      `overrideConfigFile: true` and the built config as `overrideConfig`.
-   - Runs `eslint.lintFiles()` on the current working directory.
+   - Runs `eslint.lintFiles()` on the current working directory with
+     `errorOnUnmatchedPattern: false`.
 3. ESLint loads plugins via the config's bare-specifier imports; Node resolves
    them from the package's `node_modules/`, not the target repo's.
 
@@ -171,7 +178,8 @@ This scaffolds:
 
 - `eslint.config.mjs` — imports `@virajp/linter/auto`
 - `.config/linter.yaml` — your customization file
-- `.vscode/settings.json` — enables flat config mode
+- `.vscode/settings.json` — enables flat config mode (patched with
+  `jsonc-parser` to preserve comments and trailing commas)
 
 The VS Code extension discovers `eslint.config.mjs` and loads the auto-config,
 which reads `.config/linter.yaml` and returns the merged ESLint config.
@@ -181,6 +189,7 @@ which reads `.config/linter.yaml` and returns the merged ESLint config.
 Edit `.config/linter.yaml` in your target repo:
 
 ```yaml
+version: 1
 ignores:
   - "**/generated/**"
 
@@ -188,9 +197,37 @@ overrides:
   typescript:
     rules:
       "@typescript-eslint/no-explicit-any": "error"
+
+configs:
+  - name: "custom"
+    files: [ "**/*.test.ts" ]
+    rules: {}
 ```
 
 Run `bun dist/index.js --fix` or let the VS Code extension pick up changes.
+
+#### Supported keys
+
+| Key         | Type                        | Description                                                                       |
+| ----------- | --------------------------- | --------------------------------------------------------------------------------- |
+| `version`   | `number \| string`          | **Required.** Schema version (currently `1`).                                     |
+| `ignores`   | `string[]`                  | Additional global ignore patterns (merged via `eslint/config`'s `globalIgnores`). |
+| `overrides` | `Record<string, { rules }>` | Rule overrides keyed by preset name.                                              |
+| `configs`   | `unknown[]`                 | Raw ESLint config objects appended after the base config.                         |
+
+#### Preset names for `overrides`
+
+- `javascript`
+- `typescript`
+- `astro`
+- `json`
+- `jsonc`
+- `markdown`
+- `markdown-typescript`
+- `yaml`
+- `toml`
+- `html`
+- `css`
 
 ## Code Style & Conventions
 
