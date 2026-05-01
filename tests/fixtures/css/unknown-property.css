@@ -1,0 +1,4 @@
+.invalid {
+  unknown-property: value;
+  color: red;
+}
