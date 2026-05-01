@@ -21,7 +21,7 @@ export const FIXTURES = {
   },
   jsonc: {
     valid: "jsonc/valid.jsonc",
-    commentsError: "jsonc/comments-error.jsonc",
+    missingComma: "jsonc/missing-comma.jsonc",
   },
   markdown: {
     valid: "markdown/valid.md",

@@ -1,0 +1,5 @@
+{
+  "name": "test"
+  // missing comma between properties
+  "version": "1.0.0"
+}
