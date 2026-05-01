@@ -116,11 +116,12 @@ export function runInit(options: InitOptions = {}): void {
       });
     }
     catch (e) {
-      console.error(
-        `Failed to write ${eslintConfigPath}:`,
-        e instanceof Error ? e.message : e,
+      throw new Error(
+        `Failed to write ${eslintConfigPath}: ${
+          e instanceof Error ? e.message : String(e)
+        }`,
+        { cause: e },
       );
-      process.exit(1);
     }
   }
 
@@ -143,11 +144,12 @@ export function runInit(options: InitOptions = {}): void {
       });
     }
     catch (e) {
-      console.error(
-        `Failed to write ${linterYamlPath}:`,
-        e instanceof Error ? e.message : e,
+      throw new Error(
+        `Failed to write ${linterYamlPath}: ${
+          e instanceof Error ? e.message : String(e)
+        }`,
+        { cause: e },
       );
-      process.exit(1);
     }
   }
 
@@ -182,11 +184,12 @@ export function runInit(options: InitOptions = {}): void {
       actions.push({ path: settingsPath, action: "created" });
     }
     catch (e) {
-      console.error(
-        `Failed to write ${settingsPath}:`,
-        e instanceof Error ? e.message : e,
+      throw new Error(
+        `Failed to write ${settingsPath}: ${
+          e instanceof Error ? e.message : String(e)
+        }`,
+        { cause: e },
       );
-      process.exit(1);
     }
   }
 
@@ -204,13 +207,10 @@ export function runInit(options: InitOptions = {}): void {
   }
 
   if (settingsError) {
-    console.error(
-      `\nFailed to update ${settingsPath}: ${settingsError}`,
+    throw new Error(
+      `Failed to update ${settingsPath}: ${settingsError}\n`
+        + "The file contains invalid JSONC. Fix the file and try again.",
     );
-    console.error(
-      "The file contains invalid JSONC. Fix the file and try again.",
-    );
-    process.exit(1);
   }
 
   console.log("");
