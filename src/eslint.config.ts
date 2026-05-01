@@ -32,6 +32,7 @@ export default defineConfig([
     "**/dist/",
     "**/.turbo/",
     "**/.astro/",
+    "**/*.d.ts",
     "**/AGENTS.md",
     ".agents/**/*.md",
     ".claude/**/*.md",
