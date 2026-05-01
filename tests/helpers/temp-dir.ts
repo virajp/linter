@@ -6,6 +6,7 @@ import {
 } from "node:fs";
 import { tmpdir } from "node:os";
 import {
+  basename,
   join,
   resolve,
 } from "node:path";
@@ -21,7 +22,7 @@ export function copyFixture(fixturePath: string, destDir: string): string {
   if (!existsSync(src)) {
     throw new Error(`Fixture not found: ${src}`);
   }
-  const dest = join(destDir, fixturePath.split("/").pop()!);
+  const dest = join(destDir, basename(fixturePath));
   cpSync(src, dest, { recursive: true });
   return dest;
 }
