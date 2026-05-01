@@ -59,7 +59,9 @@ describe("parseArgs", () => {
   });
 
   test("throws on missing --cache-location value", () => {
-    expect(() => parseArgs(["--cache-location"])).toThrow(ParseError);
+    expect(() => parseArgs(["--cache-location"])).toThrow(
+      new ParseError("--cache-location requires a path argument"),
+    );
   });
 
   test("parses --format", () => {
@@ -73,7 +75,9 @@ describe("parseArgs", () => {
   });
 
   test("throws on missing --format value", () => {
-    expect(() => parseArgs(["--format"])).toThrow(ParseError);
+    expect(() => parseArgs(["--format"])).toThrow(
+      new ParseError("--format requires a format name"),
+    );
   });
 
   test("parses --max-warnings", () => {
@@ -82,7 +86,15 @@ describe("parseArgs", () => {
   });
 
   test("throws on invalid --max-warnings value", () => {
-    expect(() => parseArgs(["--max-warnings", "abc"])).toThrow(ParseError);
+    expect(() => parseArgs(["--max-warnings", "abc"])).toThrow(
+      new ParseError("--max-warnings requires a number"),
+    );
+  });
+
+  test("throws on missing --max-warnings value", () => {
+    expect(() => parseArgs(["--max-warnings"])).toThrow(
+      new ParseError("--max-warnings requires a number"),
+    );
   });
 
   test("parses positional args", () => {
@@ -96,7 +108,9 @@ describe("parseArgs", () => {
   });
 
   test("throws on unknown flags", () => {
-    expect(() => parseArgs(["--unknown"])).toThrow(ParseError);
+    expect(() => parseArgs(["--unknown"])).toThrow(
+      new ParseError("Unknown flag: --unknown"),
+    );
   });
 
   test("parses -- separator", () => {
@@ -104,7 +118,7 @@ describe("parseArgs", () => {
     expect(result.positional).toEqual(["--some-flag", "file.js"]);
   });
 
-  test("default flag values are all false/off", () => {
+  test("default flag values", () => {
     const result = parseArgs([]);
     expect(result.flags).toEqual({
       init: false,
