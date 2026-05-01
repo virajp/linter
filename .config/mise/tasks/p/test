@@ -1,9 +1,15 @@
 #!/usr/bin/env zsh
-#MISE description="Run integration tests (builds first)"
+#MISE description="Run all tests (unit + integration)"
+#MISE dir="{{ config_root }}"
+
+set -e
 source "${0%/*}/_helpers"
 
+print_header "Running unit tests..."
+bun test tests/unit
+
 print_header "Building project..."
-bun run build || exit 1
+bun run build
 
 print_header "Running integration tests..."
 bun test tests/integration
