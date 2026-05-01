@@ -48,7 +48,10 @@
   ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "prepublishOnly": "bun run build"
+    "prepublishOnly": "bun run build",
+    "test": "bun test tests/unit",
+    "test:all": "bun run build && bun test",
+    "test:integration": "bun run build && bun test tests/integration"
   },
   "dependencies": {
     "@eslint/css": "1.1.0",

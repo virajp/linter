@@ -1,14 +1,9 @@
 #!/usr/bin/env zsh
-#MISE description="Test the build output"
-#MISE dir="{{ config_root }}"
-#MISE depends=["p:build"]
-
-set -e
+#MISE description="Run integration tests (builds first)"
 source "${0%/*}/_helpers"
 
-cd $MISE_PROJECT_ROOT
+print_header "Building project..."
+bun run build || exit 1
 
-print_header "Running self-lint..."
-bun dist/index.js --fix
-
-print_header "Test complete"
+print_header "Running integration tests..."
+bun test tests/integration
