@@ -19,20 +19,20 @@ No installation required for one-off use:
 
 ```bash
 # Via Bun
-bunx --bun jsr run @askviraj/linter
+bunx --bun @askviraj/linter
 
 # Via npx
-npx jsr run @askviraj/linter
+npx @askviraj/linter
 ```
 
 Install locally for faster repeated runs:
 
 ```bash
 # With Bun
-bunx --bun jsr add --save-dev @askviraj/linter
+bun install --dev @askviraj/linter
 
 # With npm
-npx jsr add --save-dev @askviraj/linter
+npm install --save-dev @askviraj/linter
 ```
 
 ## Quick Start
