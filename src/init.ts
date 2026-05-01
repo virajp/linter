@@ -34,28 +34,95 @@ const VSCODE_SETTINGS: Record<string, unknown> = {
   "eslint.useFlatConfig": true,
 };
 
-function mergeVsCodeSettings(existingPath: string): string {
+/**
+ * Strip JSONC comments (line and block comments) while preserving comments
+ * inside strings. This is a minimal, safe implementation for VS Code settings files.
+ */
+function stripJsonComments(content: string): string {
+  let result = "";
+  let i = 0;
+
+  while (i < content.length) {
+    const ch = content[i];
+    const next = content[i + 1];
+
+    if (ch === "\"") {
+      // String literal: copy verbatim until closing quote (handling escapes)
+      result += ch;
+      i++;
+      while (i < content.length) {
+        const sch = content[i];
+        result += sch;
+        if (sch === "\\") {
+          i++;
+          if (i < content.length) {
+            result += content[i];
+          }
+        }
+        else if (sch === "\"") {
+          break;
+        }
+        i++;
+      }
+      i++;
+    }
+    else if (ch === "/" && next === "/") {
+      // Line comment: skip to end of line
+      while (i < content.length && content[i] !== "\n") {
+        i++;
+      }
+    }
+    else if (ch === "/" && next === "*") {
+      // Block comment: skip to */
+      i += 2;
+      while (i < content.length) {
+        if (content[i] === "*" && content[i + 1] === "/") {
+          i += 2;
+          break;
+        }
+        i++;
+      }
+    }
+    else {
+      result += ch;
+      i++;
+    }
+  }
+
+  return result;
+}
+
+interface MergeResult {
+  content: string;
+  action: "created" | "updated" | "replaced";
+}
+
+function mergeVsCodeSettings(existingPath: string): MergeResult {
   let existing: Record<string, unknown> = {};
+  let action: MergeResult["action"] = "created";
+
   if (existsSync(existingPath)) {
     try {
-      existing = JSON.parse(readFileSync(existingPath, "utf-8")) as Record<
-        string,
-        unknown
-      >;
+      const raw = readFileSync(existingPath, "utf-8");
+      const stripped = stripJsonComments(raw);
+      existing = JSON.parse(stripped) as Record<string, unknown>;
+      action = "updated";
     }
     catch (e) {
       if (e instanceof SyntaxError) {
         console.warn(
           `Warning: ${existingPath} exists but is invalid JSON; replacing.`,
         );
+        action = "replaced";
       }
       else {
         throw e;
       }
     }
   }
+
   const merged = { ...existing, ...VSCODE_SETTINGS };
-  return JSON.stringify(merged, null, 2) + "\n";
+  return { content: JSON.stringify(merged, null, 2) + "\n", action };
 }
 
 export interface InitOptions {
@@ -65,6 +132,7 @@ export interface InitOptions {
 
 export function runInit(options: InitOptions = {}): void {
   const cwd = options.cwd || process.cwd();
+  const actions: Array<{ path: string; action: string; }> = [];
 
   // 1. eslint.config.mjs
   const eslintConfigPath = resolve(cwd, "eslint.config.mjs");
@@ -74,8 +142,13 @@ export function runInit(options: InitOptions = {}): void {
     );
     process.exit(1);
   }
+  const eslintExisted = existsSync(eslintConfigPath);
   try {
     writeFileSync(eslintConfigPath, ESLINT_CONFIG_MJS);
+    actions.push({
+      path: eslintConfigPath,
+      action: eslintExisted ? "overwritten" : "created",
+    });
   }
   catch (e) {
     console.error(
@@ -97,8 +170,13 @@ export function runInit(options: InitOptions = {}): void {
     );
     process.exit(1);
   }
+  const linterExisted = existsSync(linterYamlPath);
   try {
     writeFileSync(linterYamlPath, LINTER_YAML);
+    actions.push({
+      path: linterYamlPath,
+      action: linterExisted ? "overwritten" : "created",
+    });
   }
   catch (e) {
     console.error(
@@ -115,7 +193,9 @@ export function runInit(options: InitOptions = {}): void {
   }
   const settingsPath = resolve(vscodeDir, "settings.json");
   try {
-    writeFileSync(settingsPath, mergeVsCodeSettings(settingsPath));
+    const result = mergeVsCodeSettings(settingsPath);
+    writeFileSync(settingsPath, result.content);
+    actions.push({ path: settingsPath, action: result.action });
   }
   catch (e) {
     console.error(
@@ -126,7 +206,13 @@ export function runInit(options: InitOptions = {}): void {
   }
 
   console.log("Initialized @askviraj/linter-cli:");
-  console.log(`  - ${eslintConfigPath}`);
-  console.log(`  - ${linterYamlPath}`);
-  console.log(`  - ${settingsPath}`);
+  for (const { path, action } of actions) {
+    console.log(`  [${action}] ${path}`);
+  }
+  console.log("");
+  console.log(
+    "Note: If you have VS Code open, restart the ESLint server (",
+    "Cmd+Shift+P → 'ESLint: Restart ESLint Server'",
+    ") or restart VS Code for changes to take effect.",
+  );
 }
