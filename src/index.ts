@@ -290,7 +290,7 @@ Options:
 
   if (flags.debug) {
     const debug = require("debug");
-    debug.enable("eslint:*");
+    debug.enable("eslint:*,-eslint:code-path,eslintrc:*");
   }
 
   const targets = positional.length > 0 ? positional : ["."];
