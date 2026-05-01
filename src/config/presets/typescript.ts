@@ -1,4 +1,5 @@
 import js from "@eslint/js";
+import type { Linter } from "eslint";
 import globals from "globals";
 import tseslint from "typescript-eslint";
 
@@ -31,4 +32,4 @@ export const typescriptConfig = {
     ],
     "require-yield": "off",
   },
-};
+} satisfies Linter.Config & { extends?: unknown; };

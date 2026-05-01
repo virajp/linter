@@ -1,6 +1,6 @@
 import js from "@eslint/js";
+import type { Linter } from "eslint";
 import globals from "globals";
-
 export const javascriptConfig = {
   extends: [js.configs.recommended],
   files: ["**/*.{js,mjs,cjs,jsx}"],
@@ -13,4 +13,4 @@ export const javascriptConfig = {
   name: "javascript",
   plugins: { js },
   rules: {},
-};
+} satisfies Linter.Config & { extends?: unknown; };
