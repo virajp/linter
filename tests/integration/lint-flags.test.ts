@@ -8,6 +8,7 @@ import {
 import {
   existsSync,
   readFileSync,
+  writeFileSync,
 } from "node:fs";
 import { FIXTURES } from "../helpers/fixture-manifest.js";
 import {
@@ -46,16 +47,20 @@ describe("lint flags", () => {
   test("--cache creates cache file", async () => {
     copyFixture(FIXTURES.javascript.valid, tmpDir);
     const cacheDir = createTempDir("linter-cache-");
-    const result = await runCli([
-      "--cache",
-      "--cache-location",
-      `${cacheDir}/.eslintcache`,
-      "--no-ignore",
-      ".",
-    ], tmpDir);
-    expect(result.exitCode).toBe(0);
-    expect(existsSync(`${cacheDir}/.eslintcache`)).toBe(true);
-    cleanupTempDir(cacheDir);
+    try {
+      const result = await runCli([
+        "--cache",
+        "--cache-location",
+        `${cacheDir}/.eslintcache`,
+        "--no-ignore",
+        ".",
+      ], tmpDir);
+      expect(result.exitCode).toBe(0);
+      expect(existsSync(`${cacheDir}/.eslintcache`)).toBe(true);
+    }
+    finally {
+      cleanupTempDir(cacheDir);
+    }
   });
 
   test("--quiet suppresses warnings", async () => {
@@ -71,11 +76,16 @@ describe("lint flags", () => {
       ["--quiet", "--no-ignore", "."],
       tmpDir,
     );
-    const quietWarnings = quietResult.reduce(
+    const quietErrorCount = quietResult.reduce(
+      (sum, r) => sum + (r.errorCount as number),
+      0,
+    );
+    const quietWarningCount = quietResult.reduce(
       (sum, r) => sum + (r.warningCount as number),
       0,
     );
-    expect(quietWarnings).toBe(0);
+    expect(quietErrorCount).toBe(0);
+    expect(quietWarningCount).toBe(0);
   });
 
   test("--format json outputs valid JSON", async () => {
@@ -118,9 +128,22 @@ describe("lint flags", () => {
     expect(result.exitCode).toBe(0);
   });
 
-  test("--no-ignore processes normally ignored files", async () => {
+  test("--no-ignore processes custom-ignored files", async () => {
+    // AGENTS.md is in the base config's globalIgnores
+    writeFileSync(`${tmpDir}/AGENTS.md`, "# Test\n\n[empty]()\n");
+
+    // Without --no-ignore, AGENTS.md is skipped → exit 0
+    const withoutFlag = await runCli(["."], tmpDir);
+    expect(withoutFlag.exitCode).toBe(0);
+
+    // With --no-ignore, the global ignore is stripped → exit 1
+    const withFlag = await runCli(["--no-ignore", "."], tmpDir);
+    expect(withFlag.exitCode).toBe(1);
+  });
+
+  test("--debug does not crash", async () => {
     copyFixture(FIXTURES.javascript.valid, tmpDir);
-    const result = await runCli(["--no-ignore", "."], tmpDir);
+    const result = await runCli(["--debug", "--no-ignore", "."], tmpDir);
     expect(result.exitCode).toBe(0);
   });
 });
