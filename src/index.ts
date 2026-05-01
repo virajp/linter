@@ -76,6 +76,7 @@ interface ParsedArgs {
     cache: boolean;
     quiet: boolean;
     ignore: boolean;
+    debug: boolean;
     version: boolean;
     help: boolean;
   };
@@ -93,6 +94,7 @@ function parseArgs(rawArgs: string[]): ParsedArgs {
     cache: false,
     quiet: false,
     ignore: true,
+    debug: false,
     version: false,
     help: false,
   };
@@ -124,6 +126,9 @@ function parseArgs(rawArgs: string[]): ParsedArgs {
         break;
       case "--no-ignore":
         flags.ignore = false;
+        break;
+      case "--debug":
+        flags.debug = true;
         break;
       case "--version":
       case "-v":
@@ -269,6 +274,7 @@ Options:
   --cache-location    Path to the cache file or directory
   --no-ignore         Disable use of ignore files
   --quiet             Report errors only
+  --debug             Enable debug logging
   --format, -f        Use a specific output format
   --max-warnings      Number of warnings to trigger nonzero exit code
   --version, -v       Show version
@@ -280,6 +286,10 @@ Options:
   if (flags.init) {
     runInit({ force: flags.force });
     process.exit(0);
+  }
+
+  if (flags.debug) {
+    process.env["DEBUG"] = "eslint:*";
   }
 
   const targets = positional.length > 0 ? positional : ["."];
