@@ -289,7 +289,8 @@ Options:
   }
 
   if (flags.debug) {
-    process.env["DEBUG"] = "eslint:*";
+    const debug = require("debug");
+    debug.enable("eslint:*");
   }
 
   const targets = positional.length > 0 ? positional : ["."];
