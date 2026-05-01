@@ -25,7 +25,7 @@ export const FIXTURES = {
   },
   markdown: {
     valid: "markdown/valid.md",
-    fencedCodeLang: "markdown/fenced-code-lang.md",
+    emptyLinks: "markdown/empty-links.md",
   },
   yaml: {
     valid: "yaml/valid.yaml",
@@ -33,7 +33,7 @@ export const FIXTURES = {
   },
   toml: {
     valid: "toml/valid.toml",
-    invalidKey: "toml/invalid-key.toml",
+    duplicateKeys: "toml/duplicate-keys.toml",
   },
   html: {
     valid: "html/valid.html",
