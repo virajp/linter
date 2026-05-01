@@ -70,5 +70,6 @@ describe("init command", () => {
     await runCli(["--init"], tmpDir);
     const content = readFileSync(`${tmpDir}/.config/linter.yaml`, "utf-8");
     expect(content).toContain("@askviraj/linter-cli");
+    expect(content).toContain("version: 1");
   });
 });

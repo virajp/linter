@@ -22,6 +22,8 @@ const LINTER_YAML = `# @askviraj/linter-cli configuration
 #
 # Add custom ignores, rule overrides, and additional config blocks below.
 
+version: 1
+
 # ignores:
 #   - "**/generated/**"
 #   - "**/*.d.ts"

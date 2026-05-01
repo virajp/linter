@@ -42,6 +42,7 @@ describe("runInit", () => {
     expect(existsSync(path)).toBe(true);
     const content = readFileSync(path, "utf-8");
     expect(content).toContain("@askviraj/linter-cli");
+    expect(content).toContain("version: 1");
   });
 
   test("creates .vscode/settings.json", () => {
