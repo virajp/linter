@@ -7,7 +7,9 @@ import {
 } from "bun:test";
 import {
   existsSync,
+  mkdirSync,
   readFileSync,
+  writeFileSync,
 } from "node:fs";
 import { runInit } from "../../src/cli/commands/init.js";
 import {
@@ -52,17 +54,46 @@ describe("runInit", () => {
 
   test("skips existing files without force", () => {
     runInit({ cwd: tmpDir });
-    // Should not throw on second run
-    expect(() => runInit({ cwd: tmpDir })).not.toThrow();
+    // Modify eslint.config.mjs to track if it gets overwritten
+    const path = `${tmpDir}/eslint.config.mjs`;
+    const modifiedContent = "// modified\n";
+    writeFileSync(path, modifiedContent);
+    // Second run should not overwrite
+    runInit({ cwd: tmpDir });
+    expect(readFileSync(path, "utf-8")).toBe(modifiedContent);
   });
 
   test("overwrites existing files with force", () => {
     runInit({ cwd: tmpDir });
-    // Modify the file
     const path = `${tmpDir}/eslint.config.mjs`;
-    const original = readFileSync(path, "utf-8");
+    const modifiedContent = "// modified\n";
+    writeFileSync(path, modifiedContent);
     runInit({ cwd: tmpDir, force: true });
     const overwritten = readFileSync(path, "utf-8");
-    expect(overwritten).toBe(original); // same content, overwritten
+    expect(overwritten).not.toBe(modifiedContent);
+    expect(overwritten).toContain("@askviraj/linter-cli/auto");
+  });
+
+  test("updates existing vscode settings with false flat config", () => {
+    mkdirSync(`${tmpDir}/.vscode`, { recursive: true });
+    writeFileSync(
+      `${tmpDir}/.vscode/settings.json`,
+      JSON.stringify({ "eslint.useFlatConfig": false }) + "\n",
+    );
+    runInit({ cwd: tmpDir });
+    const content = readFileSync(`${tmpDir}/.vscode/settings.json`, "utf-8");
+    expect(content).toContain("true");
+  });
+
+  test("leaves up-to-date vscode settings unchanged", () => {
+    mkdirSync(`${tmpDir}/.vscode`, { recursive: true });
+    writeFileSync(
+      `${tmpDir}/.vscode/settings.json`,
+      JSON.stringify({ "eslint.useFlatConfig": true, "other.setting": 1 })
+        + "\n",
+    );
+    runInit({ cwd: tmpDir });
+    const content = readFileSync(`${tmpDir}/.vscode/settings.json`, "utf-8");
+    expect(content).toContain("\"other.setting\":1");
   });
 });
