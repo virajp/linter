@@ -13,6 +13,7 @@ task.timings                       = true
 [tools]
 # Runtime and build tools
 bun        = { version = "latest" }
+deno       = { version = "latest" }
 dprint     = { version = "latest" }
 node       = { version = "latest" }
 pre-commit = { version = "latest" }

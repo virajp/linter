@@ -14,4 +14,7 @@ mise x -- npm version patch -m "ops: bump version to %s"
 print_header "Publishing to npm registry..."
 npx jsr publish
 
+print_header "Pushing version bump and tag..."
+git push && git push --tags
+
 print_header "Publish complete"

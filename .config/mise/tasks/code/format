@@ -3,13 +3,9 @@
 
 #USAGE flag "--debug" help="emit debug logs"
 #USAGE flag "--fix" help="apply fixes"
-#USAGE arg "[files]" var=#true help="files to be processed"
 
 set -e
 source "${0%/*}/_helpers"
-
-# Convert to bash array:
-eval "files=($usage_files)"
 
 print_header "Formatting files ..."
 
@@ -19,11 +15,10 @@ print_header "Formatting files ..."
 dprint ${CMD} \
   --config $MISE_PROJECT_ROOT/dprint.json \
   --allow-no-files \
-  --log-level ${LOG_LEVEL} \
-  ${files[@]}
+  --log-level ${LOG_LEVEL}
 
 # Filter the files array for anything ending in /package.json or exactly package.json
-[[ "${#files[@]}" -gt 0 ]] && target_packages=(${(M)files:#*(^|/)package.json}) || target_packages=("**/package.json")
+target_packages=("**/package.json" "jsr.json")
 
 if (( ${#target_packages} > 0 )); then
   print_header "Sorting package.json files ..."

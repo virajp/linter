@@ -17,10 +17,6 @@ repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
-      # - id: no-commit-to-branch
-      #   name: Prevent committing to main branch
-      #   args: [ "--branch", "main" ]
-      #   stages: [ pre-commit ]
       - id: check-shebang-scripts-are-executable
         name: Check that scripts with shebangs are executable
         stages: [ pre-commit ]
