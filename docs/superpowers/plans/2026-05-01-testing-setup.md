@@ -738,7 +738,7 @@ describe("createConfig", () => {
   test("adds ignores when provided", () => {
     const config = createConfig({ ignores: ["**/dist/**"] });
     const ignoresConfig = config.find(
-      c => c.name === "@virajp/linter/ignores",
+      c => c.name === "@askviraj/linter/ignores",
     );
     expect(ignoresConfig).toBeDefined();
   });
@@ -746,7 +746,7 @@ describe("createConfig", () => {
   test("applies overrides by preset name", () => {
     const config = createConfig({
       overrides: {
-        "@virajp/linter/typescript": {
+        "@askviraj/linter/typescript": {
           rules: {
             "@typescript-eslint/no-explicit-any": "error",
           },
@@ -754,7 +754,7 @@ describe("createConfig", () => {
       },
     });
     const tsConfig = config.find(
-      c => c.name === "@virajp/linter/typescript",
+      c => c.name === "@askviraj/linter/typescript",
     );
     expect(tsConfig?.rules?.["@typescript-eslint/no-explicit-any"]).toBe(
       "error",
@@ -833,7 +833,7 @@ describe("runInit", () => {
     const path = `${tmpDir}/eslint.config.mjs`;
     expect(existsSync(path)).toBe(true);
     const content = readFileSync(path, "utf-8");
-    expect(content).toContain("@virajp/linter/auto");
+    expect(content).toContain("@askviraj/linter/auto");
   });
 
   test("creates .config/linter.yaml", () => {
@@ -841,7 +841,7 @@ describe("runInit", () => {
     const path = `${tmpDir}/.config/linter.yaml`;
     expect(existsSync(path)).toBe(true);
     const content = readFileSync(path, "utf-8");
-    expect(content).toContain("@virajp/linter");
+    expect(content).toContain("@askviraj/linter");
   });
 
   test("creates .vscode/settings.json", () => {
@@ -1370,7 +1370,7 @@ describe("init command", () => {
   test("generated eslint.config.mjs exports from auto", async () => {
     await runCli(["--init"], tmpDir);
     const content = readFileSync(`${tmpDir}/eslint.config.mjs`, "utf-8");
-    expect(content).toContain("@virajp/linter/auto");
+    expect(content).toContain("@askviraj/linter/auto");
   });
 
   test("generated .vscode/settings.json enables flat config", async () => {

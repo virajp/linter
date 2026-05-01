@@ -1,11 +1,11 @@
-# Plan: Turn `@virajp/linter` into a Distributable CLI
+# Plan: Turn `@askviraj/linter` into a Distributable CLI
 
 ## Goal
 
-Make `@virajp/linter` runnable as a self-contained CLI via:
+Make `@askviraj/linter` runnable as a self-contained CLI via:
 
-- `bunx --bun @virajp/linter`
-- `npx @virajp/linter`
+- `bunx --bun @askviraj/linter`
+- `npx @askviraj/linter`
 
 When executed from any repo, it should lint files in the **current working
 directory** using the bundled ESLint config (`src/eslint.config.ts`) and bundled
@@ -37,9 +37,9 @@ still need to wire up ESLint themselves.
 - The bundled config (`dist/eslint.config.js`) imports plugins via bare
   specifiers (`@eslint/css`, `typescript-eslint`, etc.).
 - Node module resolution starts from the config file's directory (inside the
-  installed `@virajp/linter` package), so it finds the plugins in the package's
-  own `node_modules/`. This is exactly what we want — the target repo does not
-  need these installed.
+  installed `@askviraj/linter` package), so it finds the plugins in the
+  package's own `node_modules/`. This is exactly what we want — the target repo
+  does not need these installed.
 
 ## Implementation Steps
 
@@ -87,7 +87,7 @@ A thin launcher that:
 ### 4. Update `package.json`
 
 - Add `"type": "module"` to treat `.js` files as ESM.
-- Add `"bin": { "@virajp/linter": "dist/index.js" }` so `npx`/`bunx` know what
+- Add `"bin": { "@askviraj/linter": "dist/index.js" }` so `npx`/`bunx` know what
   to run.
 - Add `"files": ["dist/", "src/"]` so npm publishes the compiled JS (and
   optionally the TS source).
@@ -118,5 +118,5 @@ A thin launcher that:
 - Add a `format` subcommand that invokes `dprint` using the bundled
   `dprint.json`.
 - Export the config separately via `exports` field so consumers can
-  `import config from "@virajp/linter/config"`.
+  `import config from "@askviraj/linter/config"`.
 - Add `--version` and `--help` flags in the launcher.
