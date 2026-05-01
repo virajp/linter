@@ -1,4 +1,4 @@
-# @virajp/linter
+# @askviraj/linter
 
 A self-contained linter CLI for JavaScript, TypeScript, Astro, JSON, JSONC, CSS,
 HTML, Markdown, YAML, TOML, and more. It bundles ESLint and all plugins so you
@@ -19,36 +19,36 @@ No installation required for one-off use:
 
 ```bash
 # Via Bun
-bunx --bun jsr run @virajp/linter
+bunx --bun jsr run @askviraj/linter
 
 # Via npx
-npx jsr run @virajp/linter
+npx jsr run @askviraj/linter
 ```
 
 Install locally for faster repeated runs:
 
 ```bash
 # With Bun
-bunx --bun jsr add --save-dev @virajp/linter
+bunx --bun jsr add --save-dev @askviraj/linter
 
 # With npm
-npx jsr add --save-dev @virajp/linter
+npx jsr add --save-dev @askviraj/linter
 ```
 
 ## Quick Start
 
 ```bash
 # Lint the current directory
-bunx --bun @virajp/linter
+bunx --bun @askviraj/linter
 
 # Lint specific files or directories
-bunx --bun @virajp/linter src/ tests/
+bunx --bun @askviraj/linter src/ tests/
 
 # Auto-fix issues
-bunx --bun @virajp/linter --fix
+bunx --bun @askviraj/linter --fix
 
 # Scaffold config files for your project
-bunx --bun @virajp/linter --init
+bunx --bun @askviraj/linter --init
 ```
 
 ## Supported File Types
@@ -141,7 +141,7 @@ Use these names in the `overrides` section:
 
 Run `--init` to create the following files in your project:
 
-- `eslint.config.mjs` — imports `@virajp/linter/auto`
+- `eslint.config.mjs` — imports `@askviraj/linter/auto`
 - `.config/linter.yaml` — your customization file
 - `.vscode/settings.json` — enables flat config mode
 
@@ -149,7 +149,7 @@ Use `--force` to overwrite existing files.
 
 ## VS Code Integration
 
-The package exports `@virajp/linter/auto` for use with the
+The package exports `@askviraj/linter/auto` for use with the
 `dbaeumer.vscode-eslint` extension.
 
 After running `--init`, VS Code discovers `eslint.config.mjs` and loads the
@@ -158,8 +158,8 @@ extension picks up changes without restarting.
 
 ## How It Works
 
-1. `npx` or `bunx` installs `@virajp/linter` and its dependencies in a temporary
-   or local `node_modules`.
+1. `npx` or `bunx` installs `@askviraj/linter` and its dependencies in a
+   temporary or local `node_modules`.
 2. The bundled CLI reads `.config/linter.yaml` from the target repo (if present)
    to load user customizations.
 3. It builds the ESLint config by merging YAML overrides with the bundled base

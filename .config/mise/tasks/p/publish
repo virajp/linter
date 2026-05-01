@@ -13,12 +13,14 @@ print_header "Tagging release v${CURRENT_VERSION}..."
 git tag --sign "v${CURRENT_VERSION}" -m "ops: bump version to v${CURRENT_VERSION}"
 
 print_header "Publishing to npm registry..."
-npx jsr publish
+npm publish
 
 print_header "Bumping version post-publish..."
 mise x -- npm version patch --no-git-tag-version
 
 print_header "Pushing commits and tags..."
+CURRENT_VERSION=$(bun -p "require('./package.json').version")
+git commit -m "ops: bump version to v${CURRENT_VERSION}"
 git push && git push --tags
 
 print_header "Publish complete"

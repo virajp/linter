@@ -1,10 +1,10 @@
 <!-- From: /Users/virajpatel/Projects/github.com/virajp/linter/AGENTS.md -->
 
-# Agent Context: @virajp/linter
+# Agent Context: @askviraj/linter
 
 ## What This Project Is
 
-`@virajp/linter` is an **ESLint configuration package** that exports a single,
+`@askviraj/linter` is an **ESLint configuration package** that exports a single,
 opinionated flat config covering many file types:
 
 - JavaScript / TypeScript (`js`, `ts`, `jsx`, `tsx`, `mjs`, `cjs`)
@@ -97,10 +97,10 @@ or any plugins.
 
 ```bash
 # Via Bun
-bunx --bun @virajp/linter
+bunx --bun @askviraj/linter
 
 # Via Node (npx)
-npx @virajp/linter
+npx @askviraj/linter
 ```
 
 ### Arguments
@@ -126,19 +126,19 @@ conflicts with internal config management.
 
 ```bash
 # Lint specific files
-bunx --bun @virajp/linter src/ lib/
+bunx --bun @askviraj/linter src/ lib/
 
 # Auto-fix issues
-bunx --bun @virajp/linter --fix
+bunx --bun @askviraj/linter --fix
 
 # Quiet mode (errors only)
-bunx --bun @virajp/linter --quiet
+bunx --bun @askviraj/linter --quiet
 
 # Cache for faster re-runs
-bunx --bun @virajp/linter --cache
+bunx --bun @askviraj/linter --cache
 
 # Scaffold config files
-bunx --bun @virajp/linter --init
+bunx --bun @askviraj/linter --init
 ```
 
 When no file arguments are provided, the CLI defaults to `.` (the current
@@ -149,7 +149,7 @@ Use `--` to pass file names that look like flags. For example:
 
 ### How It Works
 
-1. `npx`/`bunx` installs `@virajp/linter` and its dependencies in a
+1. `npx`/`bunx` installs `@askviraj/linter` and its dependencies in a
    temporary/local `node_modules`.
 2. The `bin` entry (`dist/index.js`) launches a thin wrapper that:
    - Reads `.config/linter.yaml` from the target repo (if present) to load user
@@ -165,18 +165,18 @@ Use `--` to pass file names that look like flags. For example:
 
 ### VS Code Integration
 
-The package exports `@virajp/linter/auto` for use with the
+The package exports `@askviraj/linter/auto` for use with the
 `dbaeumer.vscode-eslint` extension.
 
 In your target repo, run:
 
 ```bash
-npx @virajp/linter --init
+npx @askviraj/linter --init
 ```
 
 This scaffolds:
 
-- `eslint.config.mjs` — imports `@virajp/linter/auto`
+- `eslint.config.mjs` — imports `@askviraj/linter/auto`
 - `.config/linter.yaml` — your customization file
 - `.vscode/settings.json` — enables flat config mode (patched with
   `jsonc-parser` to preserve comments and trailing commas)

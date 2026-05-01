@@ -18,7 +18,7 @@ dprint ${CMD} \
   --log-level ${LOG_LEVEL}
 
 # Filter the files array for anything ending in /package.json or exactly package.json
-target_packages=("**/package.json" "jsr.json")
+target_packages=("**/package.json")
 
 if (( ${#target_packages} > 0 )); then
   print_header "Sorting package.json files ..."

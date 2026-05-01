@@ -1,6 +1,6 @@
 {
-  "name": "@virajp/linter",
-  "version": "1.0.4",
+  "name": "@askviraj/linter",
+  "version": "1.0.5",
   "description": "A linter & formatter CLI for JavaScript, TypeScript, Astro, JSON, JSONC, CSS, HTML, Markdown, YAML, TOML, and more.",
   "keywords": [
     "lint",
@@ -51,8 +51,7 @@
     "prepublishOnly": "bun run build",
     "test": "bun test tests/unit",
     "test:all": "bun run build && bun test",
-    "test:integration": "bun run build && bun test tests/integration",
-    "version": "bun -e \"const fs=require('fs'); const j=JSON.parse(fs.readFileSync('jsr.json','utf8')); j.version=require('./package.json').version; fs.writeFileSync('jsr.json', JSON.stringify(j,null,2)+'\\n');\" && git add jsr.json package.json"
+    "test:integration": "bun run build && bun test tests/integration"
   },
   "dependencies": {
     "@eslint/css": "1.1.0",

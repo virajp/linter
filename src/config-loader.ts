@@ -56,7 +56,7 @@ export function loadYamlOptions(startDir: string): LinterYamlRaw {
   for (const key of Object.keys(parsed)) {
     if (!knownKeys.has(key)) {
       console.warn(
-        `[@virajp/linter] Warning: unknown key "${key}" in .config/linter.yaml`,
+        `[@askviraj/linter] Warning: unknown key "${key}" in .config/linter.yaml`,
       );
     }
   }
