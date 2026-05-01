@@ -8,7 +8,6 @@ import {
 import { FIXTURES } from "../helpers/fixture-manifest.js";
 import {
   runCli,
-  runCliJson,
 } from "../helpers/run-cli.js";
 import {
   cleanupTempDir,
@@ -76,6 +75,7 @@ describe("lint file types", () => {
     copyFixture(FIXTURES.json.trailingComma, tmpDir);
     const result = await runCli(["--no-ignore", "."], tmpDir);
     expect(result.exitCode).toBe(1);
+    expect(result.stdout).toContain("error");
   });
 
   test("lints valid jsonc with no errors", async () => {
@@ -88,6 +88,7 @@ describe("lint file types", () => {
     copyFixture(FIXTURES.jsonc.missingComma, tmpDir);
     const result = await runCli(["--no-ignore", "."], tmpDir);
     expect(result.exitCode).toBe(1);
+    expect(result.stdout).toContain("error");
   });
 
   test("lints valid markdown with no errors", async () => {
@@ -113,6 +114,7 @@ describe("lint file types", () => {
     copyFixture(FIXTURES.yaml.duplicateKeys, tmpDir);
     const result = await runCli(["--no-ignore", "."], tmpDir);
     expect(result.exitCode).toBe(1);
+    expect(result.stdout).toContain("error");
   });
 
   test("lints valid toml with no errors", async () => {
@@ -125,6 +127,7 @@ describe("lint file types", () => {
     copyFixture(FIXTURES.toml.duplicateKeys, tmpDir);
     const result = await runCli(["--no-ignore", "."], tmpDir);
     expect(result.exitCode).toBe(1);
+    expect(result.stdout).toContain("error");
   });
 
   test("lints valid html with no errors", async () => {

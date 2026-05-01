@@ -7,5 +7,7 @@ export const htmlConfig = {
   language: "html/html",
   name: "html",
   plugins: { html },
-  rules: {},
+  rules: {
+    "html/indent": ["error", 2],
+  },
 } satisfies Linter.Config & { extends?: unknown; };
