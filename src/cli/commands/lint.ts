@@ -25,7 +25,7 @@ export async function runLint(args: CliArgs): Promise<number> {
     ignore: args.flags.ignore,
   });
 
-  let results;
+  let results: ESLint.LintResult[];
   try {
     results = await eslint.lintFiles(targets);
   }
