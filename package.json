@@ -1,6 +1,6 @@
 {
   "name": "@askviraj/linter-cli",
-  "version": "1.0.10",
+  "version": "1.0.11",
   "description": "A linter & formatter CLI for JavaScript, TypeScript, Astro, JSON, JSONC, CSS, HTML, Markdown, YAML, TOML, and more.",
   "keywords": [
     "lint",
