@@ -8,13 +8,18 @@ source "${0%/*}/_helpers"
 
 cd $MISE_PROJECT_ROOT
 
-print_header "Bumping version..."
-mise x -- npm version patch -m "ops: bump version to %s"
+CURRENT_VERSION=$(node -p "require('./package.json').version")
+
+print_header "Tagging release v${CURRENT_VERSION}..."
+git tag -a "v${CURRENT_VERSION}" -m "v${CURRENT_VERSION}"
 
 print_header "Publishing to npm registry..."
 npx jsr publish
 
-print_header "Pushing version bump and tag..."
+print_header "Bumping version post-publish..."
+mise x -- npm version patch -m "ops: bump version to %s"
+
+print_header "Pushing commits and tags..."
 git push && git push --tags
 
 print_header "Publish complete"
