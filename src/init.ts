@@ -38,10 +38,6 @@ const VSCODE_SETTINGS: Record<string, unknown> = {
  * Strip JSONC comments (line and block comments) while preserving comments
  * inside strings. This is a minimal, safe implementation for VS Code settings files.
  */
-/**
- * Strip JSONC comments (line and block comments) while preserving comments
- * inside strings. This is a minimal, safe implementation for VS Code settings files.
- */
 function stripJsonComments(content: string): string {
   let result = "";
   let i = 0;
@@ -156,37 +152,15 @@ function stripTrailingCommas(content: string): string {
   return result;
 }
 
-interface MergeResult {
-  content: string;
-  action: "created" | "updated" | "replaced";
+interface FileAction {
+  path: string;
+  action: "created" | "updated" | "skipped" | "overwritten" | "failed";
 }
 
-function mergeVsCodeSettings(existingPath: string): MergeResult {
-  let existing: Record<string, unknown> = {};
-  let action: MergeResult["action"] = "created";
-
-  if (existsSync(existingPath)) {
-    try {
-      const raw = readFileSync(existingPath, "utf-8");
-      const cleaned = stripTrailingCommas(stripJsonComments(raw));
-      existing = JSON.parse(cleaned) as Record<string, unknown>;
-      action = "updated";
-    }
-    catch (e) {
-      if (e instanceof SyntaxError) {
-        console.warn(
-          `Warning: ${existingPath} exists but is invalid JSON; replacing.`,
-        );
-        action = "replaced";
-      }
-      else {
-        throw e;
-      }
-    }
-  }
-
-  const merged = { ...existing, ...VSCODE_SETTINGS };
-  return { content: JSON.stringify(merged, null, 2) + "\n", action };
+function mergeVsCodeSettings(existingPath: string): Record<string, unknown> {
+  const raw = readFileSync(existingPath, "utf-8");
+  const cleaned = stripTrailingCommas(stripJsonComments(raw));
+  return JSON.parse(cleaned) as Record<string, unknown>;
 }
 
 export interface InitOptions {
@@ -196,30 +170,30 @@ export interface InitOptions {
 
 export function runInit(options: InitOptions = {}): void {
   const cwd = options.cwd || process.cwd();
-  const actions: Array<{ path: string; action: string; }> = [];
+  const actions: FileAction[] = [];
+  let settingsError: string | undefined;
 
   // 1. eslint.config.mjs
   const eslintConfigPath = resolve(cwd, "eslint.config.mjs");
-  if (existsSync(eslintConfigPath) && !options.force) {
-    console.error(
-      `eslint.config.mjs already exists. Use --force to overwrite.`,
-    );
-    process.exit(1);
-  }
   const eslintExisted = existsSync(eslintConfigPath);
-  try {
-    writeFileSync(eslintConfigPath, ESLINT_CONFIG_MJS);
-    actions.push({
-      path: eslintConfigPath,
-      action: eslintExisted ? "overwritten" : "created",
-    });
+  if (eslintExisted && !options.force) {
+    actions.push({ path: eslintConfigPath, action: "skipped" });
   }
-  catch (e) {
-    console.error(
-      `Failed to write ${eslintConfigPath}:`,
-      e instanceof Error ? e.message : e,
-    );
-    process.exit(1);
+  else {
+    try {
+      writeFileSync(eslintConfigPath, ESLINT_CONFIG_MJS);
+      actions.push({
+        path: eslintConfigPath,
+        action: eslintExisted ? "overwritten" : "created",
+      });
+    }
+    catch (e) {
+      console.error(
+        `Failed to write ${eslintConfigPath}:`,
+        e instanceof Error ? e.message : e,
+      );
+      process.exit(1);
+    }
   }
 
   // 2. .config/linter.yaml
@@ -228,26 +202,25 @@ export function runInit(options: InitOptions = {}): void {
     mkdirSync(configDir, { recursive: true });
   }
   const linterYamlPath = resolve(configDir, "linter.yaml");
-  if (existsSync(linterYamlPath) && !options.force) {
-    console.error(
-      `.config/linter.yaml already exists. Use --force to overwrite.`,
-    );
-    process.exit(1);
-  }
   const linterExisted = existsSync(linterYamlPath);
-  try {
-    writeFileSync(linterYamlPath, LINTER_YAML);
-    actions.push({
-      path: linterYamlPath,
-      action: linterExisted ? "overwritten" : "created",
-    });
+  if (linterExisted && !options.force) {
+    actions.push({ path: linterYamlPath, action: "skipped" });
   }
-  catch (e) {
-    console.error(
-      `Failed to write ${linterYamlPath}:`,
-      e instanceof Error ? e.message : e,
-    );
-    process.exit(1);
+  else {
+    try {
+      writeFileSync(linterYamlPath, LINTER_YAML);
+      actions.push({
+        path: linterYamlPath,
+        action: linterExisted ? "overwritten" : "created",
+      });
+    }
+    catch (e) {
+      console.error(
+        `Failed to write ${linterYamlPath}:`,
+        e instanceof Error ? e.message : e,
+      );
+      process.exit(1);
+    }
   }
 
   // 3. .vscode/settings.json
@@ -256,23 +229,58 @@ export function runInit(options: InitOptions = {}): void {
     mkdirSync(vscodeDir, { recursive: true });
   }
   const settingsPath = resolve(vscodeDir, "settings.json");
-  try {
-    const result = mergeVsCodeSettings(settingsPath);
-    writeFileSync(settingsPath, result.content);
-    actions.push({ path: settingsPath, action: result.action });
+  if (existsSync(settingsPath)) {
+    try {
+      const existing = mergeVsCodeSettings(settingsPath);
+      const merged = { ...existing, ...VSCODE_SETTINGS };
+      writeFileSync(settingsPath, JSON.stringify(merged, null, 2) + "\n");
+      actions.push({ path: settingsPath, action: "updated" });
+    }
+    catch (e) {
+      settingsError = e instanceof Error ? e.message : String(e);
+      actions.push({ path: settingsPath, action: "failed" });
+    }
   }
-  catch (e) {
-    console.error(
-      `Failed to write ${settingsPath}:`,
-      e instanceof Error ? e.message : e,
-    );
-    process.exit(1);
+  else {
+    try {
+      writeFileSync(
+        settingsPath,
+        JSON.stringify(VSCODE_SETTINGS, null, 2) + "\n",
+      );
+      actions.push({ path: settingsPath, action: "created" });
+    }
+    catch (e) {
+      console.error(
+        `Failed to write ${settingsPath}:`,
+        e instanceof Error ? e.message : e,
+      );
+      process.exit(1);
+    }
   }
 
   console.log("Initialized @askviraj/linter-cli:");
   for (const { path, action } of actions) {
     console.log(`  [${action}] ${path}`);
   }
+
+  const skipped = actions.filter(a => a.action === "skipped");
+  if (skipped.length > 0) {
+    console.log("");
+    console.log(
+      "Some files were skipped because they already exist. Use --force to overwrite.",
+    );
+  }
+
+  if (settingsError) {
+    console.error(
+      `\nFailed to update ${settingsPath}: ${settingsError}`,
+    );
+    console.error(
+      "The file contains invalid JSONC. Fix the file and try again.",
+    );
+    process.exit(1);
+  }
+
   console.log("");
   console.log(
     "Note: If you have VS Code open, restart the ESLint server (",
