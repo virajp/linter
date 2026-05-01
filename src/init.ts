@@ -38,6 +38,10 @@ const VSCODE_SETTINGS: Record<string, unknown> = {
  * Strip JSONC comments (line and block comments) while preserving comments
  * inside strings. This is a minimal, safe implementation for VS Code settings files.
  */
+/**
+ * Strip JSONC comments (line and block comments) while preserving comments
+ * inside strings. This is a minimal, safe implementation for VS Code settings files.
+ */
 function stripJsonComments(content: string): string {
   let result = "";
   let i = 0;
@@ -92,6 +96,66 @@ function stripJsonComments(content: string): string {
   return result;
 }
 
+/**
+ * Strip trailing commas from JSON content while preserving commas inside strings.
+ * VS Code settings files allow trailing commas, but JSON.parse does not.
+ */
+function stripTrailingCommas(content: string): string {
+  let result = "";
+  let i = 0;
+
+  while (i < content.length) {
+    const ch = content[i];
+
+    if (ch === "\"") {
+      // String literal: copy verbatim until closing quote (handling escapes)
+      result += ch;
+      i++;
+      while (i < content.length) {
+        const sch = content[i];
+        result += sch;
+        if (sch === "\\") {
+          i++;
+          if (i < content.length) {
+            result += content[i];
+          }
+        }
+        else if (sch === "\"") {
+          break;
+        }
+        i++;
+      }
+      i++;
+    }
+    else if (ch === ",") {
+      // Look ahead for ] or } (with optional whitespace)
+      let j = i + 1;
+      while (j < content.length) {
+        const cj = content[j];
+        if (cj === undefined || !/[\s]/.test(cj)) {
+          break;
+        }
+        j++;
+      }
+      const cj = content[j];
+      if (cj !== undefined && (cj === "]" || cj === "}")) {
+        // Skip the trailing comma
+        i++;
+      }
+      else {
+        result += ch;
+        i++;
+      }
+    }
+    else {
+      result += ch;
+      i++;
+    }
+  }
+
+  return result;
+}
+
 interface MergeResult {
   content: string;
   action: "created" | "updated" | "replaced";
@@ -104,8 +168,8 @@ function mergeVsCodeSettings(existingPath: string): MergeResult {
   if (existsSync(existingPath)) {
     try {
       const raw = readFileSync(existingPath, "utf-8");
-      const stripped = stripJsonComments(raw);
-      existing = JSON.parse(stripped) as Record<string, unknown>;
+      const cleaned = stripTrailingCommas(stripJsonComments(raw));
+      existing = JSON.parse(cleaned) as Record<string, unknown>;
       action = "updated";
     }
     catch (e) {
