@@ -1,0 +1,46 @@
+export const FIXTURES = {
+  javascript: {
+    valid: "javascript/valid.js",
+    unusedVars: "javascript/unused-vars.js",
+    consoleUsage: "javascript/console-usage.js",
+    eqeqeq: "javascript/eqeqeq.js",
+  },
+  typescript: {
+    valid: "typescript/valid.ts",
+    explicitAny: "typescript/explicit-any.ts",
+    unusedParams: "typescript/unused-params.ts",
+    preferConst: "typescript/prefer-const.ts",
+  },
+  astro: {
+    valid: "astro/valid.astro",
+    unclosedTag: "astro/unclosed-tag.astro",
+  },
+  json: {
+    valid: "json/valid.json",
+    trailingComma: "json/trailing-comma.json",
+  },
+  jsonc: {
+    valid: "jsonc/valid.jsonc",
+    commentsError: "jsonc/comments-error.jsonc",
+  },
+  markdown: {
+    valid: "markdown/valid.md",
+    fencedCodeLang: "markdown/fenced-code-lang.md",
+  },
+  yaml: {
+    valid: "yaml/valid.yaml",
+    duplicateKeys: "yaml/duplicate-keys.yaml",
+  },
+  toml: {
+    valid: "toml/valid.toml",
+    invalidKey: "toml/invalid-key.toml",
+  },
+  html: {
+    valid: "html/valid.html",
+    missingAlt: "html/missing-alt.html",
+  },
+  css: {
+    valid: "css/valid.css",
+    unknownProperty: "css/unknown-property.css",
+  },
+} as const;
