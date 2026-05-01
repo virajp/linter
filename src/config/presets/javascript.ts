@@ -12,5 +12,7 @@ export const javascriptConfig = {
   },
   name: "javascript",
   plugins: { js },
-  rules: {},
+  rules: {
+    "no-console": "warn",
+  },
 } satisfies Linter.Config & { extends?: unknown; };

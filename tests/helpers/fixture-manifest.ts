@@ -2,8 +2,8 @@ export const FIXTURES = {
   javascript: {
     valid: "javascript/valid.js",
     unusedVars: "javascript/unused-vars.js",
-    consoleUsage: "javascript/console-usage.js",
-    eqeqeq: "javascript/eqeqeq.js",
+    noUndef: "javascript/no-undef.js",
+    debuggerStatement: "javascript/debugger-statement.js",
   },
   typescript: {
     valid: "typescript/valid.ts",
