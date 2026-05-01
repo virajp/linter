@@ -6,7 +6,7 @@ import baseConfig from "./eslint.config.js";
 export interface LinterYamlOptions extends LinterYamlRaw {}
 
 export function createConfig(
-  options: LinterYamlOptions = {},
+  options: LinterYamlOptions = { version: 1 },
 ): Linter.Config[] {
   const configs: Linter.Config[] = [];
 

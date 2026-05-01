@@ -6,6 +6,7 @@ import { resolve } from "node:path";
 import { parse } from "yaml";
 
 export interface LinterYamlRaw {
+  version: number | string;
   ignores?: string[];
   overrides?: Record<string, { rules?: Record<string, unknown>; }>;
   configs?: unknown[];
@@ -30,7 +31,7 @@ export function findLinterYaml(startDir: string): string | undefined {
 export function loadYamlOptions(startDir: string): LinterYamlRaw {
   const yamlPath = findLinterYaml(startDir);
   if (!yamlPath) {
-    return {};
+    return { version: 1 };
   }
 
   const content = readFileSync(yamlPath, "utf-8");
@@ -47,7 +48,11 @@ export function loadYamlOptions(startDir: string): LinterYamlRaw {
     );
   }
 
-  const knownKeys = new Set(["ignores", "overrides", "configs"]);
+  if (!("version" in parsed)) {
+    throw new Error(`Missing required "version" key in ${yamlPath}`);
+  }
+
+  const knownKeys = new Set(["version", "ignores", "overrides", "configs"]);
   for (const key of Object.keys(parsed)) {
     if (!knownKeys.has(key)) {
       console.warn(
@@ -56,5 +61,5 @@ export function loadYamlOptions(startDir: string): LinterYamlRaw {
     }
   }
 
-  return parsed as LinterYamlRaw;
+  return parsed as unknown as LinterYamlRaw;
 }
