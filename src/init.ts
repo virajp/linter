@@ -154,7 +154,13 @@ function stripTrailingCommas(content: string): string {
 
 interface FileAction {
   path: string;
-  action: "created" | "updated" | "skipped" | "overwritten" | "failed";
+  action:
+    | "created"
+    | "updated"
+    | "up-to-date"
+    | "skipped"
+    | "overwritten"
+    | "failed";
 }
 
 function mergeVsCodeSettings(existingPath: string): Record<string, unknown> {
@@ -232,9 +238,14 @@ export function runInit(options: InitOptions = {}): void {
   if (existsSync(settingsPath)) {
     try {
       const existing = mergeVsCodeSettings(settingsPath);
-      const merged = { ...existing, ...VSCODE_SETTINGS };
-      writeFileSync(settingsPath, JSON.stringify(merged, null, 2) + "\n");
-      actions.push({ path: settingsPath, action: "updated" });
+      if (existing["eslint.useFlatConfig"] === true) {
+        actions.push({ path: settingsPath, action: "up-to-date" });
+      }
+      else {
+        const merged = { ...existing, ...VSCODE_SETTINGS };
+        writeFileSync(settingsPath, JSON.stringify(merged, null, 2) + "\n");
+        actions.push({ path: settingsPath, action: "updated" });
+      }
     }
     catch (e) {
       settingsError = e instanceof Error ? e.message : String(e);
