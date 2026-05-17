@@ -24,8 +24,4 @@ mise run setup:bun:install
 
 mise run setup:precommit
 
-# Setup Kimi
-print_header "Setting up Context7 MCP for Kimi ..."
-kimi mcp add --transport http context7 https://mcp.context7.com/mcp 2>/dev/null || true
-
 echo "Setup complete!"

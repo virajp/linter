@@ -20,7 +20,6 @@ pre-commit = { version = "latest" }
 taplo      = { version = "latest" }
 
 # AI Tools
-"pipx:kimi-cli" = { depends = [ "uv" ], uvx = "true", version = "latest" }
 
 [tasks.init]
 description = "Initialize mise tasks"
