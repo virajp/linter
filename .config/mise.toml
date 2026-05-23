@@ -3,19 +3,23 @@ activate_aggressive                = true
 all_compile                        = false
 gpg_verify                         = true
 lockfile                           = true
-npm.package_manager                = "bun"
 paranoid                           = true
 raw                                = true
 status.missing_tools               = "always"
 task.disable_spec_from_run_scripts = true
 task.timings                       = true
 
+# NodeJS settings
+node.compile        = false
+node.gpg_verify     = false
+node.mirror_url     = "https://nodejs.org/dist/"
+npm.package_manager = "pnpm"
+
 [tools]
 # Runtime and build tools
-bun        = { version = "latest" }
-deno       = { version = "latest" }
 dprint     = { version = "latest" }
-node       = { version = "latest" }
+node       = { postinstall = "npm uninstall --global npm", version = "latest" }
+pnpm       = { version = "latest" }
 pre-commit = { version = "latest" }
 taplo      = { version = "latest" }
 
