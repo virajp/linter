@@ -78,11 +78,26 @@ pnpm install
 # Run formatter
 mise run code:format
 
-# Run linter (self-consuming)
-node dist/index.js --fix
+# Run linter (self-consuming, uses source config)
+mise x -- pnpx eslint --no-config-lookup --config src/eslint.config.ts --fix
 ```
 
 The `mise.toml` defines `setup = "mise run setup:all"` as a shell alias.
+
+### Development Workflow
+
+The project uses ESLint directly (via `pnpx eslint`) for self-linting in
+pre-commit hooks, not the built CLI. This avoids requiring a build step before
+commits. The `tests/` folder is excluded from linting since it contains
+intentional error fixtures.
+
+```bash
+# Run formatter
+mise run code:format
+
+# Run linter (self-consuming, uses source config)
+mise x -- pnpx eslint --no-config-lookup --config src/eslint.config.ts --fix
+```
 
 ## CLI Usage
 
@@ -268,6 +283,8 @@ When extending `src/eslint.config.ts`:
 - NEVER commit without explicit instructions from the user. Always ask for
   confirmation before committing.
 - **gitleaks** is configured in `.config/gitleaks.toml`.
-- **pre-commit** hooks run formatting and linting checks.
+- **pre-commit** hooks run formatting and linting checks:
+  - Formatter: `dprint fmt`
+  - Linter: `eslint --config src/eslint.config.ts` (excludes `tests/` folder)
 - Commit messages follow conventional commits (see
   `.config/git-conventional-commits.yaml`).
