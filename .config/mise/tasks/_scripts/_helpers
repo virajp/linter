@@ -43,33 +43,3 @@ print_error() {
   local msg="$1"
   echo -e "${RED}${BOLD}${msg}${NORMAL}"
 }
-
-# Run bun command in a directory
-run_bun() {
-  local dir="$1"
-  shift
-  print_header "Running bun command in ${dir}..."
-  cd "$dir" && bun "$@"
-}
-
-# Run bun script in a project
-run_bun_script() {
-  local project="$1"
-  local script="$2"
-  print_header "Running ${script}..."
-  bun run --filter "${project}" "${script}"
-}
-
-# Build a project using turbo
-build_project() {
-  local filter="$1"
-  print_header "Building ${filter}..."
-  turbo build --filter="${filter}"
-}
-
-# Build a project using turbo
-build_project_force() {
-  local filter="$1"
-  print_header "Building ${filter}..."
-  turbo build --filter="${filter}" --force
-}

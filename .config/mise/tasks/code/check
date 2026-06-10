@@ -5,6 +5,6 @@ set -e
 source "${MISE_PROJECT_ROOT}/.config/mise/tasks/_scripts/_helpers"
 
 print_header "Running tsc to check for type errors ..."
-bunx --bun tsc --noEmit
+pnpx --package typescript@latest tsc --noEmit
 
 print_header "All checks completed."
