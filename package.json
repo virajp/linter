@@ -1,6 +1,6 @@
 {
   "name": "@askviraj/linter",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A linter & formatter CLI for JavaScript, TypeScript, Astro, JSON, JSONC, CSS, HTML, Markdown, YAML, TOML, and more.",
   "keywords": [
     "lint",
@@ -75,11 +75,11 @@
   },
   "devDependencies": {
     "@types/node": "latest",
-    "jiti": "^2.7.0",
+    "jiti": "latest",
     "sort-package-json": "latest",
     "tsx": "latest",
     "typescript": "latest",
-    "vitest": "^4.1.8"
+    "vitest": "latest"
   },
   "peerDependencies": {
     "eslint": "^10.0.0"

@@ -22,7 +22,7 @@
   "explorer.fileNesting.enabled": true,
   "explorer.fileNesting.expand": false,
   "explorer.fileNesting.patterns": {
-    "package.json": "bun.lock,bunfig.toml,tsconfig.json",
+    "package.json": "tsconfig.json,pnpm-*.yaml",
     "readme.md": "*.md,LICENSE,dprint.json,.gitignore,",
   },
   "files.autoGuessEncoding": true,
