@@ -7,11 +7,14 @@ import {
 import { tmpdir } from "node:os";
 import {
   basename,
+  dirname,
   join,
   resolve,
 } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const FIXTURES_DIR = resolve(import.meta.dir, "../fixtures");
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const FIXTURES_DIR = resolve(__dirname, "../fixtures");
 
 export function createTempDir(prefix = "linter-test-"): string {
   return mkdtempSync(join(tmpdir(), prefix));

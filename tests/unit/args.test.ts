@@ -2,7 +2,7 @@ import {
   describe,
   expect,
   test,
-} from "bun:test";
+} from "vitest";
 import { parseArgs } from "../../src/cli/args.js";
 import { ParseError } from "../../src/cli/types.js";
 

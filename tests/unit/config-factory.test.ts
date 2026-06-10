@@ -2,7 +2,7 @@ import {
   describe,
   expect,
   test,
-} from "bun:test";
+} from "vitest";
 import { createConfig } from "../../src/config-factory.js";
 
 describe("createConfig", () => {

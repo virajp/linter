@@ -4,7 +4,7 @@
 #USAGE flag "--debug" help="emit debug logs"
 
 set -e
-source "${0%/*}/_helpers"
+source "${MISE_PROJECT_ROOT}/.config/mise/tasks/_scripts/_helpers"
 
 # Get the folder name
 FOLDER_NAME=$(basename "$PWD")

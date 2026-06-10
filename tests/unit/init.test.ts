@@ -1,16 +1,16 @@
 import {
-  afterEach,
-  beforeEach,
-  describe,
-  expect,
-  test,
-} from "bun:test";
-import {
   existsSync,
   mkdirSync,
   readFileSync,
   writeFileSync,
 } from "node:fs";
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  test,
+} from "vitest";
 import { runInit } from "../../src/cli/commands/init.js";
 import {
   cleanupTempDir,

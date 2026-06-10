@@ -3,11 +3,11 @@
 #MISE depends=["p:preview"]
 
 set -e
-source "${0%/*}/_helpers"
+source "${MISE_PROJECT_ROOT}/.config/mise/tasks/_scripts/_helpers"
 
 cd $MISE_PROJECT_ROOT
 
-CURRENT_VERSION=$(bun -p "require('./package.json').version")
+CURRENT_VERSION=$(node -p "require('./package.json').version")
 
 print_header "Tagging release v${CURRENT_VERSION}..."
 git tag --sign "v${CURRENT_VERSION}" -m "ops: bump version to v${CURRENT_VERSION}"
@@ -20,7 +20,7 @@ mise x -- npm version patch --no-git-tag-version
 mise run code:format --fix
 
 print_header "Pushing commits and tags..."
-NEW_VERSION=$(bun -p "require('./package.json').version")
+NEW_VERSION=$(node -p "require('./package.json').version")
 git add package.json
 git commit -m "ops: bump version to v${NEW_VERSION}"
 git push && git push --tags

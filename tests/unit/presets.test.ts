@@ -2,7 +2,7 @@ import {
   describe,
   expect,
   test,
-} from "bun:test";
+} from "vitest";
 import { astroConfig } from "../../src/config/presets/astro.js";
 import { cssConfig } from "../../src/config/presets/css.js";
 import { htmlConfig } from "../../src/config/presets/html.js";

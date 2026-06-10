@@ -50,7 +50,7 @@ repos:
     hooks:
       - id: package-json-sorter
         name: Package.json sorter
-        entry: mise x -- bun --bun sort-package-json
+        entry: mise x -- pnpx sort-package-json
         files: (^|.*/)package\.json$
         language: system
         stages: [ pre-commit ]
@@ -59,7 +59,7 @@ repos:
     hooks:
       - id: formatter
         name: Formatter
-        entry: mise x -- dprint fmt --allow-no-files --log-level warn
+        entry: mise x -- pnpx dprint fmt --allow-no-files --log-level warn
         exclude: (^|.*/)package\.json$
         language: system
         stages: [ pre-commit ]
@@ -68,15 +68,7 @@ repos:
     hooks:
       - id: linter
         name: Linter
-        entry: mise x -- bun --bun eslint
-          --no-config-lookup
-          --config src/eslint.config.ts
-          --pass-on-no-patterns
-          --concurrency 1
-          --exit-on-fatal-error
-          --no-error-on-unmatched-pattern
-          --quiet
-          --fix
+        entry: mise x -- node dist/index.js --fix
         language: system
         stages: [ pre-commit ]
 

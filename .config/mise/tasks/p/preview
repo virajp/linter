@@ -3,11 +3,11 @@
 #MISE depends=["p:test"]
 
 set -e
-source "${0%/*}/_helpers"
+source "${MISE_PROJECT_ROOT}/.config/mise/tasks/_scripts/_helpers"
 
 cd $MISE_PROJECT_ROOT
 
 print_header "Previewing tarball..."
-bun pm pack
+pnpm pack
 
 print_header "Preview complete"

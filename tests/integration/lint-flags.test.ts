@@ -1,15 +1,15 @@
 import {
+  existsSync,
+  readFileSync,
+  writeFileSync,
+} from "node:fs";
+import {
   afterEach,
   beforeEach,
   describe,
   expect,
   test,
-} from "bun:test";
-import {
-  existsSync,
-  readFileSync,
-  writeFileSync,
-} from "node:fs";
+} from "vitest";
 import { FIXTURES } from "../helpers/fixture-manifest.js";
 import {
   runCli,

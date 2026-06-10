@@ -6,7 +6,7 @@
 #USAGE arg "[files]" var=#true
 
 set -e
-source "${0%/*}/_helpers"
+source "${MISE_PROJECT_ROOT}/.config/mise/tasks/_scripts/_helpers"
 
 cd $MISE_PROJECT_ROOT
 
@@ -23,7 +23,7 @@ done
 [[ "${usage_fix:-false}" == "true" ]] && FIX="--fix" || FIX=""
 [[ ${#files[@]} -eq 0 ]] && files=("**/*")
 
-bunx --bun eslint \
+pnpx eslint \
   --no-config-lookup \
   --config $MISE_PROJECT_ROOT/src/eslint.config.ts \
   --color \

@@ -1,4 +1,0 @@
-#!/usr/bin/env zsh
-#MISE hide=true
-# Helper functions for service tasks - sources parent helpers
-source "${0%/*}/../_helpers"

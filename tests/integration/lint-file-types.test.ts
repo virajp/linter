@@ -4,7 +4,7 @@ import {
   describe,
   expect,
   test,
-} from "bun:test";
+} from "vitest";
 import { FIXTURES } from "../helpers/fixture-manifest.js";
 import {
   runCli,

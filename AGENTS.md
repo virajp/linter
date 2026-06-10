@@ -28,18 +28,13 @@ current working directory.
 
 | Tool           | Role                       | Config File                      |
 | -------------- | -------------------------- | -------------------------------- |
-| **Bun**        | Package manager + runtime  | `bunfig.toml`                    |
+| **Node.js**    | Runtime                    | N/A                              |
+| **pnpm**       | Package manager            | `pnpm-lock.yaml`                 |
 | **TypeScript** | Language (no emit, strict) | `tsconfig.json`                  |
 | **dprint**     | Formatter (not Prettier)   | `dprint.json`                    |
 | **ESLint**     | Linter (self-consuming)    | `src/eslint.config.ts`           |
 | **mise**       | Dev-tool version manager   | `.config/mise.toml`              |
 | **pre-commit** | Git hooks                  | `.config/pre-commit-config.yaml` |
-
-### Bunfig Policies
-
-- Telemetry disabled, `.env` loading disabled.
-- Minimum package age: **3 days** (excludes `@types/bun` and `typescript`).
-- Security scanner: `@bun-security-scanner/osv`.
 
 ### dprint Notes
 
@@ -62,29 +57,29 @@ available in the `mise x` environment, so you can run
 `mise x --` when executing from an AI agent to ensure proper context and access
 to all tools and dependencies. </IMPORTANT_NOTE>
 
-| Script           | Command                                        |
-| ---------------- | ---------------------------------------------- |
-| `build`          | `bun run build` — Compiles `src/` to `dist/`   |
-| `prepublishOnly` | Auto-runs `build` before publishing            |
-| `p:build`        | `mise run p:build` — Build the CLI             |
-| `p:test`         | `mise run p:test` — Self-lint the build output |
-| `p:preview`      | `mise run p:preview` — Preview the tarball     |
-| `p:publish`      | `mise run p:publish` — Publish to npm          |
+| Script           | Command                                                   |
+| ---------------- | --------------------------------------------------------- |
+| `build`          | `tsc -p tsconfig.build.json` — Compiles `src/` to `dist/` |
+| `prepublishOnly` | Auto-runs `build` before publishing                       |
+| `p:build`        | `mise run p:build` — Build the CLI                        |
+| `p:test`         | `mise run p:test` — Self-lint the build output            |
+| `p:preview`      | `mise run p:preview` — Preview the tarball                |
+| `p:publish`      | `mise run p:publish` — Publish to npm                     |
 
 Each step depends on the previous one, so running `mise run p:publish`
 automatically triggers `p:build` → `p:test` → `p:preview` → `p:publish`.
 
-Additional tasks are executed via **mise** or directly with Bun:
+Additional tasks are executed via **mise** or directly with pnpm:
 
 ```bash
 # Install dependencies
-bun install
+pnpm install
 
 # Run formatter
 mise run code:format
 
 # Run linter (self-consuming)
-bun dist/index.js --fix
+node dist/index.js --fix
 ```
 
 The `mise.toml` defines `setup = "mise run setup:all"` as a shell alias.
@@ -126,19 +121,19 @@ conflicts with internal config management.
 
 ```bash
 # Lint specific files
-bunx --bun @askviraj/linter src/ lib/
+npx @askviraj/linter src/ lib/
 
 # Auto-fix issues
-bunx --bun @askviraj/linter --fix
+npx @askviraj/linter --fix
 
 # Quiet mode (errors only)
-bunx --bun @askviraj/linter --quiet
+npx @askviraj/linter --quiet
 
 # Cache for faster re-runs
-bunx --bun @askviraj/linter --cache
+npx @askviraj/linter --cache
 
 # Scaffold config files
-bunx --bun @askviraj/linter --init
+npx @askviraj/linter --init
 ```
 
 When no file arguments are provided, the CLI defaults to `.` (the current
@@ -204,7 +199,7 @@ configs:
     rules: {}
 ```
 
-Run `bun dist/index.js --fix` or let the VS Code extension pick up changes.
+Run `node dist/index.js --fix` or let the VS Code extension pick up changes.
 
 #### Supported keys
 
@@ -264,8 +259,8 @@ When extending `src/eslint.config.ts`:
    - `files` (glob array)
    - `plugins` and/or `extends`
    - `languageOptions` / `language` as needed
-4. Run `bun install`, then `bun run build`.
-5. Verify with `bun dist/index.js --fix`.
+4. Run `pnpm install`, then `pnpm run build`.
+5. Verify with `node dist/index.js --fix`.
 6. Format with `mise run code:format`.
 
 ## Security / Hooks

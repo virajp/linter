@@ -1,7 +1,10 @@
 import { spawn } from "node:child_process";
 import { resolve } from "node:path";
+import { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 
-const CLI_PATH = resolve(import.meta.dir, "../../dist/index.js");
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const CLI_PATH = resolve(__dirname, "../../dist/index.js");
 
 export interface CliResult {
   exitCode: number;
@@ -11,7 +14,7 @@ export interface CliResult {
 
 export function runCli(args: string[], cwd?: string): Promise<CliResult> {
   return new Promise((resolve, reject) => {
-    const child = spawn("bun", [CLI_PATH, ...args], {
+    const child = spawn("node", [CLI_PATH, ...args], {
       cwd,
       stdio: ["ignore", "pipe", "pipe"],
     });

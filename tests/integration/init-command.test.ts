@@ -1,14 +1,14 @@
 import {
+  existsSync,
+  readFileSync,
+} from "node:fs";
+import {
   afterEach,
   beforeEach,
   describe,
   expect,
   test,
-} from "bun:test";
-import {
-  existsSync,
-  readFileSync,
-} from "node:fs";
+} from "vitest";
 import { runCli } from "../helpers/run-cli.js";
 import {
   cleanupTempDir,

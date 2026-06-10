@@ -5,7 +5,7 @@
 #USAGE flag "--fix" help="apply fixes"
 
 set -e
-source "${0%/*}/_helpers"
+source "${MISE_PROJECT_ROOT}/.config/mise/tasks/_scripts/_helpers"
 
 print_header "Formatting files ..."
 
@@ -22,7 +22,7 @@ target_packages=("**/package.json")
 
 if (( ${#target_packages} > 0 )); then
   print_header "Sorting package.json files ..."
-  bunx --bun sort-package-json "${target_packages[@]}"
+  pnpx sort-package-json "${target_packages[@]}"
 fi
 
 print_header "Formatting done"

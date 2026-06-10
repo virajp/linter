@@ -2,11 +2,11 @@
 #MISE description="Build the CLI"
 
 set -e
-source "${0%/*}/_helpers"
+source "${MISE_PROJECT_ROOT}/.config/mise/tasks/_scripts/_helpers"
 
 cd $MISE_PROJECT_ROOT
 
 print_header "Building package..."
-bun run build
+pnpm run build
 
 print_header "Build complete"

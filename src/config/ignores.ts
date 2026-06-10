@@ -10,4 +10,10 @@ export const ignores = globalIgnores([
   ".agents/**/*.md",
   ".claude/**/*.md",
   ".github/**/*.md",
+  "**/worktrees/**",
+  "**/.worktrees/**",
+  "**/superpowers/**",
+  "**/coverage/**",
+  "graphify-out/**",
+  "**/graphify-out/**",
 ]);
