@@ -68,7 +68,10 @@ repos:
     hooks:
       - id: linter
         name: Linter
-        entry: mise x -- node dist/index.js --fix
+        entry: mise x -- eslint --no-config-lookup --config
+          src/eslint.config.ts --pass-on-no-patterns --concurrency 1
+          --exit-on-fatal-error --no-error-on-unmatched-pattern --quiet --fix
+        exclude: (^|.*/)tests/
         language: system
         stages: [ pre-commit ]
 
