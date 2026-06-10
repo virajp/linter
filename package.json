@@ -62,6 +62,7 @@
     "@poupe/eslint-plugin-tailwindcss": "latest",
     "@typescript-eslint/parser": "latest",
     "astro-eslint-parser": "latest",
+    "debug": "latest",
     "eslint": "latest",
     "eslint-plugin-astro": "latest",
     "eslint-plugin-toml": "latest",

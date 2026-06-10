@@ -32,6 +32,9 @@ importers:
       astro-eslint-parser:
         specifier: latest
         version: 1.4.0
+      debug:
+        specifier: latest
+        version: 4.4.3
       eslint:
         specifier: latest
         version: 10.4.1(jiti@2.7.0)
