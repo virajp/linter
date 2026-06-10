@@ -60,7 +60,7 @@ repos:
       - id: formatter
         name: Formatter
         entry: mise x -- pnpx dprint fmt --allow-no-files --log-level warn
-        exclude: (^|.*/)package\.json$
+        exclude: (^|.*/)(package\.json$|tests/[^/]*$)
         language: system
         stages: [ pre-commit ]
 
