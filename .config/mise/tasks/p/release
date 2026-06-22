@@ -1,0 +1,39 @@
+#!/usr/bin/env zsh
+#MISE description="Bump version, commit, and tag a release (does not push)"
+
+#USAGE flag "--minor" help="Bump the minor version"
+#USAGE flag "--major" help="Bump the major version"
+
+set -e
+source "${MISE_PROJECT_ROOT}/.config/mise/tasks/_scripts/_helpers"
+
+cd $MISE_PROJECT_ROOT
+
+if [ -n "$(git status --porcelain)" ]; then
+  print_error "Working tree is not clean. Commit or stash changes first."
+  exit 1
+fi
+
+if [ "${usage_major:-false}" = "true" ]; then
+  VERSION_FLAG="--major"
+elif [ "${usage_minor:-false}" = "true" ]; then
+  VERSION_FLAG="--minor"
+else
+  VERSION_FLAG=""
+fi
+
+print_header "Running tests..."
+mise run p:test
+
+print_header "Bumping version..."
+mise run p:version ${VERSION_FLAG}
+
+NEW_VERSION=$(node -p "require('./package.json').version")
+
+print_header "Committing and tagging v${NEW_VERSION}..."
+git add package.json
+git commit -m "ops: release v${NEW_VERSION}"
+git tag --sign "v${NEW_VERSION}" -m "ops: release v${NEW_VERSION}"
+
+print_header "Release v${NEW_VERSION} prepared"
+print_warn "Push to publish via CI: git push && git push origin v${NEW_VERSION}"

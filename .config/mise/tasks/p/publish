@@ -1,28 +1,30 @@
 #!/usr/bin/env zsh
-#MISE description="Publish package to npm registry"
-#MISE depends=["p:preview"]
+#MISE description="Publish to npm from this machine (fallback; prefer CI/OIDC release)"
+
+#USAGE flag "--dry-run" help="Validate the publish without uploading"
 
 set -e
 source "${MISE_PROJECT_ROOT}/.config/mise/tasks/_scripts/_helpers"
 
 cd $MISE_PROJECT_ROOT
 
-CURRENT_VERSION=$(node -p "require('./package.json').version")
+print_header "Checking npm authentication..."
+npm whoami
 
-print_header "Tagging release v${CURRENT_VERSION}..."
-git tag --sign "v${CURRENT_VERSION}" -m "ops: bump version to v${CURRENT_VERSION}"
+print_header "Running tests..."
+mise run p:test
+
+print_header "Building package..."
+mise run p:build
+
+if [ "${usage_dry_run:-false}" = "true" ]; then
+  print_header "Dry run: validating publish..."
+  npm publish --access public --dry-run
+  print_header "Dry run complete"
+  exit 0
+fi
 
 print_header "Publishing to npm registry..."
 npm publish --access public
-
-print_header "Bumping version post-publish..."
-mise x -- npm version patch --no-git-tag-version
-mise run code:format --fix
-
-print_header "Pushing commits and tags..."
-NEW_VERSION=$(node -p "require('./package.json').version")
-git add package.json
-git commit -m "ops: bump version to v${NEW_VERSION}"
-git push && git push --tags
 
 print_header "Publish complete"

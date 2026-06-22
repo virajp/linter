@@ -1,0 +1,81 @@
+name: Monthly Dependency Update
+
+on:
+  schedule:
+    # 02:00 UTC on the 1st of every month
+    - cron: "0 2 1 * *"
+  workflow_dispatch: {}
+
+# Needs contents:write to push the refresh commit + tag, and id-token:write
+# to publish via OIDC (the tag push from GITHUB_TOKEN does not trigger
+# release.yml, so this workflow publishes inline).
+permissions:
+  contents: write
+  id-token: write
+
+env:
+  MISE_ENV: ci
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up mise
+        uses: jdx/mise-action@v4
+
+      - name: Update dependencies to latest
+        run: pnpm update --latest
+
+      - name: Detect changes
+        id: changed
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "No dependency updates available."
+          fi
+
+      - name: Scan for vulnerabilities
+        if: steps.changed.outputs.changed == 'true'
+        run: osv-scanner scan source --lockfile=pnpm-lock.yaml
+
+      - name: Build and test
+        if: steps.changed.outputs.changed == 'true'
+        run: pnpm run test:all
+
+      - name: Configure git
+        if: steps.changed.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Commit dependency refresh
+        if: steps.changed.outputs.changed == 'true'
+        run: |
+          git add package.json pnpm-lock.yaml
+          git commit -m "ops(deps): monthly dependency refresh"
+
+      - name: Bump version and tag
+        if: steps.changed.outputs.changed == 'true'
+        run: |
+          pnpm version patch --no-git-tag-version
+          NEW_VERSION="v$(node -p "require('./package.json').version")"
+          git add package.json
+          git commit -m "ops: release ${NEW_VERSION}"
+          git tag -a "${NEW_VERSION}" -m "ops: release ${NEW_VERSION}"
+
+      - name: Push commit and tag
+        if: steps.changed.outputs.changed == 'true'
+        run: git push origin HEAD:main --follow-tags
+
+      - name: Upgrade npm for OIDC publishing
+        if: steps.changed.outputs.changed == 'true'
+        run: npm install -g npm@latest
+
+      - name: Publish to npm
+        if: steps.changed.outputs.changed == 'true'
+        run: npm publish --access public

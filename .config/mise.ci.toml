@@ -1,0 +1,7 @@
+# CI-only mise config. Loaded in addition to mise.toml when MISE_ENV=ci.
+
+[tools]
+osv-scanner = "2.4.0"
+
+[env]
+CI = "true"
