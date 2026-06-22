@@ -3,7 +3,6 @@ activate_aggressive                = true
 all_compile                        = false
 gpg_verify                         = true
 lockfile                           = true
-paranoid                           = true
 raw                                = true
 status.missing_tools               = "always"
 task.disable_spec_from_run_scripts = true
