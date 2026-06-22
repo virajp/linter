@@ -22,6 +22,8 @@ mise upgrade --local || true
 
 mise run setup:pnpm:install
 
+mise run setup:ai
+
 mise run setup:precommit
 
 echo "Setup complete!"

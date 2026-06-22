@@ -28,6 +28,10 @@ hide        = true
 run         = "find .config/mise/tasks/ -name '*' -type f -exec chmod 755 {} \\;"
 
 [shell_alias]
+cc    = "claude --allow-dangerously-skip-permissions --dangerously-skip-permissions"
+cch   = "claude --allow-dangerously-skip-permissions --dangerously-skip-permissions --model 'haiku[1m]' --effort high"
+cco   = "claude --allow-dangerously-skip-permissions --dangerously-skip-permissions --model 'opus[1m]' --effort high"
+ccs   = "claude --allow-dangerously-skip-permissions --dangerously-skip-permissions --model 'sonnet[1m]' --effort high"
 setup = "mise run setup:all"
 
 [env]
