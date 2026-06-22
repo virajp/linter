@@ -1,2 +1,7 @@
 allowBuilds:
   esbuild: true
+
+# Reject dependency versions published less than 10h ago (supply-chain guard).
+# Pinned in-repo so CI matches local dev; CI otherwise falls back to pnpm's
+# stricter 24h default and rejects freshly-released pinned deps.
+minimumReleaseAge: 600
