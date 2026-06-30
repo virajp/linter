@@ -48,7 +48,6 @@
   ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
-    "prepublishOnly": "pnpm run build",
     "test": "pnpm run build && pnpx vitest run tests/unit",
     "test:all": "pnpm run build && pnpx vitest run tests",
     "test:integration": "pnpm run build && pnpx vitest run tests/integration"
