@@ -42,8 +42,14 @@ jobs:
       - name: Upgrade npm for OIDC publishing
         run: npm install -g npm@latest
 
+      # Pack first, then publish the tarball. `npm publish .` crashes with
+      # "Exit handler never called!" when packing a directory that has
+      # bundledDependencies; publishing a pre-built tarball avoids that path.
+      - name: Pack tarball
+        run: npm pack
+
       - name: Publish to npm
-        run: npm publish --access public
+        run: npm publish "$(ls *.tgz)" --access public
 
       - name: Show npm debug log on failure
         if: failure()
