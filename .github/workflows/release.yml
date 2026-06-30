@@ -39,8 +39,11 @@ jobs:
       - name: Build and test
         run: pnpm run test:all
 
-      - name: Upgrade npm for OIDC publishing
-        run: npm install -g npm@latest
+      # npm 11.18.0 crashes with "Exit handler never called!" packing a
+      # bundledDependencies package; 11.17.0 is the last known-good. Needs
+      # >= 11.5.1 for OIDC trusted publishing.
+      - name: Pin npm for OIDC publishing
+        run: npm install -g npm@11.17.0
 
       # Pack first, then publish the tarball. `npm publish .` crashes with
       # "Exit handler never called!" when packing a directory that has
