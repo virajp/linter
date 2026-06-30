@@ -44,3 +44,13 @@ jobs:
 
       - name: Publish to npm
         run: npm publish --access public
+
+      - name: Show npm debug log on failure
+        if: failure()
+        run: |
+          shopt -s nullglob
+          for f in ~/.npm/_logs/*-debug-*.log; do
+            echo "::group::$f"
+            cat "$f"
+            echo "::endgroup::"
+          done
