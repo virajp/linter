@@ -79,24 +79,25 @@ pnpm install
 mise run code:format
 
 # Run linter (self-consuming, uses source config)
-mise x -- pnpx eslint --no-config-lookup --config src/eslint.config.ts --fix
+mise x -- pnpm exec eslint --no-config-lookup --config src/eslint.config.ts --ignore-pattern "tests/**" --fix
 ```
 
 The `mise.toml` defines `setup = "mise run setup:all"` as a shell alias.
 
 ### Development Workflow
 
-The project uses ESLint directly (via `pnpx eslint`) for self-linting in
-pre-commit hooks, not the built CLI. This avoids requiring a build step before
-commits. The `tests/` folder is excluded from linting since it contains
-intentional error fixtures.
+The project uses ESLint directly (the locally-installed `eslint`, not `pnpx`/dlx
+— self-linting loads the TypeScript `src/eslint.config.ts`, which needs the
+`jiti` peer that a dlx sandbox lacks) for self-linting in pre-commit hooks, not
+the built CLI. This avoids requiring a build step before commits. The `tests/`
+folder is excluded from linting since it contains intentional error fixtures.
 
 ```bash
 # Run formatter
 mise run code:format
 
 # Run linter (self-consuming, uses source config)
-mise x -- pnpx eslint --no-config-lookup --config src/eslint.config.ts --fix
+mise x -- pnpm exec eslint --no-config-lookup --config src/eslint.config.ts --ignore-pattern "tests/**" --fix
 ```
 
 ## CLI Usage
@@ -266,8 +267,10 @@ Run `node dist/index.js --fix` or let the VS Code extension pick up changes.
 
 When extending `src/eslint.config.ts`:
 
-1. Add the plugin dependency to `package.json` (use `"latest"` to match existing
-   conventions).
+1. Add the plugin dependency to `package.json`, **and add its name to
+   `bundledDependencies`** — production deps are shipped inside the tarball, so
+   a dep that isn't bundled won't reach consumers. Add any runtime peer (e.g.
+   `typescript`) to both `dependencies` and `bundledDependencies` as well.
 2. Import the plugin at the top of `src/eslint.config.ts`.
 3. Add a new config object inside `defineConfig([...])` with:
    - `name` (descriptive, kebab-case or lowercase)

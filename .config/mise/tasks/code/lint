@@ -23,12 +23,17 @@ done
 [[ "${usage_fix:-false}" == "true" ]] && FIX="--fix" || FIX=""
 [[ ${#files[@]} -eq 0 ]] && files=("**/*")
 
-pnpx eslint \
+# Use the project's pinned eslint (not `pnpx`/dlx): self-linting loads the
+# TypeScript config src/eslint.config.ts, which needs the `jiti` peer that a
+# dlx sandbox lacks. `tests/` holds intentional violation fixtures, excluded
+# here the same way the pre-commit hook excludes them.
+pnpm exec eslint \
   --no-config-lookup \
   --config $MISE_PROJECT_ROOT/src/eslint.config.ts \
   --color \
   --pass-on-no-patterns \
   --concurrency "auto" \
+  --ignore-pattern "tests/**" \
   ${LOG_LEVEL} \
   ${FIX} \
   ${files[@]}

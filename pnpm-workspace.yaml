@@ -1,6 +1,10 @@
 allowBuilds:
   esbuild: true
 
+# Required for bundledDependencies: pnpm can only bundle a real nested
+# node_modules tree, not the default symlinked (isolated) store.
+nodeLinker: hoisted
+
 # Reject dependency versions published less than 10h ago (supply-chain guard).
 # Pinned in-repo so CI matches local dev; CI otherwise falls back to pnpm's
 # stricter 24h default and rejects freshly-released pinned deps.

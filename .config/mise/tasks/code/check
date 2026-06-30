@@ -5,6 +5,8 @@ set -e
 source "${MISE_PROJECT_ROOT}/.config/mise/tasks/_scripts/_helpers"
 
 print_header "Running tsc to check for type errors ..."
-pnpx --package typescript@latest tsc --noEmit
+# Use the project's pinned typescript (a bundled dependency), not `pnpx`/dlx
+# `typescript@latest`, so the type-check matches the version we ship.
+pnpm exec tsc --noEmit
 
 print_header "All checks completed."

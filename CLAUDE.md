@@ -14,6 +14,15 @@ CSS, YAML, TOML, HTML) so consuming repos never install ESLint or plugins
 themselves. At runtime, plugins resolve from this package's own `node_modules`,
 not the target repo's.
 
+This is enforced literally: every production dependency is listed in
+`bundledDependencies`, so `npm pack`/`publish` ships the full resolved tree
+**inside the tarball** (~19 MB). Consumers get exact, pre-resolved versions with
+no install-time resolution — immune to transitive version drift, regardless of
+their package manager. `typescript` is a real `dependency` (not just a
+`typescript-eslint` peer) for the same reason — TS/Astro linting needs it
+present in the bundle. Bundling requires `nodeLinker: hoisted`
+(`pnpm-workspace.yaml`); pnpm refuses to bundle its default symlinked store.
+
 ## Commands
 
 Run mise tasks through `mise x --` so the correct toolchain (node, pnpm, dprint,
@@ -69,9 +78,12 @@ Config composition pipeline:
    merges per-preset `overrides.<name>.rules`, prepends `globalIgnores`, and
    appends raw user `configs`.
 
-When **adding a language/plugin**: add the dep to `package.json` (`"latest"`),
-create a preset in `src/config/presets/`, register it in `composeBaseConfig()`,
-and add its `name` to the preset list in `AGENTS.md` / `readme.md`.
+When **adding a language/plugin**: add the dep to `package.json` **and to
+`bundledDependencies`** (otherwise it won't ship in the tarball), create a
+preset in `src/config/presets/`, register it in `composeBaseConfig()`, and add
+its `name` to the preset list in `AGENTS.md` / `readme.md`. If the plugin needs
+a runtime peer (like `typescript`), add that to `dependencies` +
+`bundledDependencies` too.
 
 ## Conventions
 

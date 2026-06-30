@@ -23,7 +23,8 @@ target_packages=("**/package.json")
 
 if (( ${#target_packages} > 0 )); then
   print_header "Sorting package.json files ..."
-  pnpx sort-package-json "${target_packages[@]}"
+  # Use the project's pinned sort-package-json (a devDependency), not `pnpx`/dlx.
+  pnpm exec sort-package-json "${target_packages[@]}"
 fi
 
 print_header "Formatting done"
