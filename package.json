@@ -62,7 +62,7 @@
     "@typescript-eslint/parser": "latest",
     "astro-eslint-parser": "latest",
     "debug": "latest",
-    "eslint": "latest",
+    "eslint": "^10.6.0",
     "eslint-plugin-astro": "latest",
     "eslint-plugin-toml": "latest",
     "eslint-plugin-yml": "latest",
@@ -74,7 +74,7 @@
     "yaml-eslint-parser": "latest"
   },
   "devDependencies": {
-    "@types/node": "26.0.0",
+    "@types/node": "26.0.1",
     "jiti": "2.7.0",
     "sort-package-json": "4.0.0",
     "tsx": "4.22.4",
