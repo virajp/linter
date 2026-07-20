@@ -16,7 +16,11 @@ export const markdownConfig = {
     "markdown/no-missing-link-fragments": "error",
     "markdown/no-multiple-h1": "error",
     "markdown/no-reference-like-urls": "error",
-    "markdown/no-reversed-media-syntax": "error",
+    // ReDoS in the rule's `reversedPattern` (@eslint/markdown <=8.0.3): the
+    // label group nests `[\s\S]*` inside a `*`, so a paragraph with many
+    // parenthesised spans and no `)[` backtracks exponentially and hangs the
+    // lint. Re-enable once eslint/markdown#690 ships.
+    "markdown/no-reversed-media-syntax": "off",
     "markdown/no-space-in-emphasis": "error",
     "markdown/table-column-count": "error",
   },
