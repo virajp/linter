@@ -26,8 +26,22 @@ jobs:
       - name: Set up mise
         uses: jdx/mise-action@v4
 
+      # Mirrors .config/mise/tasks/setup/pnpm/upgrade -- two lockfile-only
+      # resolution passes, then one install:
+      #   1. Seed the lockfile so typescript resolves against its package.json
+      #      range. `pnpm update --latest` resolves the `latest` dist-tag even
+      #      for packages excluded with `!`, which otherwise pulls typescript 7
+      #      -- unsupported by eslint/typescript-eslint, and it would be
+      #      published inside the bundledDependencies tarball.
+      #   2. A `pnpm update` that downloads leaks handles on the pnpm store
+      #      index and never exits (pnpm 11.18.0). A CI runner always has a cold
+      #      store, so this would hang the job. `--lockfile-only` downloads
+      #      nothing; the final install is the only pass that touches the store.
       - name: Update dependencies to latest
-        run: pnpm update --latest
+        run: |
+          pnpm install --lockfile-only
+          pnpm update --latest "!typescript" --lockfile-only
+          pnpm install
 
       - name: Detect changes
         id: changed

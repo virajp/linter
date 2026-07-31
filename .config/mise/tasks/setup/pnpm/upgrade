@@ -8,13 +8,23 @@ source "${MISE_PROJECT_ROOT}/.config/mise/tasks/_scripts/_helpers"
 print_header "Updating pnpm in package.json ..."
 pnpm self-update $(mise exec -- pnpm --version)
 
-print_header "Install node modules ..."
-pnpm install --aggregate-output --child-concurrency 10 --network-concurrency 10 --recursive
+# Resolve in two lockfile-only passes, then materialise node_modules once.
+#
+#   1. Seed the lockfile. `pnpm update --latest` resolves the `latest` dist-tag
+#      even for packages excluded with `!`, ignoring their package.json range --
+#      on a clean slate (cleanup deletes the lockfile) that pulls typescript 7,
+#      which eslint/typescript-eslint do not support. Given a lockfile that
+#      already pins 6.x, the `!typescript` exclusion leaves that resolution alone.
+#   2. A `pnpm update` that downloads leaks handles on the store index
+#      (~/Library/pnpm/store/v11/index.db) and never exits -- pnpm 11.18.0, only
+#      reproducible against a cold store, which `store prune` in cleanup
+#      guarantees. `--lockfile-only` downloads nothing, so the install below is
+#      the only pass that touches the store.
+print_header "Resolving dependencies ..."
+pnpm install --lockfile-only
 
-# Must run *after* the install above: `pnpm update --latest` resolves the `latest`
-# dist-tag even for packages excluded with `!`, ignoring their package.json range.
-# On a clean slate (cleanup deletes the lockfile) that pulls typescript 7, which
-# eslint/typescript-eslint do not support. With a lockfile already pinning 6.x,
-# the `!typescript` exclusion correctly leaves it alone.
 print_header "Updating dependencies to latest ..."
-pnpm --recursive update --latest "!typescript" --aggregate-output --network-concurrency 10
+pnpm --recursive update --latest "!typescript" --lockfile-only --network-concurrency 10
+
+print_header "Install node modules ..."
+pnpm install --child-concurrency 10 --network-concurrency 10 --recursive

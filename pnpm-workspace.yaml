@@ -1,4 +1,5 @@
 allowBuilds:
+  "@poupe/eslint-plugin-tailwindcss": true
   esbuild: true
 
 # Required for bundledDependencies: pnpm can only bundle a real nested

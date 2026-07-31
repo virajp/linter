@@ -60,7 +60,10 @@ repos:
       - id: formatter
         name: Formatter
         entry: mise x -- pnpx dprint fmt --allow-no-files --log-level warn
-        exclude: (^|.*/)(package\.json$|tests/[^/]*$)
+        # `tests/` holds intentional violation fixtures that must never be
+        # reformatted. Match the whole subtree -- `tests/[^/]*$` only matched
+        # files directly inside it, so nested fixtures were still rewritten.
+        exclude: (^|.*/)(package\.json$|tests/)
         language: system
         stages: [ pre-commit ]
 
