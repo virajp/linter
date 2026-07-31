@@ -5,5 +5,16 @@
 set -e
 source "${MISE_PROJECT_ROOT}/.config/mise/tasks/_scripts/_helpers"
 
+print_header "Updating pnpm in package.json ..."
+pnpm self-update $(mise exec -- pnpm --version)
+
 print_header "Install node modules ..."
 pnpm install --aggregate-output --child-concurrency 10 --network-concurrency 10 --recursive
+
+# Must run *after* the install above: `pnpm update --latest` resolves the `latest`
+# dist-tag even for packages excluded with `!`, ignoring their package.json range.
+# On a clean slate (cleanup deletes the lockfile) that pulls typescript 7, which
+# eslint/typescript-eslint do not support. With a lockfile already pinning 6.x,
+# the `!typescript` exclusion correctly leaves it alone.
+print_header "Updating dependencies to latest ..."
+pnpm --recursive update --latest "!typescript" --aggregate-output --network-concurrency 10
