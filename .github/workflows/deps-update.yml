@@ -86,10 +86,32 @@ jobs:
         if: steps.changed.outputs.changed == 'true'
         run: git push origin HEAD:main --follow-tags
 
-      - name: Upgrade npm for OIDC publishing
+      # Keep this publish sequence in step with release.yml.
+      #
+      # npm 11.18.0 crashes with "Exit handler never called!" packing a
+      # bundledDependencies package; 11.17.0 is the last known-good. Needs
+      # >= 11.5.1 for OIDC trusted publishing.
+      - name: Pin npm for OIDC publishing
         if: steps.changed.outputs.changed == 'true'
-        run: npm install -g npm@latest
+        run: npm install -g npm@11.17.0
+
+      # npm crashes ("Exit handler never called!") packing a
+      # bundledDependencies package in CI, so let pnpm build the tarball and
+      # use npm only to upload it (which keeps OIDC trusted publishing).
+      - name: Pack tarball with pnpm
+        if: steps.changed.outputs.changed == 'true'
+        run: pnpm pack
 
       - name: Publish to npm
         if: steps.changed.outputs.changed == 'true'
-        run: npm publish --access public
+        run: npm publish "$(ls *.tgz)" --access public
+
+      - name: Show npm debug log on failure
+        if: failure()
+        run: |
+          shopt -s nullglob
+          for f in ~/.npm/_logs/*-debug-*.log; do
+            echo "::group::$f"
+            cat "$f"
+            echo "::endgroup::"
+          done
