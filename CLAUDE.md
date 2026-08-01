@@ -106,7 +106,9 @@ a runtime peer (like `typescript`), add that to `dependencies` +
 ## Releasing
 
 Publishing uses **npm OIDC trusted publishing** (no token, auto provenance) via
-CI; pnpm is used for everything else. Two paths, both authorized publishers:
+CI; pnpm is used for everything else. `release.yml` is the **only** workflow
+that publishes — npm allows exactly one trusted publisher per package, so every
+path routes through it:
 
 - **Manual release**: `mise run p:release [--minor|--major]` bumps the version,
   commits `ops: release vX.Y.Z`, and creates a **signed** tag — it does *not*
@@ -115,8 +117,11 @@ CI; pnpm is used for everything else. Two paths, both authorized publishers:
   → `npm publish` via OIDC).
 - **Monthly auto-update**: `.github/workflows/deps-update.yml` (cron + manual)
   runs `pnpm update --latest`, gates on `osv-scanner`, runs tests, then commits,
-  bumps, annotated-tags, pushes, and publishes inline (a bot tag push can't
-  re-trigger `release.yml`).
+  bumps, annotated-tags, pushes, and hands off with
+  `gh workflow run release.yml --ref vX.Y.Z`. A bot tag push can't trigger
+  `release.yml`, but `workflow_dispatch` is a documented exception to that rule
+  — it fires even from `GITHUB_TOKEN`. Dispatching against the **tag** ref keeps
+  `release.yml`'s version check active.
 - **Local fallback**: `mise run p:publish [--dry-run]` (checks `npm whoami` →
   tests → builds → `npm publish`). Prefer CI so every version keeps the
   strongest npm trust level.
@@ -124,10 +129,12 @@ CI; pnpm is used for everything else. Two paths, both authorized publishers:
 CI sets `MISE_ENV=ci`, which layers `.config/mise.ci.toml` (provides
 `osv-scanner`) on top of `.config/mise.toml`.
 
-**One-time manual setup required**: configure the OIDC Trusted Publisher on
-npmjs.com for `@askviraj/linter`, authorizing repo `virajp/linter` with both
-`release.yml` and `deps-update.yml`. Until then, CI publishes fail. If `main` is
-branch-protected, allow `github-actions[bot]` to push.
+**npm Trusted Publisher config**: on npmjs.com, `@askviraj/linter` authorizes
+repo `virajp/linter` with workflow `release.yml`. npm permits **one** trusted
+publisher per package, so `deps-update.yml` can never publish directly — it
+dispatches `release.yml` instead. Publishing from any other workflow fails the
+OIDC token exchange with a misleading `404 ... package not found` / `ENEEDAUTH`.
+If `main` is branch-protected, allow `github-actions[bot]` to push.
 
 ## Testing
 
