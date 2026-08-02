@@ -4,7 +4,12 @@ on:
   push:
     tags:
       - "v*"
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      dry-run:
+        description: "Pack and run the platform matrix, but do not publish"
+        type: boolean
+        default: false
 
 # OIDC trusted publishing: no NPM_TOKEN, automatic provenance.
 permissions:
@@ -15,8 +20,11 @@ env:
   MISE_ENV: ci
 
 jobs:
-  release:
+  pack:
+    name: Pack
     runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.meta.outputs.version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -39,12 +47,6 @@ jobs:
       - name: Build and test
         run: pnpm run test:all
 
-      # npm 11.18.0 crashes with "Exit handler never called!" packing a
-      # bundledDependencies package; 11.17.0 is the last known-good. Needs
-      # >= 11.5.1 for OIDC trusted publishing.
-      - name: Pin npm for OIDC publishing
-        run: npm install -g npm@11.17.0
-
       # npm crashes ("Exit handler never called!") packing a
       # bundledDependencies package in CI, so let pnpm build the tarball and
       # use npm only to upload it (which keeps OIDC trusted publishing).
@@ -52,8 +54,8 @@ jobs:
         run: pnpm pack
 
       # A native addon bundled from a host-only install ships a tarball that
-      # runs on the packing platform alone (see CLAUDE.md). Fail the release
-      # rather than publish one — the crash is silent until a user hits it.
+      # runs on the packing platform alone (see CLAUDE.md). Catch it here so
+      # the matrix below only has to prove the binaries actually load.
       - name: Verify every platform's native binding is bundled
         run: |
           TARBALL="$(ls *.tgz)"
@@ -75,6 +77,93 @@ jobs:
           done
           [ "$missing" -eq 0 ]
 
+      - name: Record version
+        id: meta
+        run: |
+          echo "version=$(node -p "require('./package.json').version")" >>"$GITHUB_OUTPUT"
+
+      - name: Upload tarball
+        uses: actions/upload-artifact@v7
+        with:
+          name: tarball
+          path: "*.tgz"
+          if-no-files-found: error
+          retention-days: 7
+
+  # Install the packed tarball on one runner per bundled native binary and lint
+  # the fixtures with it. A tarball that only runs where it was packed fails
+  # here, before anything reaches npm.
+  verify-tarball:
+    name: Verify ${{ matrix.target }}
+    needs: pack
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { target: linux-x64-gnu, os: ubuntu-latest }
+          - { target: linux-arm64-gnu, os: ubuntu-24.04-arm }
+          - { target: linux-x64-musl, os: ubuntu-latest, image: node:24-alpine }
+          - {
+              target: linux-arm64-musl,
+              os: ubuntu-24.04-arm,
+              image: node:24-alpine,
+            }
+          - { target: darwin-arm64, os: macos-latest }
+          - { target: darwin-x64, os: macos-15-intel }
+          - { target: win32-x64-msvc, os: windows-latest }
+          - { target: win32-arm64-msvc, os: windows-11-arm }
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      # The musl targets run in a container started by hand rather than via
+      # `container:`, which needs a glibc image to host the runner's own node.
+      - name: Set up Node
+        if: matrix.image == ''
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      - name: Download tarball
+        uses: actions/download-artifact@v8
+        with:
+          name: tarball
+
+      - name: Smoke test the packed tarball
+        shell: bash
+        run: |
+          TARBALL="$(ls *.tgz)"
+          if [ -n "${{ matrix.image }}" ]; then
+            docker run --rm -v "$PWD:/work" -w /work "${{ matrix.image }}" \
+              node .github/scripts/smoke.mjs "/work/$TARBALL"
+          else
+            node .github/scripts/smoke.mjs "./$TARBALL"
+          fi
+
+  publish:
+    name: Publish
+    needs: verify-tarball
+    if: inputs.dry-run != true
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up mise
+        uses: jdx/mise-action@v4
+
+      # npm 11.18.0 crashes with "Exit handler never called!" packing a
+      # bundledDependencies package; 11.17.0 is the last known-good. Needs
+      # >= 11.5.1 for OIDC trusted publishing.
+      - name: Pin npm for OIDC publishing
+        run: npm install -g npm@11.17.0
+
+      - name: Download tarball
+        uses: actions/download-artifact@v8
+        with:
+          name: tarball
+
       - name: Publish to npm
         run: npm publish "$(ls *.tgz)" --access public
 
@@ -87,3 +176,62 @@ jobs:
             cat "$f"
             echo "::endgroup::"
           done
+
+  # Same matrix again, this time against what the registry actually serves —
+  # the artifact users install, not the one CI built.
+  smoke-published:
+    name: Smoke ${{ matrix.target }}
+    needs: [ pack, publish ]
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { target: linux-x64-gnu, os: ubuntu-latest }
+          - { target: linux-arm64-gnu, os: ubuntu-24.04-arm }
+          - { target: linux-x64-musl, os: ubuntu-latest, image: node:24-alpine }
+          - {
+              target: linux-arm64-musl,
+              os: ubuntu-24.04-arm,
+              image: node:24-alpine,
+            }
+          - { target: darwin-arm64, os: macos-latest }
+          - { target: darwin-x64, os: macos-15-intel }
+          - { target: win32-x64-msvc, os: windows-latest }
+          - { target: win32-arm64-msvc, os: windows-11-arm }
+    env:
+      SPEC: "@askviraj/linter@${{ needs.pack.outputs.version }}"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Set up Node
+        if: matrix.image == ''
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24
+
+      # A publish takes a moment to become installable; without this the first
+      # runners to start would fail on a version the registry cannot serve yet.
+      - name: Wait for the registry to serve the version
+        shell: bash
+        run: |
+          for _ in $(seq 1 30); do
+            if npm view "$SPEC" version >/dev/null 2>&1; then
+              echo "$SPEC is installable"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "::error::$SPEC never became installable"
+          exit 1
+
+      - name: Smoke test the published package
+        shell: bash
+        run: |
+          if [ -n "${{ matrix.image }}" ]; then
+            docker run --rm -e SPEC -v "$PWD:/work" -w /work "${{ matrix.image }}" \
+              node .github/scripts/smoke.mjs "$SPEC"
+          else
+            node .github/scripts/smoke.mjs "$SPEC"
+          fi

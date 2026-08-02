@@ -117,13 +117,26 @@ a runtime peer (like `typescript`), add that to `dependencies` +
 Publishing uses **npm OIDC trusted publishing** (no token, auto provenance) via
 CI; pnpm is used for everything else. `release.yml` is the **only** workflow
 that publishes — npm allows exactly one trusted publisher per package, so every
-path routes through it:
+path routes through it.
+
+It runs as four jobs: **pack** (test, `pnpm pack`, assert every platform's
+native binding is in the tarball) → **verify-tarball** → **publish** →
+**smoke-published**. The two matrix jobs run `.github/scripts/smoke.mjs` on one
+runner per bundled native binary — the six GitHub-hosted os/arch combinations,
+plus `node:24-alpine` containers for the two musl targets. The script installs
+the build into a temp directory and lints `tests/fixtures/` with it, expecting
+`valid.*` to report no errors and every other fixture to report a problem, so a
+binary that fails to load surfaces as a failed job. `verify-tarball` gates the
+publish; `smoke-published` re-checks what the registry actually serves. Dispatch
+the workflow with **dry-run** to exercise both matrices without publishing.
+
+The release paths into that pipeline:
 
 - **Manual release**: `mise run p:release [--minor|--major]` bumps the version,
   commits `ops: release vX.Y.Z`, and creates a **signed** tag — it does *not*
   push. Then `git push && git push origin vX.Y.Z`; the tag push triggers
-  `.github/workflows/release.yml` (verifies tag == package.json version → tests
-  → `npm publish` via OIDC).
+  `.github/workflows/release.yml`, which verifies tag == package.json version
+  before running the pipeline above.
 - **Monthly auto-update**: `.github/workflows/deps-update.yml` (cron + manual)
   runs `pnpm update --latest`, gates on `osv-scanner`, runs tests, then commits,
   bumps, annotated-tags, pushes, and hands off with
