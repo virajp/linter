@@ -16,12 +16,21 @@ not the target repo's.
 
 This is enforced literally: every production dependency is listed in
 `bundledDependencies`, so `npm pack`/`publish` ships the full resolved tree
-**inside the tarball** (~19 MB). Consumers get exact, pre-resolved versions with
+**inside the tarball** (~36 MB). Consumers get exact, pre-resolved versions with
 no install-time resolution — immune to transitive version drift, regardless of
 their package manager. `typescript` is a real `dependency` (not just a
 `typescript-eslint` peer) for the same reason — TS/Astro linting needs it
 present in the bundle. Bundling requires `nodeLinker: hoisted`
 (`pnpm-workspace.yaml`); pnpm refuses to bundle its default symlinked store.
+
+Bundling a **native addon** needs one more thing. `astro-eslint-parser` loads
+`@astrojs/compiler-binding`, whose per-platform `.node` binaries ship as
+optional dependencies; pnpm installs only the host's binary by default, so a
+tarball packed on CI bundled a linux-x64 binding that no other platform could
+load and the CLI threw `Cannot find native binding` on import. The
+`supportedArchitectures` block in `pnpm-workspace.yaml` forces every os/cpu/libc
+combination to install, so all of them get bundled, and `release.yml` refuses to
+publish a tarball missing any of them.
 
 ## Commands
 

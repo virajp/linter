@@ -6,6 +6,26 @@ allowBuilds:
 # node_modules tree, not the default symlinked (isolated) store.
 nodeLinker: hoisted
 
+# astro-eslint-parser pulls in @astrojs/compiler-binding, a native addon whose
+# platform binaries ship as optional deps. pnpm installs only the host's binary
+# by default, so a tarball packed on CI (linux x64) bundled a binding no other
+# platform could load and the CLI crashed on import. Install every platform's
+# binary so bundledDependencies ships them all.
+supportedArchitectures:
+  os:
+    - current
+    - darwin
+    - linux
+    - win32
+  cpu:
+    - current
+    - x64
+    - arm64
+  libc:
+    - current
+    - glibc
+    - musl
+
 # Reject dependency versions published less than 10h ago (supply-chain guard).
 # Pinned in-repo so CI matches local dev; CI otherwise falls back to pnpm's
 # stricter 24h default and rejects freshly-released pinned deps.

@@ -51,6 +51,30 @@ jobs:
       - name: Pack tarball with pnpm
         run: pnpm pack
 
+      # A native addon bundled from a host-only install ships a tarball that
+      # runs on the packing platform alone (see CLAUDE.md). Fail the release
+      # rather than publish one — the crash is silent until a user hits it.
+      - name: Verify every platform's native binding is bundled
+        run: |
+          TARBALL="$(ls *.tgz)"
+          CONTENTS="$(tar tzf "$TARBALL")"
+          EXPECTED="$(node -e "
+            const pkg = require('./node_modules/@astrojs/compiler-binding/package.json');
+            console.log(
+              Object.keys(pkg.optionalDependencies)
+                .filter((name) => !name.includes('wasm32'))
+                .join('\n'),
+            );
+          ")"
+          missing=0
+          for pkg in $EXPECTED; do
+            if ! grep -q "^package/node_modules/$pkg/.*\.node\$" <<<"$CONTENTS"; then
+              echo "::error::$TARBALL is missing the native binary for $pkg"
+              missing=1
+            fi
+          done
+          [ "$missing" -eq 0 ]
+
       - name: Publish to npm
         run: npm publish "$(ls *.tgz)" --access public
 
