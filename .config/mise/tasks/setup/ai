@@ -7,15 +7,4 @@ set -e
 source "${MISE_PROJECT_ROOT}/.config/mise/tasks/_scripts/_helpers"
 
 print_header "Adding marketplaces ..."
-pnpx @askviraj/ai-plugins --all --upgrade --yes
-
-print_header "Installing graphify for Claude Code ..."
-graphify install --platform claude
-
-print_header "Installing Graphify post-commit hook ..."
-graphify hook install
-
-print_header "Prune Claude plugins ..."
-claude plugin autoremove --scope user --yes
-claude plugin autoremove --scope project --yes
-claude plugin autoremove --scope local --yes
+pnpx @askviraj/ai-plugins --all
