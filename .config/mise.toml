@@ -2,7 +2,6 @@
 activate_aggressive                = true
 all_compile                        = false
 gpg_verify                         = true
-lockfile                           = true
 raw                                = true
 status.missing_tools               = "always"
 task.disable_spec_from_run_scripts = true
@@ -13,27 +12,8 @@ node.compile        = false
 npm.package_manager = "pnpm"
 
 [tools]
-# Runtime and build tools
-dprint     = { version = "latest" }
-node       = { version = "latest" }
-pnpm       = { version = "latest" }
-pre-commit = { version = "latest" }
-taplo      = { version = "latest" }
-
-# AI Tools
-
-[tasks.init]
-description = "Initialize mise tasks"
-hide        = true
-run         = "find .config/mise/tasks/ -name '*' -type f -exec chmod 755 {} \\;"
-
-[shell_alias]
-cc    = "claude --allow-dangerously-skip-permissions --dangerously-skip-permissions"
-cch   = "claude --allow-dangerously-skip-permissions --dangerously-skip-permissions --model 'haiku[1m]' --effort high"
-cco   = "claude --allow-dangerously-skip-permissions --dangerously-skip-permissions --model 'opus[1m]' --effort high"
-ccs   = "claude --allow-dangerously-skip-permissions --dangerously-skip-permissions --model 'sonnet[1m]' --effort high"
-setup = "mise run setup:all"
+node = { version = "latest" }
+pnpm = { version = "latest" }
 
 [env]
-DISABLE_TELEMETRY = 1
-_.path            = { path = "node_modules/.bin", tools = true }
+_.path = { path = "node_modules/.bin", tools = true }
