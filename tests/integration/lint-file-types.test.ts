@@ -104,6 +104,13 @@ describe("lint file types", () => {
     expect(result.stdout).toContain("no-empty-links");
   });
 
+  test("treats a hash comment in frontmatter as frontmatter, not an H1", async () => {
+    copyFixture(FIXTURES.markdown.frontmatterComment, tmpDir);
+    const result = await runCli(["--no-ignore", "."], tmpDir);
+    expect(result.stdout).not.toContain("no-multiple-h1");
+    expect(result.exitCode).toBe(0);
+  });
+
   test("lints valid yaml with no errors", async () => {
     copyFixture(FIXTURES.yaml.valid, tmpDir);
     const result = await runCli(["--no-ignore", "."], tmpDir);

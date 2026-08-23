@@ -27,6 +27,7 @@ export const FIXTURES = {
   markdown: {
     valid: "markdown/valid.md",
     emptyLinks: "markdown/empty-links.md",
+    frontmatterComment: "markdown/frontmatter-comment.md",
   },
   yaml: {
     valid: "yaml/valid.yaml",
