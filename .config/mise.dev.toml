@@ -12,8 +12,4 @@ hide        = true
 run         = "find .config/mise/tasks/ -name '*' -type f -exec chmod 755 {} \\;"
 
 [shell_alias]
-cc    = "claude --allow-dangerously-skip-permissions --dangerously-skip-permissions --name 'linter' --remote-control --continue"
-cch   = "claude --allow-dangerously-skip-permissions --dangerously-skip-permissions --model 'haiku[1m]' --effort high --name 'linter' --remote-control --continue"
-cco   = "claude --allow-dangerously-skip-permissions --dangerously-skip-permissions --model 'opus[1m]' --effort high --name 'linter' --remote-control --continue"
-ccs   = "claude --allow-dangerously-skip-permissions --dangerously-skip-permissions --model 'sonnet[1m]' --effort high --name 'linter' --remote-control --continue"
 setup = "mise run setup:all"
