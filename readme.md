@@ -167,6 +167,19 @@ extension picks up changes without restarting.
 4. ESLint's programmatic API lints the current working directory. Plugins are
    resolved from the package's own `node_modules`, not the target repo's.
 
+## Known Vulnerabilities
+
+These advisories have no fix in the allowed version range of the dependency that
+pulls them in. `osv-scanner` (the monthly dependency update) ignores them
+through [`.config/osv-scanner.toml`](./.config/osv-scanner.toml), and
+`pnpm audit` (`setup:pnpm:audit`) ignores them through `auditConfig.ignoreGhsas`
+in [`pnpm-workspace.yaml`](./pnpm-workspace.yaml). Remove an entry from both
+places when its fix can install.
+
+| Advisory                                                                 | Severity | Package         | Path                                                      | Reason                                                                                    |
+| ------------------------------------------------------------------------ | -------- | --------------- | --------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| [GHSA-238p-pmpm-9mq7](https://github.com/advisories/GHSA-238p-pmpm-9mq7) | Low      | `katex` <0.18.2 | `@eslint/markdown` > `micromark-extension-math` > `katex` | `micromark-extension-math` 3.1.0 (latest) requires `katex ^0.16.0`. The fix is in 0.18.2. |
+
 ## License
 
 MIT — see [LICENSE](./LICENSE) for details.

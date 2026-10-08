@@ -24,7 +24,10 @@ print_header "Resolving dependencies ..."
 pnpm install --lockfile-only
 
 print_header "Updating dependencies to latest ..."
-pnpm --recursive update --latest "!typescript" --lockfile-only --network-concurrency 10
+# `!@eslint/css`: hold @eslint/css at 1.x. @poupe/eslint-plugin-tailwindcss
+# (latest 0.3.1) needs ^1.1.0; with 2.x ESLint rejects every css/* rule for the
+# "tailwindcss/css" language. Drop the exclusion when the plugin supports 2.x.
+pnpm --recursive update --latest "!typescript" "!@eslint/css" --lockfile-only
 
 print_header "Install node modules ..."
-pnpm install --child-concurrency 10 --network-concurrency 10 --recursive
+pnpm install --network-concurrency 10 --recursive

@@ -1,0 +1,7 @@
+# Known advisories that have no fix in range. Each entry is also listed in the
+# "Known Vulnerabilities" section of readme.md. Remove an entry when its fix
+# can install.
+
+[[IgnoredVulns]]
+id     = "GHSA-238p-pmpm-9mq7"
+reason = "katex <0.18.2 via @eslint/markdown > micromark-extension-math, which requires katex ^0.16.0. No in-range fix."

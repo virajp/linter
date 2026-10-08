@@ -36,10 +36,14 @@ jobs:
       #      index and never exits (pnpm 11.18.0). A CI runner always has a cold
       #      store, so this would hang the job. `--lockfile-only` downloads
       #      nothing; the final install is the only pass that touches the store.
+      # `!@eslint/css`: hold @eslint/css at 1.x. @poupe/eslint-plugin-tailwindcss
+      # (latest 0.3.1) needs ^1.1.0; with 2.x ESLint rejects every css/* rule
+      # for the "tailwindcss/css" language. Drop the exclusion when the plugin
+      # supports 2.x.
       - name: Update dependencies to latest
         run: |
           pnpm install --lockfile-only
-          pnpm update --latest "!typescript" --lockfile-only
+          pnpm update --latest "!typescript" "!@eslint/css" --lockfile-only
           pnpm install
 
       - name: Detect changes
@@ -54,7 +58,8 @@ jobs:
 
       - name: Scan for vulnerabilities
         if: steps.changed.outputs.changed == 'true'
-        run: osv-scanner scan source --lockfile=pnpm-lock.yaml
+        run: osv-scanner scan source --config .config/osv-scanner.toml
+          --lockfile=pnpm-lock.yaml
 
       - name: Build and test
         if: steps.changed.outputs.changed == 'true'
