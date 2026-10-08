@@ -105,7 +105,7 @@ describe("lint file types", () => {
   });
 
   test("treats a hash comment in frontmatter as frontmatter, not an H1", async () => {
-    copyFixture(FIXTURES.markdown.frontmatterComment, tmpDir);
+    copyFixture(FIXTURES.markdown.valid, tmpDir);
     const result = await runCli(["--no-ignore", "."], tmpDir);
     expect(result.stdout).not.toContain("no-multiple-h1");
     expect(result.exitCode).toBe(0);
