@@ -43,3 +43,16 @@ print_error() {
   local msg="$1"
   echo -e "${RED}${BOLD}${msg}${NORMAL}"
 }
+
+# Print a full-width separator line built from the given character
+line_sep() {
+  local COL
+  COL=$(stty size 2>/dev/null | awk '{print $2}') || COL=''
+  local line
+  printf -v line '%*s' "${COL:-80}" ''
+  printf '%s\n' "${line// /$1}"
+}
+
+print_success() { echo -e "${GREEN}${BOLD}$1${NORMAL}"; }
+print_ok() { echo -e "${GREEN}${BOLD}OK${NORMAL}"; }
+print_yellow() { echo -e "${YELLOW}$1${NORMAL}"; }
