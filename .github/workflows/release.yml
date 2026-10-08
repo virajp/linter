@@ -56,6 +56,9 @@ jobs:
       # A native addon bundled from a host-only install ships a tarball that
       # runs on the packing platform alone (see CLAUDE.md). Catch it here so
       # the matrix below only has to prove the binaries actually load.
+      #
+      # Skipped: wasm32 (no native .node file) and android (not in
+      # supportedArchitectures -- no runner in the matrix can load it).
       - name: Verify every platform's native binding is bundled
         run: |
           TARBALL="$(ls *.tgz)"
@@ -64,7 +67,7 @@ jobs:
             const pkg = require('./node_modules/@astrojs/compiler-binding/package.json');
             console.log(
               Object.keys(pkg.optionalDependencies)
-                .filter((name) => !name.includes('wasm32'))
+                .filter((name) => !/wasm32|android/.test(name))
                 .join('\n'),
             );
           ")"
