@@ -42,6 +42,7 @@ mise x -- mise run code:format    # Format with dprint
 mise x -- mise run code:lint      # Self-lint via src/eslint.config.ts (--fix, --debug supported)
 mise x -- mise run code:check     # tsc type-check (no emit)
 mise x -- mise run p:test         # Build, then run all tests (unit + integration)
+mise x -- mise run p:preflight    # Tests + pack + binding check + smoke.mjs (release.yml's Pack job, locally)
 mise x -- mise run p:build        # Compile src/ -> dist/
 mise x -- mise run setup:all      # Bootstrap: install deps, pre-commit hooks, etc.
 ```
@@ -132,9 +133,11 @@ the workflow with **dry-run** to exercise both matrices without publishing.
 
 The release paths into that pipeline:
 
-- **Manual release**: `mise run p:release [--minor|--major]` bumps the version,
-  commits `ops: release vX.Y.Z`, and creates a **signed** tag — it does *not*
-  push. Then `git push && git push origin vX.Y.Z`; the tag push triggers
+- **Manual release**: `mise run p:release [--minor|--major]` runs `p:preflight`
+  (tests, then the binding check and `smoke.mjs` against a locally packed
+  tarball — the same scripts `release.yml` runs), bumps the version, commits
+  `ops: release vX.Y.Z`, and creates a **signed** tag — it does *not* push. Then
+  `git push && git push origin vX.Y.Z`; the tag push triggers
   `.github/workflows/release.yml`, which verifies tag == package.json version
   before running the pipeline above.
 - **Monthly auto-update**: `.github/workflows/deps-update.yml` (cron + manual)

@@ -1,0 +1,27 @@
+#!/usr/bin/env zsh
+#MISE description="Run the release.yml pack checks locally: tests, bundled bindings, smoke"
+
+set -e
+source "${MISE_PROJECT_ROOT}/.config/mise/tasks/_scripts/_helpers"
+
+cd $MISE_PROJECT_ROOT
+
+PACK_DIR=$(mktemp -d)
+# `pnpm pack` and `pnpm run build` can prune node_modules; restore it on exit.
+trap 'rm -rf "$PACK_DIR"; pnpm install --frozen-lockfile >/dev/null' EXIT
+
+print_header "Running tests..."
+mise run p:test
+
+print_header "Packing tarball..."
+pnpm pack --pack-destination "$PACK_DIR" >/dev/null
+TARBALL=$(ls "$PACK_DIR"/*.tgz)
+
+print_header "Checking bundled native bindings..."
+bash .github/scripts/check-bindings.sh "$TARBALL"
+
+print_header "Smoke testing the tarball..."
+node .github/scripts/smoke.mjs "$TARBALL"
+
+print_header "Preflight passed on $(uname -s)-$(uname -m)"
+print_warn "release.yml still smoke tests the other platforms."

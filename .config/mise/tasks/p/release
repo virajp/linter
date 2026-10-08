@@ -22,8 +22,8 @@ else
   VERSION_FLAG=""
 fi
 
-print_header "Running tests..."
-mise run p:test
+print_header "Running release preflight..."
+mise run p:preflight
 
 print_header "Bumping version..."
 mise run p:version ${VERSION_FLAG}

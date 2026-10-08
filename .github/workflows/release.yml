@@ -53,32 +53,9 @@ jobs:
       - name: Pack tarball with pnpm
         run: pnpm pack
 
-      # A native addon bundled from a host-only install ships a tarball that
-      # runs on the packing platform alone (see CLAUDE.md). Catch it here so
-      # the matrix below only has to prove the binaries actually load.
-      #
-      # Skipped: wasm32 (no native .node file) and android (not in
-      # supportedArchitectures -- no runner in the matrix can load it).
+      # Shared with the p:preflight task -- see the script for what it skips.
       - name: Verify every platform's native binding is bundled
-        run: |
-          TARBALL="$(ls *.tgz)"
-          CONTENTS="$(tar tzf "$TARBALL")"
-          EXPECTED="$(node -e "
-            const pkg = require('./node_modules/@astrojs/compiler-binding/package.json');
-            console.log(
-              Object.keys(pkg.optionalDependencies)
-                .filter((name) => !/wasm32|android/.test(name))
-                .join('\n'),
-            );
-          ")"
-          missing=0
-          for pkg in $EXPECTED; do
-            if ! grep -q "^package/node_modules/$pkg/.*\.node\$" <<<"$CONTENTS"; then
-              echo "::error::$TARBALL is missing the native binary for $pkg"
-              missing=1
-            fi
-          done
-          [ "$missing" -eq 0 ]
+        run: bash .github/scripts/check-bindings.sh "$(ls *.tgz)"
 
       - name: Record version
         id: meta

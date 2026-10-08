@@ -57,13 +57,14 @@ available in the `mise x` environment, so you can run
 `mise x --` when executing from an AI agent to ensure proper context and access
 to all tools and dependencies. </IMPORTANT_NOTE>
 
-| Script      | Command                                                   |
-| ----------- | --------------------------------------------------------- |
-| `build`     | `tsc -p tsconfig.build.json` — Compiles `src/` to `dist/` |
-| `p:build`   | `mise run p:build` — Build the CLI                        |
-| `p:test`    | `mise run p:test` — Self-lint the build output            |
-| `p:preview` | `mise run p:preview` — Preview the tarball                |
-| `p:publish` | `mise run p:publish` — Publish to npm                     |
+| Script        | Command                                                        |
+| ------------- | -------------------------------------------------------------- |
+| `build`       | `tsc -p tsconfig.build.json` — Compiles `src/` to `dist/`      |
+| `p:build`     | `mise run p:build` — Build the CLI                             |
+| `p:test`      | `mise run p:test` — Self-lint the build output                 |
+| `p:preview`   | `mise run p:preview` — Preview the tarball                     |
+| `p:preflight` | `mise run p:preflight` — Run release.yml's pack checks locally |
+| `p:publish`   | `mise run p:publish` — Publish to npm                          |
 
 Each step depends on the previous one, so running `mise run p:publish`
 automatically triggers `p:build` → `p:test` → `p:preview` → `p:publish`.
