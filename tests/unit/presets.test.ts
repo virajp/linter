@@ -9,6 +9,7 @@ import { htmlConfig } from "../../src/config/presets/html.js";
 import { javascriptConfig } from "../../src/config/presets/javascript.js";
 import { jsonConfig } from "../../src/config/presets/json.js";
 import { jsoncConfig } from "../../src/config/presets/jsonc.js";
+import { markdownCodeBlocksConfig } from "../../src/config/presets/markdown-code-blocks.js";
 import { markdownConfig } from "../../src/config/presets/markdown.js";
 import { tomlConfig } from "../../src/config/presets/toml.js";
 import { typescriptConfig } from "../../src/config/presets/typescript.js";
@@ -36,6 +37,11 @@ const presets = [
     ],
   },
   { name: "markdown", config: markdownConfig, files: ["**/*.md"] },
+  {
+    name: "markdown-code-blocks",
+    config: markdownCodeBlocksConfig,
+    files: ["**/*.md/*.{js,mjs,cjs,jsx,ts,mts,cts,tsx}"],
+  },
   { name: "toml", config: tomlConfig, files: ["**/*.toml"] },
   {
     name: "typescript",

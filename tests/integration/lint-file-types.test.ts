@@ -1,4 +1,8 @@
 import {
+  readFileSync,
+  writeFileSync,
+} from "node:fs";
+import {
   afterEach,
   beforeEach,
   describe,
@@ -102,6 +106,22 @@ describe("lint file types", () => {
     const result = await runCli(["--no-ignore", "."], tmpDir);
     expect(result.exitCode).toBe(1);
     expect(result.stdout).toContain("no-empty-links");
+  });
+
+  test("lints markdown content and code blocks in one run", async () => {
+    copyFixture(FIXTURES.markdown.codeBlockErrors, tmpDir);
+    const result = await runCli(["--no-ignore", "."], tmpDir);
+    expect(result.exitCode).toBe(1);
+    expect(result.stdout).toContain("no-empty-links");
+    expect(result.stdout).toMatch(/6:1\s+error\s+Unexpected 'debugger' statement\s+no-debugger/);
+    expect(result.stdout).toContain("Parsing error");
+  });
+
+  test("fixes code blocks in markdown with --fix", async () => {
+    writeFileSync(`${tmpDir}/doc.md`, "# Doc\n\n```js\nif (!!a) foo();\n```\n");
+    const result = await runCli(["--no-ignore", "--fix", "."], tmpDir);
+    expect(result.exitCode).toBe(0);
+    expect(readFileSync(`${tmpDir}/doc.md`, "utf-8")).toContain("if (a) foo();");
   });
 
   test("treats a hash comment in frontmatter as frontmatter, not an H1", async () => {

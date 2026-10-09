@@ -18,7 +18,7 @@ not the target repo's.
 | Astro      | `.astro`                                                       |
 | JSON       | `.json`                                                        |
 | JSONC      | `.jsonc`, `tsconfig.json`, `tsconfig.*.json`, `.vscode/*.json` |
-| Markdown   | `.md` (frontmatter parsed as YAML)                             |
+| Markdown   | `.md` (frontmatter parsed as YAML) and its fenced code blocks  |
 | CSS        | `.css` (with Tailwind CSS rules)                               |
 | YAML       | `.yaml`, `.yml`                                                |
 | TOML       | `.toml`                                                        |
@@ -126,6 +126,16 @@ Config composition pipeline:
    merges per-preset `overrides.<name>.rules`, prepends `globalIgnores`, and
    appends raw user `configs`.
 
+**Markdown code blocks need a second ESLint run.** With a processor, ESLint
+lints only the extracted code blocks, not the Markdown content. So
+`src/config/markdown-processor.ts` is not in the base config. `runLint` lints
+all targets with the base config, then lints the `.md` files again with the
+processor added, and merges each file's two results. The second run has no
+cache. Each block uses the preset of its language (a virtual file such as
+`doc.md/0.ts`), and the `markdown-code-blocks` preset relaxes the JS/TS rules.
+The `/auto` export has one config, so the VS Code extension shows Markdown
+content problems only.
+
 `src/config/ignores.ts` is part of the **published** config. Its patterns (for
 example `**/AGENTS.md` and `.claude/**/*.md`) apply to every consumer repo.
 
@@ -208,7 +218,7 @@ configs:
 | `configs`   | `unknown[]`                 | Raw ESLint config objects appended after the base config.                         |
 
 Preset names for `overrides`: `javascript`, `typescript`, `astro`, `json`,
-`jsonc`, `markdown`, `markdown-typescript`, `yaml`, `toml`, `html`, `css`.
+`jsonc`, `markdown`, `markdown-code-blocks`, `yaml`, `toml`, `html`, `css`.
 
 ## Conventions
 

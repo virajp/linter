@@ -13,3 +13,11 @@ This is a paragraph with a [link](https://example.com).
 ```ts
 const x = 1;
 ```
+
+```json
+{ "a": 1 }
+```
+
+```sh
+npx @askviraj/linter --fix
+```

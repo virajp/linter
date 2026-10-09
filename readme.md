@@ -60,11 +60,16 @@ bunx --bun @askviraj/linter --init
 | Astro      | `.astro`                                    |
 | JSON       | `.json`                                     |
 | JSONC      | `.jsonc`, `tsconfig.json`, `.vscode/*.json` |
-| Markdown   | `.md`                                       |
+| Markdown   | `.md` (and its fenced code blocks)          |
 | CSS        | `.css`                                      |
 | YAML       | `.yaml`, `.yml`                             |
 | TOML       | `.toml`                                     |
 | HTML       | `.html`                                     |
+
+The CLI also lints the fenced code blocks in Markdown files. A block is linted
+with the preset of its language (for example, a `ts` block with `typescript`). A
+block in a language that is not in this table, for example `sh`, is skipped. JS
+and TS blocks use relaxed rules: unused and undefined names are not errors.
 
 ## CLI Reference
 
@@ -131,7 +136,7 @@ Use these names in the `overrides` section:
 - `json`
 - `jsonc`
 - `markdown`
-- `markdown-typescript`
+- `markdown-code-blocks` — relaxed rules for JS/TS code blocks in Markdown
 - `yaml`
 - `toml`
 - `html`
@@ -156,6 +161,10 @@ After running `--init`, VS Code discovers `eslint.config.mjs` and loads the
 bundled config automatically. Edit `.config/linter.yaml` to customize rules; the
 extension picks up changes without restarting.
 
+The extension shows problems in Markdown content, but not in Markdown code
+blocks. ESLint cannot lint both in one run, and the extension runs only one. Run
+the CLI to see code-block problems.
+
 ## How It Works
 
 1. `npx` or `bunx` installs `@askviraj/linter` and its dependencies in a
@@ -166,6 +175,8 @@ extension picks up changes without restarting.
    config.
 4. ESLint's programmatic API lints the current working directory. Plugins are
    resolved from the package's own `node_modules`, not the target repo's.
+5. A second ESLint run lints the fenced code blocks of the Markdown files. The
+   CLI merges its results into the same report.
 
 ## Known Vulnerabilities
 

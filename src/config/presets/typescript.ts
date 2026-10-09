@@ -6,7 +6,6 @@ import tseslint from "typescript-eslint";
 export const typescriptConfig = {
   extends: [js.configs.recommended, tseslint.configs.recommended],
   files: ["**/*.{ts,mts,cts,tsx}"],
-  ignores: ["**/*.md/*.ts", "**/*.md/*.tsx"],
   languageOptions: {
     globals: {
       ...globals.browser,

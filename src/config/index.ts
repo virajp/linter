@@ -6,7 +6,7 @@ import { htmlConfig } from "./presets/html.js";
 import { javascriptConfig } from "./presets/javascript.js";
 import { jsonConfig } from "./presets/json.js";
 import { jsoncConfig } from "./presets/jsonc.js";
-import { markdownTsConfig } from "./presets/markdown-ts.js";
+import { markdownCodeBlocksConfig } from "./presets/markdown-code-blocks.js";
 import { markdownConfig } from "./presets/markdown.js";
 import { tomlConfig } from "./presets/toml.js";
 import { typescriptConfig } from "./presets/typescript.js";
@@ -21,7 +21,7 @@ export function composeBaseConfig() {
     jsonConfig,
     jsoncConfig,
     markdownConfig,
-    markdownTsConfig,
+    markdownCodeBlocksConfig,
     yamlConfig,
     tomlConfig,
     htmlConfig,
