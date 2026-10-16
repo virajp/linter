@@ -1,0 +1,304 @@
+---
+type: vwf-change-plan
+title: Rename to @virajp.dev/linter and skip an absent .vscode/settings.json
+requires: []
+backlog: []
+backlog_pieces: []
+---
+
+# Plan — Rename to @virajp.dev/linter and skip an absent .vscode/settings.json (2026-10-16)
+
+## Status
+
+**APPROVED**
+
+APPROVED 2026-10-16 by the user
+
+## Consent
+
+| Action                                            | Granted |
+| ------------------------------------------------- | ------- |
+| Merge to the integration branch and push on green | yes     |
+| End an `all` run after landing                    | no      |
+
+**The mode recorded here is the consent.** A `run` step runs on a green landing
+without a prompt, and `run` is the only mode. This plan has no after-landing
+step.
+
+## Release levels
+
+| Project  | Level | Reason                                                                                  |
+| -------- | ----- | --------------------------------------------------------------------------------------- |
+| `linter` | MAJOR | The package name changes. Consumers must change their install and their `/auto` import. |
+| `sunset` | NONE  | The user publishes it once by hand. The release task never publishes it.                |
+
+## Goal
+
+After this plan lands, the repository builds and tests the package as
+`@virajp.dev/linter`. A new `sunset/` package is ready for a last
+`@askviraj/linter` publish that tells users to move. `--init` edits
+`.vscode/settings.json` only when the file exists.
+
+The user asked for three things: rename the package to `@virajp.dev/linter`,
+deprecate `@askviraj/linter` and point users to the new package, and edit
+`.vscode/settings.json` only if it exists. The plan does the code and the docs.
+The publish and the deprecation are hand steps after the landing (see
+**Parked**).
+
+Two reversals of standing decisions:
+
+- **R1.** On 2026-10-09 the user decided to run `/vwf:setup` (the `cli` +
+  `site` reshape) before the rename. The user now does the rename first, in the
+  current single-package shape.
+- **R2.** Backlog item B01 says "released as v1.0.0". The first
+  `@virajp.dev/linter` version is now **2.0.0**, because the tag `v1.0.0`
+  already exists. The `v*` tag scheme stays.
+
+## Facts the survey established
+
+- `package.json`: `name` `@askviraj/linter` (line 2), `version` `1.1.9`
+  (line 3), `bin` `{ "linter": "dist/index.js" }`, `exports` `.` and `./auto`,
+  `files` `["dist/"]`, no `publishConfig`. `package.json:34` is the author email
+  `askviraj@gmail.com`. It is not the package name.
+- No code reads the package name from `package.json` at runtime. Every runtime
+  use is hard-coded. `src/cli/commands/version.ts` reads only `version` and
+  `dependencies`.
+- `pnpm-workspace.yaml` has no `packages:` list, so a new `sunset/` directory is
+  not a workspace member. `tsconfig.build.json` includes only `src/**/*`.
+- The old name has 54 hits in 16 tracked files. `pnpm-lock.yaml` has none.
+  `graphify-out/` (gitignored) has 389 hits.
+  - Runtime: `src/cli/commands/help.ts:2`; `src/cli/commands/init.ts:16`, `:17`,
+    `:18` (the scaffold line `export { default } from "@askviraj/linter/auto"`),
+    `:21`, `:184`; `src/config-loader.ts:56`.
+  - Tests: `tests/unit/init.test.ts:36`, `:44`, `:75`;
+    `tests/integration/init-command.test.ts:52`, `:58`, `:72`;
+    `tests/fixtures/markdown/valid.md:22`.
+  - CI: `.github/workflows/release.yml:183` (`SPEC`);
+    `.github/workflows/deps-update.yml:96` (comment);
+    `.github/scripts/smoke.mjs:1`, `:10`, `:11` (comments), `:37`
+    (`PACKAGE_NAME`, used at `:79` and `:159`);
+    `.github/scripts/check-bindings.sh:9` (comment).
+  - Other: `.config/statusline.json:3` (`projectName`).
+  - Docs: `readme.md:1`, `:22`, `:25`, `:32`, `:35`, `:42`, `:45`, `:48`, `:51`,
+    `:149`, `:157`, `:170`; `CLAUDE.md:8`, `:109`, `:161`, `:162`, `:187`,
+    `:189`, `:294`.
+- `--init` and `.vscode/settings.json` today (`src/cli/commands/init.ts`):
+  - `:42-44` defines the one key `"eslint.useFlatConfig": true`.
+  - `:61-94` `updateVsCodeSettings` edits the file with `jsonc-parser`.
+  - `:150-182` the settings step. It creates `.vscode/` (`:151-154`) and creates
+    the file (`:169-182`) when they do not exist. An existing file is merged:
+    `up-to-date`, `updated`, or `failed`.
+  - `--force` has no effect on the settings file. It applies only to
+    `eslint.config.mjs` (`:109`) and `.config/linter.yaml` (`:133`).
+  - `:184-187` prints a header and one `  [action] <path>` line per file.
+    `:189-195` prints a `--force` hint when any file is `skipped`.
+  - `src/cli/commands/help.ts:5` says "Scaffold eslint.config.mjs and
+    .config/linter.yaml". It does not name `.vscode/settings.json`.
+- Tests for the settings step: `tests/unit/init.test.ts:48` (creates the file),
+  `:56`, `:67`, `:78`, `:89`; `tests/integration/init-command.test.ts:29`
+  (asserts that the file exists at `:34`), `:37`, `:45`, `:61`.
+- Docs for the settings step: `readme.md:78`, `:151`, `:153`;
+  `CLAUDE.md:192-193`.
+- Release mechanics:
+  - `release.yml` runs on a `v*` tag push or by hand with `dry-run`. Jobs:
+    `pack` (`:23`), `verify-tarball` (`:76`), `publish` (`:124`,
+    `npm publish "$(ls *.tgz)" --access public` at `:148`), `smoke-published`
+    (`:162`, polls `npm view "$SPEC"` at `:200`). The tag must equal
+    `v<package.json version>` (`:35-42`). The publish job has no check for a
+    version that is already on npm.
+  - `p:release` runs `p:preflight`, bumps the version, commits
+    `ops: release vX.Y.Z`, and makes a signed tag. It does not push.
+  - `p:publish` runs `npm publish --access public` from the directory, not from
+    a packed tarball.
+- Tags: `v1.0.0`, `v1.0.2`, `v1.0.3`, `v1.0.5`, `v1.1.0` to `v1.1.9`. `v2.0.0`
+  does not exist.
+- npm (2026-10-15): `@virajp.dev/linter` returns E404. `@askviraj/linter` is
+  `1.1.9` (`latest`) and is not deprecated. `npm whoami` returns E401.
+  `@virajp.dev/claude-plugins` is on npm, so the user published under the
+  `@virajp.dev` scope before.
+- Precedent: claude-plugins
+  `docs/plans/archived/2026-09-04-rename-to-claude-plugins/`. Its `sunset/`
+  package (`package.json`, a dependency-free bin `.mjs`, `readme.md`) prints a
+  move message to stderr and exits 1. Its version was a major bump over the
+  last real version. The user published it by hand and ran `npm deprecate`.
+  The first publish of the new name was by hand, then the Trusted Publisher was
+  added, then CI published.
+- Gates: `mise tasks` has `code:format`, `code:lint`, `code:check`, `p:test`,
+  `p:preflight`. No workflow runs on push or pull request.
+- Before this plan, a separate `ops:` commit on `main` replaced the broken
+  `dprint.json` symlink with `dprint.jsonc` (it extends
+  `~/.config/dprint/dprint.jsonc`) and reformatted 29 files to that config. The
+  line numbers in this plan are from after that commit. On 2026-10-16 all four
+  wave gate lines passed on that state.
+- Commit convention (`.config/git-conventional-commits.yaml`): types `feat`,
+  `fix`, `refactor`, `wip`, `spec`, `test`, `ops`, `docs`, `merge`. No scopes.
+- `jsonc-parser` `3.3.1` is a bundled dependency. Only `init.ts` uses it.
+
+## Assumed decisions — confirm or override at review
+
+| #  | Decision             | Ruling                                                                                                                                                    | Rejected                                          | Unit  |
+| -- | -------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------- | ----- |
+| 1  | Sequence             | Do the rename before `/vwf:setup`, in the current single-package shape (reversal R1).                                                                     | Setup first; rename inside the setup reshape      | U6    |
+| 2  | First new version    | 2.0.0 (reversal R2). No unit bumps the version. `p:release --major` bumps it after the landing.                                                           | 1.0.0 with a new tag scheme; 1.2.0                | U6    |
+| 3  | Plan count           | One plan for the rename and the `.vscode/settings.json` change.                                                                                           | Two chained plans                                 | index |
+| 4  | Backlog              | Ignore the backlog for now. `backlog: []` and `backlog_pieces: []`.                                                                                       | B01 on `backlog_pieces:`; B01 on `backlog:`       | index |
+| 5  | Deprecation method   | A `sunset/` tombstone package publishes a last `@askviraj/linter` version, then `npm deprecate`. Both are hand steps.                                     | `npm deprecate` only; a working final release     | U2    |
+| 6  | Tombstone version    | `2.0.0`.                                                                                                                                                  | `1.2.0`                                           | U2    |
+| 7  | Tombstone imports    | `exports` maps `.` and `./auto` to one module. Its import throws an `Error` with the move message and the new import line.                                | Bin only                                          | U2    |
+| 8  | Tombstone bin        | The bin `linter` ignores all arguments, prints the move message to stderr, prints nothing to stdout, and exits 1.                                         | Exit 0; honor `--help`                            | U2    |
+| 9  | Absent settings file | If `.vscode/settings.json` does not exist, `--init` does not create `.vscode/` or the file. It prints `[skipped] <path>`. `--force` does not change this. | A new `[not found]` label; print nothing          | U1    |
+| 10 | `--force` hint       | The hint prints only when `eslint.config.mjs` or `.config/linter.yaml` is skipped.                                                                        | Unchanged hint                                    | U1    |
+| 11 | Help text            | The `--init` line in `help.ts` says that it also updates `.vscode/settings.json` if the file exists.                                                      | Leave the text as it is                           | U1    |
+| 12 | Consumer migration   | `readme.md` gets a section "Migrate from @askviraj/linter". No new code.                                                                                  | `--init` rewrites the old import                  | U6    |
+| 13 | First CI publish     | The `release.yml` publish job skips the publish when `npm view <name>@<version>` already exists. The `smoke-published` job still runs.                    | Accept one red run; a placeholder `0.0.0` publish | U3    |
+| 14 | Review row           | One `review` row in wave 3. The plan lands runnable code: `init.ts`, the tombstone bin and module, `release.yml`, `smoke.mjs`.                            | No review row                                     | U5    |
+| 15 | Tombstone test       | Only U2's verification runs the bin and the import. No permanent vitest test, because the user publishes the tombstone once by hand.                      | `tests/unit/sunset.test.ts`                       | U2    |
+| 16 | Markdown fixture     | Change the name in `tests/fixtures/markdown/valid.md:22` (content only).                                                                                  | Leave the old name                                | U4    |
+| 17 | Author email         | `askviraj@gmail.com` at `package.json:34` stays. It is not the package name.                                                                              | Change it                                         | U4    |
+| 18 | Model                | `opus` for every unit.                                                                                                                                    | —                                                 | all   |
+
+## New dependencies
+
+None. The tombstone imports only `node:process`.
+
+## Units
+
+| Id | Wave | Unit file                                  | Kind   | Owns                                                                                                                                                                                                                               | Depends on     | Status  | Commit |
+| -- | ---- | ------------------------------------------ | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- | ------- | ------ |
+| U1 | 1    | [01-settings-json.md](01-settings-json.md) | edit   | `src/cli/commands/init.ts`, `src/cli/commands/help.ts`, `tests/unit/init.test.ts`, `tests/integration/init-command.test.ts`                                                                                                        | —              | pending |        |
+| U2 | 1    | [02-sunset.md](02-sunset.md)               | edit   | `sunset/**`                                                                                                                                                                                                                        | —              | pending |        |
+| U3 | 1    | [03-ci.md](03-ci.md)                       | edit   | `.github/workflows/release.yml`, `.github/workflows/deps-update.yml`, `.github/scripts/smoke.mjs`, `.github/scripts/check-bindings.sh`                                                                                             | —              | pending |        |
+| U4 | 2    | [04-rename.md](04-rename.md)               | edit   | `package.json`, `src/cli/commands/help.ts`, `src/cli/commands/init.ts`, `src/config-loader.ts`, `tests/unit/init.test.ts`, `tests/integration/init-command.test.ts`, `tests/fixtures/markdown/valid.md`, `.config/statusline.json` | U1             | pending |        |
+| U5 | 3    | [05-review.md](05-review.md)               | review | —                                                                                                                                                                                                                                  | U1, U2, U3, U4 | pending |        |
+| U6 | 4    | [06-docs.md](06-docs.md)                   | edit   | `readme.md`, `CLAUDE.md`, `docs/memory/decisions/2026-10-16-rename-to-virajp-dev-linter.md`                                                                                                                                        | all            | pending |        |
+| U7 | 5    | [07-gates.md](07-gates.md)                 | edit   | none                                                                                                                                                                                                                               | U6             | pending |        |
+
+## Shared-file rule
+
+| File                                                                | Why it collides                                    | Owner                    |
+| ------------------------------------------------------------------- | -------------------------------------------------- | ------------------------ |
+| `src/cli/commands/init.ts`, `src/cli/commands/help.ts`              | U1 changes behavior; U4 changes the name           | U1 (wave 1), U4 (wave 2) |
+| `tests/unit/init.test.ts`, `tests/integration/init-command.test.ts` | U1 changes the settings tests; U4 changes the name | U1 (wave 1), U4 (wave 2) |
+| `package.json`                                                      | the version belongs to the release task            | U4, `name` only          |
+| `readme.md`, `CLAUDE.md`, `docs/**`                                 | several units falsify the same docs                | U6 only                  |
+| `graphify-out/**`                                                   | generated and gitignored                           | nobody (out of scope)    |
+
+## Waves
+
+- **Wave 1:** U1, U2, U3. Their owned paths are disjoint. U3 changes
+  `smoke.mjs` `PACKAGE_NAME` before U4 changes the `package.json` name. The wave
+  gate does not run `smoke.mjs`, so this order breaks no gate.
+- **Wave 2:** U4. It edits `init.ts`, `help.ts`, and the two init tests after
+  U1, so the rename also applies to the text that U1 wrote.
+- **Wave 3:** U5, the review of U1 to U4.
+- **Wave 4:** U6, the docs unit.
+- **Wave 5:** U7, the gates unit.
+
+## Wave gate
+
+```text
+mise x -- mise run code:format
+mise x -- mise run code:lint
+mise x -- mise run code:check
+mise x -- mise run p:test
+```
+
+Plus the wave review, plus every report read for `UNRESOLVED:`. Every line here
+must be green before wave 1.
+
+## After landing
+
+none
+
+## Gates the orchestrator keeps
+
+- `mise x -- mise run p:preflight` passes. It packs
+  `virajp.dev-linter-1.1.9.tgz`,
+  examines the bundled bindings, and runs `smoke.mjs` with the new
+  `PACKAGE_NAME`. Pass: exit 0.
+- In `sunset/`, `node linter.mjs --help` prints the move message to stderr,
+  prints nothing to stdout, and exits 1.
+- In `sunset/`, `node -e 'import("./auto.mjs")'` fails, and the error output
+  contains `@virajp.dev/linter/auto`.
+- In `sunset/`, `npm pack --dry-run` lists only `package.json`, `linter.mjs`,
+  `auto.mjs`, and `readme.md`.
+
+## Unit contract
+
+Every unit prompt carries, in order: its ruling quoted from this file, its owned
+paths plus "touch nothing outside this list", the facts section, the shared-file
+rule, and the return block below. A unit never bumps a version, never runs a
+generator, never edits a doc, never adds a dependency this file does not list,
+never commits. A unit deletes with plain `rm`, never `git rm`. It stages
+nothing.
+
+A unit returns exactly this block and nothing else. No file contents, no diff:
+
+    CHANGED: <path> — <one line>            (one per file)
+    DECIDED: <what> — <why>                 (choices made inside scope, or none)
+    DOCS FALSIFIED: <path> — <passage>      (reported, never edited; or none)
+    GAP: <what the plan left unspecified and the assumption taken>   (or none)
+    UNRESOLVED: <the ruling needed>         (or none)
+
+## Out of scope
+
+- The `/vwf:setup` reshape to `cli` + `site` (B02). The user does the rename
+  first (R1).
+- The linter website (B03). It goes through the blueprint chain.
+- The GitHub repository name. It stays `virajp/linter`.
+- The bin name `linter`. It has no scope, so it does not change.
+- The author email `askviraj@gmail.com`. It is not the package name.
+- `graphify-out/`. It is gitignored and is regenerated.
+- The old `v*` tags. They stay. A pushed tag is never moved or deleted.
+- The backlog. The user said to ignore it for now (decision 4).
+- Any `npm publish`, `npm deprecate`, Trusted Publisher change, version bump,
+  tag, or push of a tag. These are hand steps (see **Parked**).
+
+## Parked
+
+Hand steps after the landing, in this order. The plan does not do them.
+
+1. Run `npm login`. On 2026-10-15, `npm whoami` returned E401.
+2. Run `mise x -- mise run p:release --major`. This makes 1.1.9 → 2.0.0, the
+   commit `ops: release v2.0.0`, and the signed tag `v2.0.0`. It does not push.
+3. Publish 2.0.0 by hand: run `pnpm pack`, then
+   `npm publish virajp.dev-linter-2.0.0.tgz --access public`. npm cannot set a
+   Trusted Publisher for a package that does not exist.
+4. On npmjs.com, add the Trusted Publisher for `@virajp.dev/linter`: repository
+   `virajp/linter`, workflow `release.yml`.
+5. Run `git push && git push origin v2.0.0`. `release.yml` skips the publish
+   (decision 13) and smoke-tests the published package.
+6. In `sunset/`, run `npm publish --access public`.
+7. Run
+   `npm deprecate "@askviraj/linter@*" "Moved to @virajp.dev/linter — run: npx
+   @virajp.dev/linter"`.
+
+Other items:
+
+- `p:publish` runs `npm publish` from the directory, not from a packed tarball.
+  CI publishes a packed tarball because of `bundledDependencies`. Hand step 3
+  therefore uses `pnpm pack`. A fix of `p:publish` is a later plan.
+- Backlog item B01 is not updated by this plan (decision 4). After the hand
+  steps, set it with `/vwf:backlog done B01`.
+
+## Run log
+
+| Wave | Unit | Model | Round | Outcome | Detail | Commit |
+| ---- | ---- | ----- | ----- | ------- | ------ | ------ |
+
+## Launch
+
+This folder is already committed and pushed on the branch it was planned on, so
+the run's worktree, cut from the integration branch, can see it.
+
+Run in a fresh context: a fresh session, or a runner that `all` dispatches.
+
+/vwf:execute docs/plans/2026-10-16-rename-to-virajp-dev-linter
+
+or let the queue pick it, by priority:
+
+/vwf:execute next
+
+or run every runnable plan, highest priority first:
+
+/vwf:execute all
