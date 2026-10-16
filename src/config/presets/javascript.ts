@@ -15,4 +15,4 @@ export const javascriptConfig = {
   rules: {
     "no-console": "warn",
   },
-} satisfies Linter.Config & { extends?: unknown; };
+} satisfies Linter.Config & { extends?: unknown };

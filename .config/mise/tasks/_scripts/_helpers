@@ -47,7 +47,7 @@ print_error() {
 # Print a full-width separator line built from the given character
 line_sep() {
   local COL
-  COL=$(stty size 2>/dev/null | awk '{print $2}') || COL=''
+  COL=$(stty size 2> /dev/null | awk '{print $2}') || COL=''
   local line
   printf -v line '%*s' "${COL:-80}" ''
   printf '%s\n' "${line// /$1}"

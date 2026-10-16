@@ -25,7 +25,7 @@ EXPECTED="$(node -e "
 ")"
 missing=0
 for pkg in $EXPECTED; do
-  if ! grep -q "^package/node_modules/$pkg/.*\.node\$" <<<"$CONTENTS"; then
+  if ! grep -q "^package/node_modules/$pkg/.*\.node\$" <<< "$CONTENTS"; then
     echo "::error::$TARBALL is missing the native binary for $pkg"
     missing=1
   fi

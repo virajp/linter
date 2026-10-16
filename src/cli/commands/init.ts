@@ -108,20 +108,16 @@ export function runInit(options: InitOptions = {}): void {
   const eslintExisted = existsSync(eslintConfigPath);
   if (eslintExisted && !options.force) {
     actions.push({ path: eslintConfigPath, action: "skipped" });
-  }
-  else {
+  } else {
     try {
       writeFileSync(eslintConfigPath, ESLINT_CONFIG_MJS);
       actions.push({
         path: eslintConfigPath,
         action: eslintExisted ? "overwritten" : "created",
       });
-    }
-    catch (e) {
+    } catch (e) {
       throw new Error(
-        `Failed to write ${eslintConfigPath}: ${
-          e instanceof Error ? e.message : String(e)
-        }`,
+        `Failed to write ${eslintConfigPath}: ${e instanceof Error ? e.message : String(e)}`,
         { cause: e },
       );
     }
@@ -136,20 +132,16 @@ export function runInit(options: InitOptions = {}): void {
   const linterExisted = existsSync(linterYamlPath);
   if (linterExisted && !options.force) {
     actions.push({ path: linterYamlPath, action: "skipped" });
-  }
-  else {
+  } else {
     try {
       writeFileSync(linterYamlPath, LINTER_YAML);
       actions.push({
         path: linterYamlPath,
         action: linterExisted ? "overwritten" : "created",
       });
-    }
-    catch (e) {
+    } catch (e) {
       throw new Error(
-        `Failed to write ${linterYamlPath}: ${
-          e instanceof Error ? e.message : String(e)
-        }`,
+        `Failed to write ${linterYamlPath}: ${e instanceof Error ? e.message : String(e)}`,
         { cause: e },
       );
     }
@@ -166,30 +158,24 @@ export function runInit(options: InitOptions = {}): void {
       const result = updateVsCodeSettings(settingsPath);
       if (result.action === "up-to-date") {
         actions.push({ path: settingsPath, action: "up-to-date" });
-      }
-      else {
+      } else {
         writeFileSync(settingsPath, result.content);
         actions.push({ path: settingsPath, action: "updated" });
       }
-    }
-    catch (e) {
+    } catch (e) {
       settingsError = e instanceof Error ? e.message : String(e);
       actions.push({ path: settingsPath, action: "failed" });
     }
-  }
-  else {
+  } else {
     try {
       writeFileSync(
         settingsPath,
         JSON.stringify(VSCODE_SETTINGS, null, 2) + "\n",
       );
       actions.push({ path: settingsPath, action: "created" });
-    }
-    catch (e) {
+    } catch (e) {
       throw new Error(
-        `Failed to write ${settingsPath}: ${
-          e instanceof Error ? e.message : String(e)
-        }`,
+        `Failed to write ${settingsPath}: ${e instanceof Error ? e.message : String(e)}`,
         { cause: e },
       );
     }
@@ -200,7 +186,7 @@ export function runInit(options: InitOptions = {}): void {
     console.log(`  [${action}] ${path}`);
   }
 
-  const skipped = actions.filter(a => a.action === "skipped");
+  const skipped = actions.filter((a) => a.action === "skipped");
   if (skipped.length > 0) {
     console.log("");
     console.log(

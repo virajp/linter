@@ -83,8 +83,7 @@ async function lintFiles(
 ): Promise<ESLint.LintResult[]> {
   try {
     return await eslint.lintFiles(targets);
-  }
-  catch (e) {
+  } catch (e) {
     throw new Error(e instanceof Error ? e.message : String(e), { cause: e });
   }
 }
@@ -95,17 +94,15 @@ function mergeResults(
   results: ESLint.LintResult[],
   extra: ESLint.LintResult[],
 ): ESLint.LintResult[] {
-  const byPath = new Map(extra.map(r => [r.filePath, r]));
-  return results.map(r => {
+  const byPath = new Map(extra.map((r) => [r.filePath, r]));
+  return results.map((r) => {
     const e = byPath.get(r.filePath);
     if (!e) {
       return r;
     }
     return {
       ...r,
-      messages: [...r.messages, ...e.messages].sort((a, b) =>
-        a.line - b.line || a.column - b.column
-      ),
+      messages: [...r.messages, ...e.messages].sort((a, b) => a.line - b.line || a.column - b.column),
       suppressedMessages: [...r.suppressedMessages, ...e.suppressedMessages],
       errorCount: r.errorCount + e.errorCount,
       fatalErrorCount: r.fatalErrorCount + e.fatalErrorCount,

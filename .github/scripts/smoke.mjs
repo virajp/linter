@@ -100,9 +100,7 @@ for (
   const ok = shouldBeClean ? file.errorCount === 0 : problems > 0;
 
   console.log(
-    `  ${ok ? "ok  " : "FAIL"}  ${
-      name.padEnd(38)
-    } ${file.errorCount} errors, ${file.warningCount} warnings`,
+    `  ${ok ? "ok  " : "FAIL"}  ${name.padEnd(38)} ${file.errorCount} errors, ${file.warningCount} warnings`,
   );
 
   if (!ok) {
@@ -118,7 +116,7 @@ if (failures.length > 0) {
   fail(
     `\n${failures.length} broken expectation(s):\n${
       failures
-        .map(f => `  - ${f}`)
+        .map((f) => `  - ${f}`)
         .join("\n")
     }`,
   );
@@ -135,14 +133,13 @@ function run(command, args) {
   const shell = process.platform === "win32";
 
   try {
-    return execFileSync(command, shell ? args.map(arg => `"${arg}"`) : args, {
+    return execFileSync(command, shell ? args.map((arg) => `"${arg}"`) : args, {
       cwd: workspace,
       encoding: "utf8",
       stdio: ["ignore", "pipe", "inherit"],
       shell,
     });
-  }
-  catch (error) {
+  } catch (error) {
     // ESLint exits 1 whenever it reports an error, which is the expected
     // outcome for most fixtures — the output is still the result we want.
     if (error.stdout) {
@@ -163,9 +160,7 @@ function reportBundledBindings() {
     "node_modules",
     "@astrojs",
   );
-  const names = readdirSync(bindings).filter(name =>
-    name.startsWith("compiler-binding-")
-  );
+  const names = readdirSync(bindings).filter((name) => name.startsWith("compiler-binding-"));
 
   console.log(`bundled native bindings (${names.length}):`);
   for (const name of names.sort()) {
@@ -176,7 +171,7 @@ function reportBundledBindings() {
 
 function countFixtures(directory) {
   return readdirSync(directory, { recursive: true, withFileTypes: true })
-    .filter(entry => entry.isFile())
+    .filter((entry) => entry.isFile())
     .length;
 }
 

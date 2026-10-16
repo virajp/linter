@@ -25,8 +25,7 @@ export async function run(rawArgs: string[]): Promise<void> {
 
     const exitCode = await runLint(args);
     process.exit(exitCode);
-  }
-  catch (e) {
+  } catch (e) {
     console.error(e instanceof Error ? e.message : e);
     process.exit(1);
   }

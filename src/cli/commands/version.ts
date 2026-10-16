@@ -25,14 +25,12 @@ function getPackageVersion(
         if (pkg.name === name && pkg.version) {
           return pkg.version;
         }
-      }
-      catch {
+      } catch {
         // Continue walking up.
       }
       dir = dirname(dir);
     }
-  }
-  catch {
+  } catch {
     // Package main not resolvable; try fallback.
   }
 
@@ -54,8 +52,7 @@ function getPackageVersion(
     if (pkg.name === name && pkg.version) {
       return pkg.version;
     }
-  }
-  catch {
+  } catch {
     // Not found in node_modules either.
   }
 
@@ -74,8 +71,7 @@ export function runVersion(): void {
     };
     ownVersion = ownPkg.version;
     deps = ownPkg.dependencies;
-  }
-  catch {
+  } catch {
     throw new Error("Failed to read package metadata.");
   }
 
@@ -94,12 +90,10 @@ export function runVersion(): void {
   ];
 
   const depNames = deps
-    ? Object.keys(deps).filter(name =>
-      patterns.some(pattern => pattern.test(name))
-    )
+    ? Object.keys(deps).filter((name) => patterns.some((pattern) => pattern.test(name)))
     : [];
 
-  const pluginVersions: { name: string; version: string; }[] = [];
+  const pluginVersions: { name: string; version: string }[] = [];
   for (const name of depNames) {
     const version = getPackageVersion(name, require);
     if (version) {
@@ -112,7 +106,7 @@ export function runVersion(): void {
   console.log(`v${ownVersion}`);
   console.log("------");
 
-  const eslintEntry = pluginVersions.find(p => p.name === "eslint");
+  const eslintEntry = pluginVersions.find((p) => p.name === "eslint");
   if (eslintEntry) {
     console.log(`eslint v${eslintEntry.version}`);
   }

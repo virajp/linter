@@ -2,14 +2,14 @@
 
 [tools]
 # Runtime and build tools
-dprint     = { version = "latest" }
+dprint = { version = "latest" }
 pre-commit = { version = "latest" }
-taplo      = { version = "latest" }
+taplo = { version = "latest" }
 
 [tasks.init]
 description = "Initialize mise tasks"
-hide        = true
-run         = "find .config/mise/tasks/ -name '*' -type f -exec chmod 755 {} \\;"
+hide = true
+run = "find .config/mise/tasks/ -name '*' -type f -exec chmod 755 {} \\;"
 
 [shell_alias]
 setup = "mise run setup:all"

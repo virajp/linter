@@ -17,4 +17,4 @@ export const jsonConfig = {
     "json/sort-keys": "off",
     "json/top-level-interop": "error",
   },
-} satisfies Linter.Config & { extends?: unknown; };
+} satisfies Linter.Config & { extends?: unknown };

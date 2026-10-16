@@ -4,7 +4,7 @@
     "allowJs": true,
     "jsx": "react-jsx",
     "lib": [
-      "ESNext",
+      "ESNext"
     ],
     "module": "Preserve",
     "moduleDetection": "force",
@@ -20,11 +20,11 @@
     "strict": true,
     "target": "ESNext",
     "types": [
-      "node",
+      "node"
     ],
-    "verbatimModuleSyntax": true,
+    "verbatimModuleSyntax": true
   },
   "exclude": [
-    "tests/**",
-  ],
+    "tests/**"
+  ]
 }

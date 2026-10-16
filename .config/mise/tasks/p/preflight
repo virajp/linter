@@ -14,7 +14,7 @@ print_header "Running tests..."
 mise run p:test
 
 print_header "Packing tarball..."
-pnpm pack --pack-destination "$PACK_DIR" >/dev/null
+pnpm pack --pack-destination "$PACK_DIR" > /dev/null
 TARBALL=$(ls "$PACK_DIR"/*.tgz)
 
 print_header "Checking bundled native bindings..."

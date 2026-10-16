@@ -36,4 +36,4 @@ export const markdownConfig = {
     "markdown/no-space-in-emphasis": "error",
     "markdown/table-column-count": "error",
   },
-} satisfies Linter.Config & { extends?: unknown; };
+} satisfies Linter.Config & { extends?: unknown };

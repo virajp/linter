@@ -65,16 +65,16 @@ pnpm come from `.config/mise.toml`. dprint, pre-commit, and taplo come from
 `.config/mise.dev.toml`.
 
 ```bash
-mise x -- mise run code:format --fix  # Format with dprint (without --fix: check only)
-mise x -- mise run code:lint          # Self-lint via src/eslint.config.ts (--fix, --debug supported)
-mise x -- mise run code:check         # tsc type-check (no emit)
-mise x -- mise run code:precommit     # Run all pre-commit hooks on all files
-mise x -- mise run p:build            # Compile src/ -> dist/
-mise x -- mise run p:test             # Build, then run all tests (unit + integration)
-mise x -- mise run p:test-unit        # Build, then run unit tests only
-mise x -- mise run p:preflight        # Tests + pack + binding check + smoke.mjs (release.yml's Pack job, locally)
-mise x -- mise run p:preview          # Run p:test, then pnpm pack
-mise x -- mise run setup:all          # Bootstrap: clean install, upgrade deps, audit, AI plugins, pre-commit hooks
+mise x -- mise run code:format --fix # Format with dprint (without --fix: check only)
+mise x -- mise run code:lint         # Self-lint via src/eslint.config.ts (--fix, --debug supported)
+mise x -- mise run code:check        # tsc type-check (no emit)
+mise x -- mise run code:precommit    # Run all pre-commit hooks on all files
+mise x -- mise run p:build           # Compile src/ -> dist/
+mise x -- mise run p:test            # Build, then run all tests (unit + integration)
+mise x -- mise run p:test-unit       # Build, then run unit tests only
+mise x -- mise run p:preflight       # Tests + pack + binding check + smoke.mjs (release.yml's Pack job, locally)
+mise x -- mise run p:preview         # Run p:test, then pnpm pack
+mise x -- mise run setup:all         # Bootstrap: clean install, upgrade deps, audit, AI plugins, pre-commit hooks
 ```
 
 **WARNING:** `setup:all` deletes `node_modules/`, `dist/`, and `pnpm-lock.yaml`,
@@ -83,12 +83,12 @@ then upgrades every dependency to its latest version.
 Direct equivalents that bypass mise:
 
 ```bash
-pnpm run build                              # tsc -p tsconfig.build.json
-pnpm run test                               # build + vitest run tests/unit
-pnpm run test:integration                   # build + vitest run tests/integration
-pnpm run test:all                           # build + vitest run tests
-pnpx vitest run tests/unit/args.test.ts     # single test file
-pnpx vitest run -t "test name"              # single test by name
+pnpm run build                          # tsc -p tsconfig.build.json
+pnpm run test                           # build + vitest run tests/unit
+pnpm run test:integration               # build + vitest run tests/integration
+pnpm run test:all                       # build + vitest run tests
+pnpx vitest run tests/unit/args.test.ts # single test file
+pnpx vitest run -t "test name"          # single test by name
 ```
 
 **Tests require a build first** — every `test*` script runs `pnpm run build`

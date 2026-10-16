@@ -7,7 +7,7 @@ set -euo pipefail
 # shellcheck source=/dev/null
 source "${MISE_PROJECT_ROOT}/.config/mise/tasks/_scripts/_helpers"
 
-if ! command -v claude >/dev/null 2>&1; then
+if ! command -v claude > /dev/null 2>&1; then
   print_warn "claude is not on PATH — skipping AI setup."
   print_yellow "Install it from https://claude.com/code, then re-run this task."
   exit 0
@@ -15,7 +15,7 @@ fi
 
 line_sep "="
 print_wait "Updating Claude Marketplaces ... "
-claude plugins marketplace update 1>/dev/null
+claude plugins marketplace update 1> /dev/null
 print_success "done"
 
 line_sep "-"
@@ -25,13 +25,13 @@ for PLUGIN in "${PLUGINS[@]}"; do
   plugin="${PLUGIN%%|*}"
   scope="${PLUGIN##*|}"
   print_wait "- ${plugin} (${scope}) ... "
-  claude plugin update --scope "${scope}" "${plugin}" 1>/dev/null
+  claude plugin update --scope "${scope}" "${plugin}" 1> /dev/null
   print_ok
 done
 
 line_sep "-"
 print_wait "Pruning plugins nothing references ... "
-claude plugin autoremove --scope "project" --yes 1>/dev/null
+claude plugin autoremove --scope "project" --yes 1> /dev/null
 print_ok
 
 line_sep "-"

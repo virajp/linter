@@ -9,4 +9,4 @@ export const cssConfig = {
   rules: {
     "css/no-invalid-at-rules": "off",
   },
-} satisfies Linter.Config & { extends?: unknown; };
+} satisfies Linter.Config & { extends?: unknown };

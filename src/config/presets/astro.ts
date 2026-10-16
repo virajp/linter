@@ -24,4 +24,4 @@ export const astroConfig = {
   rules: {
     "no-unreachable": "off",
   },
-} satisfies Linter.Config & { extends?: unknown; };
+} satisfies Linter.Config & { extends?: unknown };

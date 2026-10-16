@@ -7,7 +7,7 @@ import type { Linter } from "eslint";
 // equivalents. Blocks in the other languages (json, yaml, css, ...) are linted
 // by their own presets with no relaxations.
 const pluginCodeBlocks = markdown.configs.processor.find(
-  c => c.name === "markdown/recommended/code-blocks",
+  (c) => c.name === "markdown/recommended/code-blocks",
 );
 
 export const markdownCodeBlocksConfig = {

@@ -10,4 +10,4 @@ export const htmlConfig = {
   rules: {
     "html/indent": ["error", 2],
   },
-} satisfies Linter.Config & { extends?: unknown; };
+} satisfies Linter.Config & { extends?: unknown };

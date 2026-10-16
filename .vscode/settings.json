@@ -81,7 +81,7 @@
     "package.json": "tsconfig.base.json,tsconfig.json,biome.jsonc,waitOn.json,waitOnExternal.json,vitest.config.ts,esbuild.mjs,turbo.json,pnpm-lock.yaml,.npmrc,apphosting.*.yaml,apphosting.yaml,.prettierrc.yaml,.markdownlint.yaml,pnpm-workspace.yaml,build.ts,eslint.config.mjs,doppler.yaml",
     "pre-commit-config.yaml": "taplo.toml,gitleaks.toml,grype.yaml,git-conventional-commits.yaml,linter.yaml,statusline.json,rustfmt.toml,rust-toolchain.toml,vwf.yaml",
     "pubspec.yaml": ".envrc,pubspec.lock,pubspec_overrides.yaml,.packages,.flutter-plugins,.flutter-plugins-dependencies,.metadata,l10n.yaml,analysis_options.yaml,devtools_options.yaml,dart_dependency_validator.yaml",
-    "readme.md": "todo.md,LICENSE,analysis_options.yaml,dprint.json,eslint.config.mjs,CLAUDE.md,mempalace.yaml",
+    "readme.md": "todo.md,LICENSE,analysis_options.yaml,dprint.jsonc,eslint.config.mjs,CLAUDE.md,mempalace.yaml",
   },
   "files.autoGuessEncoding": true,
   "files.exclude": {

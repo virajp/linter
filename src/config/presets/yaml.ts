@@ -9,4 +9,4 @@ export const yamlConfig = {
   name: "yaml",
   plugins: { yml: yaml },
   rules: {},
-} satisfies Linter.Config & { extends?: unknown; };
+} satisfies Linter.Config & { extends?: unknown };

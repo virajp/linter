@@ -8,7 +8,7 @@ import { parse } from "yaml";
 export interface LinterYamlRaw {
   version: number | string;
   ignores?: string[];
-  overrides?: Record<string, { rules?: Record<string, unknown>; }>;
+  overrides?: Record<string, { rules?: Record<string, unknown> }>;
   configs?: unknown[];
 }
 
@@ -38,12 +38,9 @@ export function loadYamlOptions(startDir: string): LinterYamlRaw {
   let parsed: Record<string, unknown>;
   try {
     parsed = parse(content) as Record<string, unknown> || {};
-  }
-  catch (e) {
+  } catch (e) {
     throw new Error(
-      `Failed to parse ${yamlPath}: ${
-        e instanceof Error ? e.message : String(e)
-      }`,
+      `Failed to parse ${yamlPath}: ${e instanceof Error ? e.message : String(e)}`,
       { cause: e },
     );
   }

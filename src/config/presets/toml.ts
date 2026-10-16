@@ -8,4 +8,4 @@ export const tomlConfig = {
   name: "toml",
   plugins: { toml: eslintPluginToml },
   rules: {},
-} satisfies Linter.Config & { extends?: unknown; };
+} satisfies Linter.Config & { extends?: unknown };

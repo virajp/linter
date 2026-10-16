@@ -31,4 +31,4 @@ export const typescriptConfig = {
     ],
     "require-yield": "off",
   },
-} satisfies Linter.Config & { extends?: unknown; };
+} satisfies Linter.Config & { extends?: unknown };
