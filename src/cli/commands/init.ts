@@ -147,13 +147,11 @@ export function runInit(options: InitOptions = {}): void {
     }
   }
 
-  // 3. .vscode/settings.json
-  const vscodeDir = resolve(cwd, ".vscode");
-  if (!existsSync(vscodeDir)) {
-    mkdirSync(vscodeDir, { recursive: true });
-  }
-  const settingsPath = resolve(vscodeDir, "settings.json");
-  if (existsSync(settingsPath)) {
+  // 3. .vscode/settings.json — only edited when it already exists.
+  const settingsPath = resolve(cwd, ".vscode", "settings.json");
+  if (!existsSync(settingsPath)) {
+    actions.push({ path: settingsPath, action: "skipped" });
+  } else {
     try {
       const result = updateVsCodeSettings(settingsPath);
       if (result.action === "up-to-date") {
@@ -166,19 +164,6 @@ export function runInit(options: InitOptions = {}): void {
       settingsError = e instanceof Error ? e.message : String(e);
       actions.push({ path: settingsPath, action: "failed" });
     }
-  } else {
-    try {
-      writeFileSync(
-        settingsPath,
-        JSON.stringify(VSCODE_SETTINGS, null, 2) + "\n",
-      );
-      actions.push({ path: settingsPath, action: "created" });
-    } catch (e) {
-      throw new Error(
-        `Failed to write ${settingsPath}: ${e instanceof Error ? e.message : String(e)}`,
-        { cause: e },
-      );
-    }
   }
 
   console.log("Initialized @askviraj/linter:");
@@ -186,7 +171,9 @@ export function runInit(options: InitOptions = {}): void {
     console.log(`  [${action}] ${path}`);
   }
 
-  const skipped = actions.filter((a) => a.action === "skipped");
+  const skipped = actions.filter(
+    (a) => a.action === "skipped" && a.path !== settingsPath,
+  );
   if (skipped.length > 0) {
     console.log("");
     console.log(

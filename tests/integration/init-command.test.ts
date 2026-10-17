@@ -1,6 +1,8 @@
 import {
   existsSync,
+  mkdirSync,
   readFileSync,
+  writeFileSync,
 } from "node:fs";
 import {
   afterEach,
@@ -31,7 +33,9 @@ describe("init command", () => {
     expect(result.exitCode).toBe(0);
     expect(existsSync(`${tmpDir}/eslint.config.mjs`)).toBe(true);
     expect(existsSync(`${tmpDir}/.config/linter.yaml`)).toBe(true);
-    expect(existsSync(`${tmpDir}/.vscode/settings.json`)).toBe(true);
+    expect(existsSync(`${tmpDir}/.vscode/settings.json`)).toBe(false);
+    expect(result.stdout).toMatch(/\[skipped\] .*\.vscode\/settings\.json/);
+    expect(result.stdout).not.toContain("--force");
   });
 
   test("--init skips existing files without --force", async () => {
@@ -58,12 +62,18 @@ describe("init command", () => {
     expect(content).toContain("@askviraj/linter/auto");
   });
 
-  test("generated .vscode/settings.json enables flat config", async () => {
-    await runCli(["--init"], tmpDir);
+  test("existing .vscode/settings.json gets flat config enabled", async () => {
+    mkdirSync(`${tmpDir}/.vscode`, { recursive: true });
+    writeFileSync(
+      `${tmpDir}/.vscode/settings.json`,
+      "// existing settings\n{}\n",
+    );
+    const result = await runCli(["--init"], tmpDir);
+    expect(result.exitCode).toBe(0);
+    expect(result.stdout).toMatch(/\[updated\] .*\.vscode\/settings\.json/);
     const content = readFileSync(`${tmpDir}/.vscode/settings.json`, "utf-8");
-    expect(content).toContain("eslint.useFlatConfig");
-    const parsed = JSON.parse(content);
-    expect(parsed["eslint.useFlatConfig"]).toBe(true);
+    expect(content).toContain("// existing settings");
+    expect(content).toContain("\"eslint.useFlatConfig\": true");
   });
 
   test("generated .config/linter.yaml contains project reference", async () => {

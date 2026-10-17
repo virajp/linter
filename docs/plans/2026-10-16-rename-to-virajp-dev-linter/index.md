@@ -10,9 +10,10 @@ backlog_pieces: []
 
 ## Status
 
-**APPROVED**
+**RUNNING**
 
-APPROVED 2026-10-16 by the user
+RUNNING since 2026-10-18 00:12 in
+/Users/virajpatel/Projects/github.com/virajp/linter/.worktrees/2026-10-16-rename-to-virajp-dev-linter
 
 ## Consent
 
@@ -283,8 +284,16 @@ Other items:
 
 ## Run log
 
-| Wave | Unit | Model | Round | Outcome | Detail | Commit |
-| ---- | ---- | ----- | ----- | ------- | ------ | ------ |
+| Wave | Unit             | Model | Round | Outcome     | Detail                                                                                                                                                                                                                                                                        | Commit |
+| ---- | ---------------- | ----- | ----- | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------ |
+| 0    | preflight        | —     | 1     | pass        | doctor: repo not onboarded (no .config/vwf.yaml), no blocking finding; no code unit, so no LSP or conventions step; format check skipped (no covers:); wave gate 4/4 green (109 tests); bootstrap: pnpm install --frozen-lockfile (no setup:worktree task, user ruling)       | —      |
+| —    | acceptance       | —     | —     | skipped     | why: no covers:                                                                                                                                                                                                                                                               | —      |
+| 1    | U2 sunset        | opus  | 1     | pass        | edit: 4 files under sunset/; DECIDED: package.json has only the planned fields (no author/engines); GAP: executable bit on linter.mjs not specified — set chmod +x                                                                                                            | —      |
+| 1    | U1 settings-json | opus  | 1     | pass        | edit: init.ts, help.ts, 2 init tests (113 tests pass); DECIDED: hint filter excludes the settings path; restart note kept; VSCODE_SETTINGS const kept for unparseable-file fallback; DOCS FALSIFIED: readme.md:78, :151, :153; CLAUDE.md:109, :187, :192-193                  | —      |
+| 1    | U3 ci            | opus  | 1     | pass        | edit: release.yml (SPEC, skip-if-published step, needs pack+verify-tarball), deps-update.yml, smoke.mjs, check-bindings.sh; DECIDED: name read from package.json; skip compares npm view output, not exit code; DOCS FALSIFIED: CLAUDE.md Releasing, Trusted Publisher config | —      |
+| 1    | R1               | opus  | 1     | findings(2) | CONTRACT clean; RULINGS clean; sunset/readme.md:16-17 [U2] rule 3 — 'this message' has no referent → loop to U2; CLAUDE.md:167 [U1] rule 5 — CLI Reference --init row → DOCS FALSIFIED handed to U6 (U6 owns CLAUDE.md)                                                       | —      |
+| 1    | U2 sunset        | opus  | 2     | pass        | edit: sunset/readme.md:16-19 rewritten — says the bin writes the new package name to stderr and exits 1                                                                                                                                                                       | —      |
+| 1    | R1               | opus  | 2     | pass        | 0 findings; CONTRACT clean; RULINGS clean                                                                                                                                                                                                                                     | —      |
 
 ## Launch
 

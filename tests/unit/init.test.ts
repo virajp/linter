@@ -10,6 +10,7 @@ import {
   describe,
   expect,
   test,
+  vi,
 } from "vitest";
 import { runInit } from "../../src/cli/commands/init.js";
 import {
@@ -45,12 +46,46 @@ describe("runInit", () => {
     expect(content).toContain("version: 1");
   });
 
-  test("creates .vscode/settings.json", () => {
-    runInit({ cwd: tmpDir });
-    const path = `${tmpDir}/.vscode/settings.json`;
-    expect(existsSync(path)).toBe(true);
-    const content = readFileSync(path, "utf-8");
-    expect(content).toContain("eslint.useFlatConfig");
+  function captureLog(fn: () => void): string {
+    const spy = vi.spyOn(console, "log").mockImplementation(() => {});
+    try {
+      fn();
+      return spy.mock.calls.map((args) => args.join(" ")).join("\n");
+    } finally {
+      spy.mockRestore();
+    }
+  }
+
+  test("skips .vscode/settings.json when it does not exist", () => {
+    const output = captureLog(() => runInit({ cwd: tmpDir }));
+    expect(existsSync(`${tmpDir}/.vscode`)).toBe(false);
+    expect(output).toContain(
+      `[skipped] ${tmpDir}/.vscode/settings.json`,
+    );
+  });
+
+  test("does not create settings.json when only .vscode/ exists", () => {
+    mkdirSync(`${tmpDir}/.vscode`, { recursive: true });
+    const output = captureLog(() => runInit({ cwd: tmpDir }));
+    expect(existsSync(`${tmpDir}/.vscode/settings.json`)).toBe(false);
+    expect(output).toMatch(/\[skipped\] .*\/\.vscode\/settings\.json/);
+  });
+
+  test("does not create settings.json with force", () => {
+    captureLog(() => runInit({ cwd: tmpDir, force: true }));
+    expect(existsSync(`${tmpDir}/.vscode/settings.json`)).toBe(false);
+    expect(existsSync(`${tmpDir}/.vscode`)).toBe(false);
+  });
+
+  test("prints no --force hint when only settings.json is skipped", () => {
+    const output = captureLog(() => runInit({ cwd: tmpDir }));
+    expect(output).not.toContain("--force");
+  });
+
+  test("prints the --force hint when eslint.config.mjs is skipped", () => {
+    writeFileSync(`${tmpDir}/eslint.config.mjs`, "// existing\n");
+    const output = captureLog(() => runInit({ cwd: tmpDir }));
+    expect(output).toContain("Use --force to overwrite.");
   });
 
   test("skips existing files without force", () => {

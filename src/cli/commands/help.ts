@@ -2,7 +2,8 @@ export function runHelp(): void {
   console.log(`@askviraj/linter [options] [files...]
 
 Options:
-  --init              Scaffold eslint.config.mjs and .config/linter.yaml
+  --init              Scaffold eslint.config.mjs and .config/linter.yaml;
+                      update .vscode/settings.json if it exists
   --force             Overwrite existing files when used with --init
   --fix               Automatically fix problems
   --cache             Only check changed files
