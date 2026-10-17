@@ -123,7 +123,7 @@ jobs:
 
   publish:
     name: Publish
-    needs: verify-tarball
+    needs: [ pack, verify-tarball ]
     if: inputs.dry-run != true
     runs-on: ubuntu-latest
     steps:
@@ -144,7 +144,26 @@ jobs:
         with:
           name: tarball
 
+      # The first version under a new name is published by hand (npm cannot
+      # set a trusted publisher for a package that does not exist yet), so
+      # skip a version the registry already has and let smoke-published run.
+      # `npm view` prints nothing for an unknown version of a known package,
+      # so compare its output instead of trusting its exit code.
+      - name: Check whether the version is already on npm
+        id: existing
+        env:
+          VERSION: ${{ needs.pack.outputs.version }}
+        run: |
+          NAME="$(node -p "require('./package.json').name")"
+          if [ "$(npm view "$NAME@$VERSION" version 2>/dev/null)" = "$VERSION" ]; then
+            echo "::notice::$NAME@$VERSION is already on npm; skipping publish"
+            echo "published=true" >>"$GITHUB_OUTPUT"
+          else
+            echo "published=false" >>"$GITHUB_OUTPUT"
+          fi
+
       - name: Publish to npm
+        if: steps.existing.outputs.published != 'true'
         run: npm publish "$(ls *.tgz)" --access public
 
       - name: Show npm debug log on failure
@@ -180,7 +199,7 @@ jobs:
           - { target: win32-x64-msvc, os: windows-latest }
           - { target: win32-arm64-msvc, os: windows-11-arm }
     env:
-      SPEC: "@askviraj/linter@${{ needs.pack.outputs.version }}"
+      SPEC: "@virajp.dev/linter@${{ needs.pack.outputs.version }}"
     steps:
       - name: Checkout
         uses: actions/checkout@v7

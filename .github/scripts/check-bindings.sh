@@ -6,7 +6,7 @@
 # the packing platform alone (see CLAUDE.md). release.yml and the p:preflight
 # task both run this, so the matrix only has to prove the binaries load.
 #
-#   bash .github/scripts/check-bindings.sh ./askviraj-linter-1.2.3.tgz
+#   bash .github/scripts/check-bindings.sh ./virajp.dev-linter-<version>.tgz
 #
 # Skipped: wasm32 (no native .node file) and android (not in
 # supportedArchitectures -- no runner in the matrix can load it).
