@@ -104,6 +104,10 @@ out
 # Claude / AI tooling
 # ============================================================
 .claude/settings.local.json
+.claude/worktrees/
+
+# Git worktrees
+.worktrees/
 
 # oh-my-claudecode (OMC)
 .omc/state/
