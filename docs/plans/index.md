@@ -6,6 +6,6 @@ and `/vwf:execute all` read to pick the next runnable plan.
 
 ## Plans
 
-| Folder                                              | Kind   | Plan                                                                  | Target repo | Priority | Status   | Requires | Backlog |
-| --------------------------------------------------- | ------ | --------------------------------------------------------------------- | ----------- | -------- | -------- | -------- | ------- |
-| `docs/plans/2026-10-16-rename-to-virajp-dev-linter` | change | Rename to @virajp.dev/linter and skip an absent .vscode/settings.json | —           | 10       | APPROVED | —        | —       |
+| Folder                                              | Kind   | Plan                                                                  | Target repo | Priority | Status  | Requires | Backlog |
+| --------------------------------------------------- | ------ | --------------------------------------------------------------------- | ----------- | -------- | ------- | -------- | ------- |
+| `docs/plans/2026-10-16-rename-to-virajp-dev-linter` | change | Rename to @virajp.dev/linter and skip an absent .vscode/settings.json | —           | 10       | RUNNING | —        | —       |
