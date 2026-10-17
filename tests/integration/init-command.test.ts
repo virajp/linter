@@ -53,13 +53,13 @@ describe("init command", () => {
     expect(result.stdout).toContain("overwritten");
     // Verify files still contain expected content
     const eslintContent = readFileSync(`${tmpDir}/eslint.config.mjs`, "utf-8");
-    expect(eslintContent).toContain("@askviraj/linter/auto");
+    expect(eslintContent).toContain("@virajp.dev/linter/auto");
   });
 
   test("generated eslint.config.mjs exports from auto", async () => {
     await runCli(["--init"], tmpDir);
     const content = readFileSync(`${tmpDir}/eslint.config.mjs`, "utf-8");
-    expect(content).toContain("@askviraj/linter/auto");
+    expect(content).toContain("@virajp.dev/linter/auto");
   });
 
   test("existing .vscode/settings.json gets flat config enabled", async () => {
@@ -79,7 +79,7 @@ describe("init command", () => {
   test("generated .config/linter.yaml contains project reference", async () => {
     await runCli(["--init"], tmpDir);
     const content = readFileSync(`${tmpDir}/.config/linter.yaml`, "utf-8");
-    expect(content).toContain("@askviraj/linter");
+    expect(content).toContain("@virajp.dev/linter");
     expect(content).toContain("version: 1");
   });
 });

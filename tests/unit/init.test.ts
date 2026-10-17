@@ -34,7 +34,7 @@ describe("runInit", () => {
     const path = `${tmpDir}/eslint.config.mjs`;
     expect(existsSync(path)).toBe(true);
     const content = readFileSync(path, "utf-8");
-    expect(content).toContain("@askviraj/linter/auto");
+    expect(content).toContain("@virajp.dev/linter/auto");
   });
 
   test("creates .config/linter.yaml", () => {
@@ -42,7 +42,7 @@ describe("runInit", () => {
     const path = `${tmpDir}/.config/linter.yaml`;
     expect(existsSync(path)).toBe(true);
     const content = readFileSync(path, "utf-8");
-    expect(content).toContain("@askviraj/linter");
+    expect(content).toContain("@virajp.dev/linter");
     expect(content).toContain("version: 1");
   });
 
@@ -107,7 +107,7 @@ describe("runInit", () => {
     runInit({ cwd: tmpDir, force: true });
     const overwritten = readFileSync(path, "utf-8");
     expect(overwritten).not.toBe(modifiedContent);
-    expect(overwritten).toContain("@askviraj/linter/auto");
+    expect(overwritten).toContain("@virajp.dev/linter/auto");
   });
 
   test("updates existing vscode settings with false flat config", () => {

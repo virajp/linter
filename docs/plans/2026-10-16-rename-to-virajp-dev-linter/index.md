@@ -294,6 +294,8 @@ Other items:
 | 1    | R1               | opus  | 1     | findings(2) | CONTRACT clean; RULINGS clean; sunset/readme.md:16-17 [U2] rule 3 — 'this message' has no referent → loop to U2; CLAUDE.md:167 [U1] rule 5 — CLI Reference --init row → DOCS FALSIFIED handed to U6 (U6 owns CLAUDE.md)                                                       | —      |
 | 1    | U2 sunset        | opus  | 2     | pass        | edit: sunset/readme.md:16-19 rewritten — says the bin writes the new package name to stderr and exits 1                                                                                                                                                                       | —      |
 | 1    | R1               | opus  | 2     | pass        | 0 findings; CONTRACT clean; RULINGS clean                                                                                                                                                                                                                                     | —      |
+| 2    | U4 rename        | opus  | 1     | pass        | edit: 8 owned files, one sed of the exact string; only package.json:34 (email) keeps askviraj; 113 tests pass; DOCS FALSIFIED: readme.md and CLAUDE.md, every @askviraj/linter passage                                                                                        | —      |
+| 2    | R2               | opus  | 1     | pass        | 0 findings; CONTRACT clean; RULINGS clean                                                                                                                                                                                                                                     | —      |
 
 ## Launch
 
