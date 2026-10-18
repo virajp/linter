@@ -5,7 +5,7 @@ docs/plans/2026-10-16-rename-to-virajp-dev-linter
 # Rename to @virajp.dev/linter
 
 Source: `docs/plans/2026-10-16-rename-to-virajp-dev-linter/index.md`, assumed
-decisions 1, 2, 5 to 8, 13, 19 and 21.
+decisions 1, 2, 5 to 8, 13, 19 and 21. D24 was decided after the landing.
 
 ## Reversals
 
@@ -34,6 +34,12 @@ decisions 1, 2, 5 to 8, 13, 19 and 21.
 - **D21** 2026-10-18 ★2 | tombstone exit | set `process.exitCode = 1`, do not
   call `process.exit`, so the stderr write completes | alt: `process.exit(1)`
   — rejected
+
+- **D24** 2026-10-18 ★4 | old package removed (supersedes D5 to D8 and D21) |
+  the user deleted `@askviraj/linter` from npm instead of a tombstone and
+  `npm deprecate`, because only the user used it; `sunset/` was removed from
+  the repo and was never published | alt: publish the tombstone, then
+  deprecate — rejected
 
 ## First CI publish of the new name
 

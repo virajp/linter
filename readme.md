@@ -35,31 +35,6 @@ bun install --dev @virajp.dev/linter
 npm install --save-dev @virajp.dev/linter
 ```
 
-## Migrate from @askviraj/linter
-
-This package was `@askviraj/linter` before version 2.0.0. The old package does
-not get more updates. To move to the new package:
-
-1. Change the command to `npx @virajp.dev/linter` (or
-   `bunx --bun @virajp.dev/linter`). Change it in your scripts, your CI, and
-   your pre-commit hooks.
-2. In `eslint.config.mjs`, change the import to this line:
-
-   ```js
-   export { default } from "@virajp.dev/linter/auto";
-   ```
-
-3. If your project installs `@askviraj/linter`, remove it and install the new
-   package:
-
-   ```bash
-   npm uninstall @askviraj/linter
-   npm install --save-dev @virajp.dev/linter
-   ```
-
-Your `.config/linter.yaml` does not change. Do not run `--init --force` to do
-the migration, because it overwrites `.config/linter.yaml`.
-
 ## Quick Start
 
 ```bash

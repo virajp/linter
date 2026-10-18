@@ -313,13 +313,6 @@ dispatches `release.yml` instead. Publishing from any other workflow fails the
 OIDC token exchange with a misleading `404 ... package not found` / `ENEEDAUTH`.
 If `main` is branch-protected, allow `github-actions[bot]` to push.
 
-**`sunset/`** is a tombstone package for `@askviraj/linter@2.0.0`, the old name
-of this package. Its `linter` bin writes the new package name to stderr and
-exits 1. An import of `@askviraj/linter` or `@askviraj/linter/auto` throws an
-error that gives the new import line. The user publishes it once by hand, then
-runs `npm deprecate` on `@askviraj/linter`. It is not a pnpm workspace member,
-and it is not part of the release pipeline.
-
 ## Testing
 
 - **Unit** (`tests/unit/`) — args parsing, preset shape, config factory, init
