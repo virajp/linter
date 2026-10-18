@@ -93,7 +93,7 @@ jobs:
         run: git push origin HEAD:main --follow-tags
 
       # npm allows exactly one trusted publisher per package, and
-      # @askviraj/linter's is registered to release.yml -- publishing from here
+      # @virajp.dev/linter's is registered to release.yml -- publishing from here
       # fails the OIDC token exchange with a misleading 404. So hand off to
       # release.yml instead of publishing inline.
       #

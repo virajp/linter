@@ -1,4 +1,4 @@
-// Installs a built @askviraj/linter and lints the repo's fixtures with it, on
+// Installs a built @virajp.dev/linter and lints the repo's fixtures with it, on
 // whatever platform this happens to be running on.
 //
 // The CLI bundles a native addon (@astrojs/compiler-binding) whose per-platform
@@ -7,8 +7,8 @@
 // every other. Only running the published artifact on each platform catches
 // that, which is what this script exists to do.
 //
-//   node .github/scripts/smoke.mjs ./askviraj-linter-1.2.3.tgz
-//   node .github/scripts/smoke.mjs @askviraj/linter@1.2.3
+//   node .github/scripts/smoke.mjs ./virajp.dev-linter-1.2.3.tgz
+//   node .github/scripts/smoke.mjs @virajp.dev/linter@1.2.3
 //
 // A fixture named valid.* must report no errors; every other fixture must
 // report at least one problem. Exits non-zero on the first broken expectation.
@@ -34,7 +34,7 @@ import { fileURLToPath } from "node:url";
 
 const REPO_ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..");
 const FIXTURES = join(REPO_ROOT, "tests", "fixtures");
-const PACKAGE_NAME = "@askviraj/linter";
+const PACKAGE_NAME = "@virajp.dev/linter";
 
 const spec = process.argv[2];
 

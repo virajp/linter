@@ -1,5 +1,5 @@
 {
-  "name": "@askviraj/linter",
+  "name": "@virajp.dev/linter",
   "version": "1.1.9",
   "description": "A linter & formatter CLI for JavaScript, TypeScript, Astro, JSON, JSONC, CSS, HTML, Markdown, YAML, TOML, and more.",
   "keywords": [

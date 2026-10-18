@@ -5,7 +5,7 @@ code in this repository.
 
 ## What This Is
 
-`@askviraj/linter` is a **self-contained ESLint CLI** published to npm. It
+`@virajp.dev/linter` is a **self-contained ESLint CLI** published to npm. It
 bundles ESLint and all language plugins (JS/TS, Astro, JSON/JSONC, Markdown,
 CSS, YAML, TOML, HTML) so consuming repos never install ESLint or plugins
 themselves. At runtime, plugins resolve from this package's own `node_modules`,
@@ -106,9 +106,9 @@ Two entry points, both backed by a shared base config:
   `.config/linter.yaml`, builds the config via `createConfig()`, and runs
   ESLint's programmatic API (`new ESLint()` with `overrideConfigFile: true` and
   `errorOnUnmatchedPattern: false`).
-- **`src/auto.ts`** — the `@askviraj/linter/auto` export for the VS Code ESLint
-  extension. Returns `createConfig(loadYamlOptions(process.cwd()))` as a default
-  export.
+- **`src/auto.ts`** — the `@virajp.dev/linter/auto` export for the VS Code
+  ESLint extension. Returns `createConfig(loadYamlOptions(process.cwd()))` as a
+  default export.
 
 Config composition pipeline:
 
@@ -158,25 +158,25 @@ example `**/AGENTS.md` and `.claude/**/*.md`) apply to every consumer repo.
 ## CLI Reference
 
 ```bash
-npx @askviraj/linter [flags] [files...]
-bunx --bun @askviraj/linter [flags] [files...]
+npx @virajp.dev/linter [flags] [files...]
+bunx --bun @virajp.dev/linter [flags] [files...]
 ```
 
-| Flag                      | Description                                                               |
-| ------------------------- | ------------------------------------------------------------------------- |
-| `--init`                  | Scaffold `eslint.config.mjs`, `.config/linter.yaml`, and VS Code settings |
-| `--force`                 | Overwrite existing files (with `--init`)                                  |
-| `--fix`                   | Automatically fix problems                                                |
-| `--cache`                 | Only check changed files                                                  |
-| `--cache-location <path>` | Path to the cache file or directory                                       |
-| `--no-ignore`             | Disable use of ignore files                                               |
-| `--quiet`                 | Report errors only                                                        |
-| `--debug`                 | Enable ESLint debug logging (`eslint:*,-eslint:code-path,eslintrc:*`)     |
-| `--format`, `-f`          | Use a specific output format                                              |
-| `--max-warnings <n>`      | Number of warnings to trigger nonzero exit code                           |
-| `--version`, `-v`         | Show version and plugin versions                                          |
-| `--help`, `-h`            | Show help                                                                 |
-| positional args           | Files or directories to lint (default: `.`)                               |
+| Flag                      | Description                                                                                         |
+| ------------------------- | --------------------------------------------------------------------------------------------------- |
+| `--init`                  | Scaffold `eslint.config.mjs` and `.config/linter.yaml`; update `.vscode/settings.json` if it exists |
+| `--force`                 | Overwrite `eslint.config.mjs` and `.config/linter.yaml` (with `--init`)                             |
+| `--fix`                   | Automatically fix problems                                                                          |
+| `--cache`                 | Only check changed files                                                                            |
+| `--cache-location <path>` | Path to the cache file or directory                                                                 |
+| `--no-ignore`             | Disable use of ignore files                                                                         |
+| `--quiet`                 | Report errors only                                                                                  |
+| `--debug`                 | Enable ESLint debug logging (`eslint:*,-eslint:code-path,eslintrc:*`)                               |
+| `--format`, `-f`          | Use a specific output format                                                                        |
+| `--max-warnings <n>`      | Number of warnings to trigger nonzero exit code                                                     |
+| `--version`, `-v`         | Show version and plugin versions                                                                    |
+| `--help`, `-h`            | Show help                                                                                           |
+| positional args           | Files or directories to lint (default: `.`)                                                         |
 
 `src/cli/args.ts` rejects unknown flags, so that they cannot conflict with the
 built-in config. Use `--` before file names that start with `-`, for example
@@ -184,13 +184,20 @@ built-in config. Use `--` before file names that start with `-`, for example
 
 ## Consumer Configuration
 
-`npx @askviraj/linter --init` scaffolds three files in the target repo:
+`npx @virajp.dev/linter --init` scaffolds two files in the target repo and
+edits one file only if it exists:
 
-- `eslint.config.mjs` — re-exports `@askviraj/linter/auto`, so the VS Code
+- `eslint.config.mjs` — re-exports `@virajp.dev/linter/auto`, so the VS Code
   ESLint extension (`dbaeumer.vscode-eslint`) loads the same config as the CLI.
 - `.config/linter.yaml` — the customization file.
-- `.vscode/settings.json` — sets `eslint.useFlatConfig`. An existing file is
-  edited with `jsonc-parser`, so its comments and trailing commas stay.
+- `.vscode/settings.json` — sets `eslint.useFlatConfig`. `--init` edits the file
+  with `jsonc-parser`, so its comments and trailing commas stay. If the file
+  does not exist, `--init` does not create it (or `.vscode/`) and reports
+  `[skipped]`. If the file has no JSON root or has a JSONC syntax error,
+  `--init` does not write it, reports `[failed]`, and exits 1. A leading UTF-8
+  BOM is not an error: the file is merged and the BOM stays. `--force` does not
+  change this step, and the `--force` hint does not count a skipped settings
+  file.
 
 `.config/linter.yaml` example:
 
@@ -264,6 +271,14 @@ binary that fails to load surfaces as a failed job. `verify-tarball` gates the
 publish; `smoke-published` re-checks what the registry actually serves. Dispatch
 the workflow with **dry-run** to exercise both matrices without publishing.
 
+The publish job skips `npm publish` only when a `workflow_dispatch` sets the
+input **skip-publish** to `true` and `npm view <name>@<version>` returns that
+version. Then `smoke-published` tests the version that is already on npm. Use
+this input after the first version of a new package name is published by hand
+(npm cannot add a Trusted Publisher to a package that does not exist). A tag
+push never skips the publish. A dispatch with `skip-publish: true` for a
+version that is not on npm fails.
+
 The release paths into that pipeline:
 
 - **Manual release**: `mise run p:release [--minor|--major]` runs `p:preflight`
@@ -291,12 +306,19 @@ next version. Do not move or delete a pushed tag.
 CI sets `MISE_ENV=ci`, which layers `.config/mise.ci.toml` (provides
 `osv-scanner`) on top of `.config/mise.toml`.
 
-**npm Trusted Publisher config**: on npmjs.com, `@askviraj/linter` authorizes
+**npm Trusted Publisher config**: on npmjs.com, `@virajp.dev/linter` authorizes
 repo `virajp/linter` with workflow `release.yml`. npm permits **one** trusted
 publisher per package, so `deps-update.yml` can never publish directly — it
 dispatches `release.yml` instead. Publishing from any other workflow fails the
 OIDC token exchange with a misleading `404 ... package not found` / `ENEEDAUTH`.
 If `main` is branch-protected, allow `github-actions[bot]` to push.
+
+**`sunset/`** is a tombstone package for `@askviraj/linter@2.0.0`, the old name
+of this package. Its `linter` bin writes the new package name to stderr and
+exits 1. An import of `@askviraj/linter` or `@askviraj/linter/auto` throws an
+error that gives the new import line. The user publishes it once by hand, then
+runs `npm deprecate` on `@askviraj/linter`. It is not a pnpm workspace member,
+and it is not part of the release pipeline.
 
 ## Testing
 

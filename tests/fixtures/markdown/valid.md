@@ -19,5 +19,5 @@ const x = 1;
 ```
 
 ```sh
-npx @askviraj/linter --fix
+npx @virajp.dev/linter --fix
 ```
