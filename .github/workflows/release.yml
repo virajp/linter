@@ -10,6 +10,10 @@ on:
         description: "Pack and run the platform matrix, but do not publish"
         type: boolean
         default: false
+      skip-publish:
+        description: "Skip the publish of a version already on npm, then smoke-test it"
+        type: boolean
+        default: false
 
 # OIDC trusted publishing: no NPM_TOKEN, automatic provenance.
 permissions:
@@ -145,22 +149,29 @@ jobs:
           name: tarball
 
       # The first version under a new name is published by hand (npm cannot
-      # set a trusted publisher for a package that does not exist yet), so
-      # skip a version the registry already has and let smoke-published run.
-      # `npm view` prints nothing for an unknown version of a known package,
-      # so compare its output instead of trusting its exit code.
-      - name: Check whether the version is already on npm
+      # set a trusted publisher for a package that does not exist yet). The
+      # `skip-publish` input lets a dispatch smoke-test that hand-published
+      # version. Only that input skips: a tag push always publishes, and a
+      # skip for a version npm does not have fails. `npm view` prints nothing
+      # for an unknown version of a known package, so compare its output
+      # instead of trusting its exit code.
+      - name: Check whether to skip the publish
         id: existing
         env:
+          SKIP_PUBLISH: ${{ inputs.skip-publish }}
           VERSION: ${{ needs.pack.outputs.version }}
         run: |
-          NAME="$(node -p "require('./package.json').name")"
-          if [ "$(npm view "$NAME@$VERSION" version 2>/dev/null)" = "$VERSION" ]; then
-            echo "::notice::$NAME@$VERSION is already on npm; skipping publish"
-            echo "published=true" >>"$GITHUB_OUTPUT"
-          else
+          if [ "$SKIP_PUBLISH" != "true" ]; then
             echo "published=false" >>"$GITHUB_OUTPUT"
+            exit 0
           fi
+          NAME="$(node -p "require('./package.json').name")"
+          if [ "$(npm view "$NAME@$VERSION" version 2>/dev/null)" != "$VERSION" ]; then
+            echo "::error::skip-publish is set, but $NAME@$VERSION is not on npm"
+            exit 1
+          fi
+          echo "::notice::$NAME@$VERSION is already on npm; skipping publish"
+          echo "published=true" >>"$GITHUB_OUTPUT"
 
       - name: Publish to npm
         if: steps.existing.outputs.published != 'true'
