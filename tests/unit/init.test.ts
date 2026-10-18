@@ -47,13 +47,25 @@ describe("runInit", () => {
   });
 
   function captureLog(fn: () => void): string {
+    const { output, error } = captureLogAndError(fn);
+    if (error !== undefined) throw error;
+    return output;
+  }
+
+  function captureLogAndError(fn: () => void): {
+    output: string;
+    error: unknown;
+  } {
     const spy = vi.spyOn(console, "log").mockImplementation(() => {});
+    let error: unknown;
     try {
       fn();
-      return spy.mock.calls.map((args) => args.join(" ")).join("\n");
-    } finally {
-      spy.mockRestore();
+    } catch (e) {
+      error = e;
     }
+    const output = spy.mock.calls.map((args) => args.join(" ")).join("\n");
+    spy.mockRestore();
+    return { output, error };
   }
 
   test("skips .vscode/settings.json when it does not exist", () => {
@@ -141,16 +153,37 @@ describe("runInit", () => {
     mkdirSync(`${tmpDir}/.vscode`, { recursive: true });
     const path = `${tmpDir}/.vscode/settings.json`;
     writeFileSync(path, text);
-    const spy = vi.spyOn(console, "log").mockImplementation(() => {});
-    try {
-      expect(() => runInit({ cwd: tmpDir })).toThrow(
-        "The file contains invalid JSONC. Fix the file and try again.",
-      );
-      const output = spy.mock.calls.map((args) => args.join(" ")).join("\n");
-      expect(output).toContain(`[failed] ${path}`);
-    } finally {
-      spy.mockRestore();
-    }
+    const { output, error } = captureLogAndError(() => runInit({ cwd: tmpDir }));
+    expect(error).toBeInstanceOf(Error);
+    expect((error as Error).message).toContain(
+      "The file contains invalid JSONC. Fix the file and try again.",
+    );
+    expect(output).toContain(`[failed] ${path}`);
     expect(readFileSync(path, "utf-8")).toBe(text);
+  });
+
+  test("does not write a settings.json with a JSONC syntax error", () => {
+    mkdirSync(`${tmpDir}/.vscode`, { recursive: true });
+    const path = `${tmpDir}/.vscode/settings.json`;
+    const text = "{ \"a\": [1, }";
+    writeFileSync(path, text);
+    const { output, error } = captureLogAndError(() => runInit({ cwd: tmpDir }));
+    expect(error).toBeInstanceOf(Error);
+    expect((error as Error).message).toContain(
+      "The file contains invalid JSONC. Fix the file and try again.",
+    );
+    expect(output).toContain(`[failed] ${path}`);
+    expect(readFileSync(path, "utf-8")).toBe(text);
+  });
+
+  test("merges a valid settings.json with comments and trailing commas", () => {
+    mkdirSync(`${tmpDir}/.vscode`, { recursive: true });
+    const path = `${tmpDir}/.vscode/settings.json`;
+    writeFileSync(path, "{\n  // a comment\n  \"a\": [1, 2,],\n}\n");
+    const output = captureLog(() => runInit({ cwd: tmpDir }));
+    expect(output).toContain(`[updated] ${path}`);
+    const content = readFileSync(path, "utf-8");
+    expect(content).toContain("// a comment");
+    expect(content).toContain("\"eslint.useFlatConfig\": true");
   });
 });

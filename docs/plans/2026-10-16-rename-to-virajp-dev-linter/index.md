@@ -161,6 +161,7 @@ Two reversals of standing decisions:
 | 20 | Unparseable settings     | Ruled 2026-10-18 at U5 (`init.ts:68`). If an existing `.vscode/settings.json` has no JSON root (empty, comments only, or not JSON), `--init` does not overwrite it. It records `[failed]` and prints the existing error message. This replaces "without change" in U1 Edits 1.                                                 | Overwrite with a new object                        | U4     |
 | 21 | Tombstone exit           | Ruled 2026-10-18 at U5 (`sunset/linter.mjs:25`). The bin sets `process.exitCode = 1` and does not call `process.exit`, so the stderr write completes. This replaces `process.exit(1)` in U2 Edits 2.                                                                                                                           | `process.exit(1)`                                  | U2     |
 | 22 | Monthly cron             | Ruled 2026-10-18 at U5 (gap G1). Parked hand step 0 disables `deps-update.yml` before the landing; hand step 8 enables it again. No code change.                                                                                                                                                                               | A guard step in `deps-update.yml`; gap only        | Parked |
+| 23 | Settings syntax errors   | Ruled 2026-10-18 at U5 round 2 (gap G3). If `parseTree` reports any syntax error in an existing `.vscode/settings.json`, `--init` does not write the file. It records `[failed]` and prints the existing error message, as decision 20 does.                                                                                   | Merge anyway; gap only                             | U4     |
 
 ## New dependencies
 
@@ -303,6 +304,12 @@ Other items:
 - **G2 (U5, plan gap, open).** Parked hand step 3 publishes a new `pnpm pack`
   tarball that `check-bindings.sh` does not examine. Because of decision 13, CI
   never publishes its own examined 2.0.0 tarball.
+- **G3 (U5 round 2, plan gap, closed by decision 23).** Decision 20 rules only
+  the no-root case.
+  A `.vscode/settings.json` with JSONC syntax errors but a recoverable root
+  (`init.ts:62`, `parseTree` with no errors array) is still merged, written back
+  more damaged, and reported `[updated]`. Example: `{ "a": [1, }`. The behavior
+  is older than this branch, and U1 Edits 1 kept it.
 
 ## Run log
 
@@ -324,6 +331,8 @@ Other items:
 | 3    | U2 sunset        | opus  | 3     | pass        | U5 loop-back: linter.mjs sets process.exitCode = 1 (decision 21); gates: --help to stderr only, exit 1; import fails with the new line; pack lists 4 files                                                                                                                                                                                      | 4fceae8 |
 | 3    | U3 ci            | opus  | 2     | pass        | U5 loop-back (security): skip-publish dispatch input; tag push never skips; skip with no version on npm fails (decision 19); DOCS FALSIFIED: CLAUDE.md Releasing (skip-publish input)                                                                                                                                                           | 2e1f14b |
 | 3    | U4 rename        | opus  | 2     | pass        | U5 loop-back: no JSON root → throw → [failed], file unchanged (decision 20); VSCODE_SETTINGS removed; 3 new tests; 116 tests pass                                                                                                                                                                                                               | 7407e54 |
+| 3    | U5 review        | opus  | 2     | pass        | security: range 6f977aa..7407e54; engine 0 vulns; round 1 finding fixed (2e1f14b); VERDICT approve; tag U5/security/2                                                                                                                                                                                                                           | —       |
+| 3    | U5 review        | opus  | 2     | findings(1) | review: range 6f977aa..7407e54; round 1 findings fixed; [low] tests/unit/init.test.ts:144 (U4) test.each copies captureLog; gap G3 (U5/gap/2); engine findings 2,3,4,7,9,10 not raised by reviewer; VERDICT approve; tag U5/review/2                                                                                                            | —       |
 
 ## Launch
 

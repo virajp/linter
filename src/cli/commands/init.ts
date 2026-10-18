@@ -1,4 +1,5 @@
 import {
+  type ParseError,
   applyEdits,
   findNodeAtLocation,
   getNodeValue,
@@ -59,11 +60,17 @@ function updateVsCodeSettings(existingPath: string): {
   action: "updated" | "up-to-date";
 } {
   const text = readFileSync(existingPath, "utf-8");
-  const root = parseTree(text);
+  const errors: ParseError[] = [];
+  const root = parseTree(text, errors, { allowTrailingComma: true });
 
   if (!root) {
     // No JSON root (empty, comments only, or not JSON) — never overwrite it.
     throw new Error("the file has no JSON root");
+  }
+
+  if (errors.length > 0) {
+    // A syntax error with a recoverable root — never write it back.
+    throw new Error("the file has a JSONC syntax error");
   }
 
   const node = findNodeAtLocation(root, ["eslint.useFlatConfig"]);
