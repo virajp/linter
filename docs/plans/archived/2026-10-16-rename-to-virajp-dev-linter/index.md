@@ -301,7 +301,9 @@ Other items:
   `main` before hand steps 2 to 5, it pushes a bot commit and the tag `v1.1.10`,
   and the publish fails because `@virajp.dev/linter` and its Trusted Publisher
   do not exist yet.
-- **G2 (U5, plan gap, open).** Parked hand step 3 publishes a new `pnpm pack`
+- **G2 (U5, plan gap, closed 2026-10-18: `check-bindings.sh` on the published
+  2.0.0 tarball found all bindings).** Parked hand step 3 publishes a new `pnpm
+  pack`
   tarball that `check-bindings.sh` does not examine. Because of decision 13, CI
   never publishes its own examined 2.0.0 tarball.
 - **G3 (U5 round 2, plan gap, closed by decision 23).** Decision 20 rules only
