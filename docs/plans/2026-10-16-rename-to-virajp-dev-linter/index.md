@@ -10,10 +10,10 @@ backlog_pieces: []
 
 ## Status
 
-**RUNNING**
+**COMPLETE**
 
-RUNNING since 2026-10-18 00:12 in
-/Users/virajpatel/Projects/github.com/virajp/linter/.worktrees/2026-10-16-rename-to-virajp-dev-linter
+COMPLETE 2026-10-18 — 99a7024 4885209 05ea198 51d6f07 4fceae8 2e1f14b 7407e54
+421239c 027c570 7745075
 
 ## Consent
 
@@ -169,15 +169,15 @@ None. The tombstone imports only `node:process`.
 
 ## Units
 
-| Id | Wave | Unit file                                  | Kind   | Owns                                                                                                                                                                                                                               | Depends on     | Status  | Commit  |
-| -- | ---- | ------------------------------------------ | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- | ------- | ------- |
-| U1 | 1    | [01-settings-json.md](01-settings-json.md) | edit   | `src/cli/commands/init.ts`, `src/cli/commands/help.ts`, `tests/unit/init.test.ts`, `tests/integration/init-command.test.ts`                                                                                                        | —              | green   | 99a7024 |
-| U2 | 1    | [02-sunset.md](02-sunset.md)               | edit   | `sunset/**`                                                                                                                                                                                                                        | —              | green   | 4885209 |
-| U3 | 1    | [03-ci.md](03-ci.md)                       | edit   | `.github/workflows/release.yml`, `.github/workflows/deps-update.yml`, `.github/scripts/smoke.mjs`, `.github/scripts/check-bindings.sh`                                                                                             | —              | green   | 05ea198 |
-| U4 | 2    | [04-rename.md](04-rename.md)               | edit   | `package.json`, `src/cli/commands/help.ts`, `src/cli/commands/init.ts`, `src/config-loader.ts`, `tests/unit/init.test.ts`, `tests/integration/init-command.test.ts`, `tests/fixtures/markdown/valid.md`, `.config/statusline.json` | U1             | green   | 51d6f07 |
-| U5 | 3    | [05-review.md](05-review.md)               | review | —                                                                                                                                                                                                                                  | U1, U2, U3, U4 | green   |         |
-| U6 | 4    | [06-docs.md](06-docs.md)                   | edit   | `readme.md`, `CLAUDE.md`, `docs/memory/decisions/2026-10-16-rename-to-virajp-dev-linter.md`                                                                                                                                        | all            | green   | 7745075 |
-| U7 | 5    | [07-gates.md](07-gates.md)                 | edit   | none                                                                                                                                                                                                                               | U6             | pending |         |
+| Id | Wave | Unit file                                  | Kind   | Owns                                                                                                                                                                                                                               | Depends on     | Status | Commit  |
+| -- | ---- | ------------------------------------------ | ------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- | ------ | ------- |
+| U1 | 1    | [01-settings-json.md](01-settings-json.md) | edit   | `src/cli/commands/init.ts`, `src/cli/commands/help.ts`, `tests/unit/init.test.ts`, `tests/integration/init-command.test.ts`                                                                                                        | —              | green  | 99a7024 |
+| U2 | 1    | [02-sunset.md](02-sunset.md)               | edit   | `sunset/**`                                                                                                                                                                                                                        | —              | green  | 4885209 |
+| U3 | 1    | [03-ci.md](03-ci.md)                       | edit   | `.github/workflows/release.yml`, `.github/workflows/deps-update.yml`, `.github/scripts/smoke.mjs`, `.github/scripts/check-bindings.sh`                                                                                             | —              | green  | 05ea198 |
+| U4 | 2    | [04-rename.md](04-rename.md)               | edit   | `package.json`, `src/cli/commands/help.ts`, `src/cli/commands/init.ts`, `src/config-loader.ts`, `tests/unit/init.test.ts`, `tests/integration/init-command.test.ts`, `tests/fixtures/markdown/valid.md`, `.config/statusline.json` | U1             | green  | 51d6f07 |
+| U5 | 3    | [05-review.md](05-review.md)               | review | —                                                                                                                                                                                                                                  | U1, U2, U3, U4 | green  |         |
+| U6 | 4    | [06-docs.md](06-docs.md)                   | edit   | `readme.md`, `CLAUDE.md`, `docs/memory/decisions/2026-10-16-rename-to-virajp-dev-linter.md`                                                                                                                                        | all            | green  | 7745075 |
+| U7 | 5    | [07-gates.md](07-gates.md)                 | edit   | none                                                                                                                                                                                                                               | U6             | green  |         |
 
 ## Shared-file rule
 
@@ -354,6 +354,9 @@ Other items:
 | 4    | U6 docs          | opus  | 2     | pass        | R4 loop-back: decisions doc Source line now names 21                                                                                                                                                                                                                                                                                            | —       |
 | 4    | R4               | opus  | 2     | pass        | 0 findings; CONTRACT clean; RULINGS clean                                                                                                                                                                                                                                                                                                       | —       |
 | 4    | gate             | —     | 1     | pass        | wave 4 gate 4/4 green                                                                                                                                                                                                                                                                                                                           | —       |
+| 5    | U7 gates         | opus  | 1     | pass        | steps 1-9 green: gate 4/4 (120 tests), p:preflight exit 0 (8 bindings, 26 fixtures), sunset bin/import/pack checks, askviraj grep only in the allowed set; no file changed                                                                                                                                                                      | —       |
+| 5    | R5               | —     | 1     | pass        | wave diff empty (U7 Owns none, no file changed); nothing to review                                                                                                                                                                                                                                                                              | —       |
+| —    | reconcile        | —     | 1     | pass        | final gate by the orchestrator: wave gate 4/4 (format re-run after the orchestrator's own Units-table edit), p:preflight exit 0; sunset: --help exit 1, 0 B stdout, move message on stderr; import error names @virajp.dev/linter/auto; npm pack lists the 4 files                                                                              | —       |
 
 ## Launch
 
