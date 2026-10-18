@@ -176,6 +176,31 @@ describe("runInit", () => {
     expect(readFileSync(path, "utf-8")).toBe(text);
   });
 
+  test("merges a settings.json with a UTF-8 BOM and keeps the BOM", () => {
+    mkdirSync(`${tmpDir}/.vscode`, { recursive: true });
+    const path = `${tmpDir}/.vscode/settings.json`;
+    writeFileSync(path, "\uFEFF{ \"a\": 1 }");
+    const output = captureLog(() => runInit({ cwd: tmpDir }));
+    expect(output).toContain(`[updated] ${path}`);
+    const content = readFileSync(path, "utf-8");
+    expect(content.startsWith("\uFEFF")).toBe(true);
+    expect(content).toContain("\"eslint.useFlatConfig\": true");
+  });
+
+  test("does not write a BOM settings.json with a JSONC syntax error", () => {
+    mkdirSync(`${tmpDir}/.vscode`, { recursive: true });
+    const path = `${tmpDir}/.vscode/settings.json`;
+    const text = "\uFEFF{ \"a\": [1, }";
+    writeFileSync(path, text);
+    const { output, error } = captureLogAndError(() => runInit({ cwd: tmpDir }));
+    expect(error).toBeInstanceOf(Error);
+    expect((error as Error).message).toContain(
+      "The file contains invalid JSONC. Fix the file and try again.",
+    );
+    expect(output).toContain(`[failed] ${path}`);
+    expect(readFileSync(path, "utf-8")).toBe(text);
+  });
+
   test("merges a valid settings.json with comments and trailing commas", () => {
     mkdirSync(`${tmpDir}/.vscode`, { recursive: true });
     const path = `${tmpDir}/.vscode/settings.json`;

@@ -68,7 +68,13 @@ function updateVsCodeSettings(existingPath: string): {
     throw new Error("the file has no JSON root");
   }
 
-  if (errors.length > 0) {
+  // jsonc-parser reports a leading UTF-8 BOM as InvalidSymbol at offset 0.
+  // VS Code reads such a file as valid, so ignore exactly that one error.
+  const syntaxErrors = text.startsWith("\uFEFF")
+    ? errors.filter((e) => !(e.error === 1 /* ParseErrorCode.InvalidSymbol */ && e.offset === 0 && e.length === 1))
+    : errors;
+
+  if (syntaxErrors.length > 0) {
     // A syntax error with a recoverable root — never write it back.
     throw new Error("the file has a JSONC syntax error");
   }
