@@ -39,10 +39,6 @@ version: 1
 #     rules: {}
 `;
 
-const VSCODE_SETTINGS: Record<string, unknown> = {
-  "eslint.useFlatConfig": true,
-};
-
 interface FileAction {
   path: string;
   action:
@@ -66,11 +62,8 @@ function updateVsCodeSettings(existingPath: string): {
   const root = parseTree(text);
 
   if (!root) {
-    // Completely unparseable — fall back to a fresh object.
-    return {
-      content: JSON.stringify(VSCODE_SETTINGS, null, 2) + "\n",
-      action: "updated",
-    };
+    // No JSON root (empty, comments only, or not JSON) — never overwrite it.
+    throw new Error("the file has no JSON root");
   }
 
   const node = findNodeAtLocation(root, ["eslint.useFlatConfig"]);

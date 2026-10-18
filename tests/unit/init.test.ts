@@ -132,4 +132,25 @@ describe("runInit", () => {
     const content = readFileSync(`${tmpDir}/.vscode/settings.json`, "utf-8");
     expect(content).toContain("\"other.setting\":1");
   });
+
+  test.each([
+    ["empty", ""],
+    ["comments only", "// a comment\n/* another */\n"],
+    ["not JSON", "this is not json\n"],
+  ])("does not overwrite a settings.json with no JSON root (%s)", (_, text) => {
+    mkdirSync(`${tmpDir}/.vscode`, { recursive: true });
+    const path = `${tmpDir}/.vscode/settings.json`;
+    writeFileSync(path, text);
+    const spy = vi.spyOn(console, "log").mockImplementation(() => {});
+    try {
+      expect(() => runInit({ cwd: tmpDir })).toThrow(
+        "The file contains invalid JSONC. Fix the file and try again.",
+      );
+      const output = spy.mock.calls.map((args) => args.join(" ")).join("\n");
+      expect(output).toContain(`[failed] ${path}`);
+    } finally {
+      spy.mockRestore();
+    }
+    expect(readFileSync(path, "utf-8")).toBe(text);
+  });
 });
