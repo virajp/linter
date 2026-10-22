@@ -12,7 +12,7 @@ node.compile = false
 npm.package_manager = "pnpm"
 
 [tools]
-node = { version = "latest" }
+node = { version = "lts" }
 pnpm = { version = "latest" }
 
 [env]
