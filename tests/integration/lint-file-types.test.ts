@@ -170,6 +170,13 @@ describe("lint file types", () => {
     expect(result.stdout).toContain("require-img-alt");
   });
 
+  test("lints html void element without self-closing tag", async () => {
+    copyFixture(FIXTURES.html.missingSelfClose, tmpDir);
+    const result = await runCli(["--no-ignore", "."], tmpDir);
+    expect(result.exitCode).toBe(1);
+    expect(result.stdout).toContain("Missing self closing tag for img");
+  });
+
   test("lints valid css with no errors", async () => {
     copyFixture(FIXTURES.css.valid, tmpDir);
     const result = await runCli(["--no-ignore", "."], tmpDir);

@@ -40,6 +40,7 @@ export const FIXTURES = {
   html: {
     valid: "html/valid.html",
     missingAlt: "html/missing-alt.html",
+    missingSelfClose: "html/missing-self-close.html",
   },
   css: {
     valid: "css/valid.css",
