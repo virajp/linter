@@ -194,9 +194,10 @@ through [`.config/osv-scanner.toml`](./.config/osv-scanner.toml), and
 in [`pnpm-workspace.yaml`](./pnpm-workspace.yaml). Remove an entry from both
 places when its fix can install.
 
-| Advisory                                                                 | Severity | Package         | Path                                                      | Reason                                                                                    |
-| ------------------------------------------------------------------------ | -------- | --------------- | --------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
-| [GHSA-238p-pmpm-9mq7](https://github.com/advisories/GHSA-238p-pmpm-9mq7) | Low      | `katex` <0.18.2 | `@eslint/markdown` > `micromark-extension-math` > `katex` | `micromark-extension-math` 3.1.0 (latest) requires `katex ^0.16.0`. The fix is in 0.18.2. |
+| Advisory                                                                 | Severity | Package             | Path                                                                               | Reason                                                                                                     |
+| ------------------------------------------------------------------------ | -------- | ------------------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| [GHSA-238p-pmpm-9mq7](https://github.com/advisories/GHSA-238p-pmpm-9mq7) | Low      | `katex` <0.18.2     | `@eslint/markdown` > `micromark-extension-math` > `katex`                          | `micromark-extension-math` 3.1.0 (latest) requires `katex ^0.16.0`. The fix is in 0.18.2.                  |
+| [GHSA-g3hv-75wg-m249](https://github.com/advisories/GHSA-g3hv-75wg-m249) | Moderate | `minimatch` <11.0.1 | `@typescript-eslint/parser` > `@typescript-eslint/typescript-estree` > `minimatch` | `@typescript-eslint/typescript-estree` 8.72.1 (latest) requires `minimatch ^10.2.2`. The fix is in 11.0.1. |
 
 ## License
 

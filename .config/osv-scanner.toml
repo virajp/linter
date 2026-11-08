@@ -5,3 +5,7 @@
 [[IgnoredVulns]]
 id = "GHSA-238p-pmpm-9mq7"
 reason = "katex <0.18.2 via @eslint/markdown > micromark-extension-math, which requires katex ^0.16.0. No in-range fix."
+
+[[IgnoredVulns]]
+id = "GHSA-g3hv-75wg-m249"
+reason = "minimatch <11.0.1 via @typescript-eslint/parser > @typescript-eslint/typescript-estree, which requires minimatch ^10.2.2. No in-range fix."
