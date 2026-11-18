@@ -169,7 +169,7 @@ bunx --bun @virajp.dev/linter [flags] [files...]
 | `--fix`                   | Automatically fix problems                                                                          |
 | `--cache`                 | Only check changed files                                                                            |
 | `--cache-location <path>` | Path to the cache file or directory                                                                 |
-| `--no-ignore`             | Disable use of ignore files                                                                         |
+| `--no-ignore`             | Disable use of ignore files, the built-in ignore list, and `ignores` of `.config/linter.yaml`       |
 | `--quiet`                 | Report errors only                                                                                  |
 | `--debug`                 | Enable ESLint debug logging (`eslint:*,-eslint:code-path,eslintrc:*`)                               |
 | `--format`, `-f`          | Use a specific output format                                                                        |
