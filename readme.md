@@ -80,7 +80,7 @@ and TS blocks use relaxed rules: unused and undefined names are not errors.
 | `--fix`                   |       | Automatically fix problems                                                                          |
 | `--cache`                 |       | Only check changed files                                                                            |
 | `--cache-location <path>` |       | Path to the cache file or directory                                                                 |
-| `--no-ignore`             |       | Disable use of ignore files                                                                         |
+| `--no-ignore`             |       | Disable use of ignore files, the built-in ignore list, and `ignores` of `.config/linter.yaml`       |
 | `--quiet`                 |       | Report errors only                                                                                  |
 | `--debug`                 |       | Enable ESLint debug logging                                                                         |
 | `--format`, `-f <name>`   |       | Use a specific output format                                                                        |
@@ -91,6 +91,11 @@ and TS blocks use relaxed rules: unused and undefined names are not errors.
 Positional arguments are treated as file or directory targets. Defaults to `.`
 when none are provided. Use `--` to pass file names that look like flags (for
 example, `linter -- --fix.js`).
+
+`--no-ignore` turns off all ignore lists. The built-in ignore list and the
+`ignores` of `.config/linter.yaml` have no effect, and the CLI lints each file
+that you give it. The gate `code:lint:05-linter` of bootstrap runs
+`linter --no-ignore <files>` and supplies its own list of files.
 
 ## Configuration
 

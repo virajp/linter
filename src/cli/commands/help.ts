@@ -8,7 +8,8 @@ Options:
   --fix               Automatically fix problems
   --cache             Only check changed files
   --cache-location    Path to the cache file or directory
-  --no-ignore         Disable use of ignore files
+  --no-ignore         Disable use of ignore files, the built-in ignore list,
+                      and the ignores of .config/linter.yaml
   --quiet             Report errors only
   --debug             Enable debug logging
   --format, -f        Use a specific output format

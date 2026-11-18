@@ -1,5 +1,6 @@
 import {
   existsSync,
+  mkdirSync,
   readFileSync,
   writeFileSync,
 } from "node:fs";
@@ -139,6 +140,50 @@ describe("lint flags", () => {
     // With --no-ignore, the global ignore is stripped → exit 1
     const withFlag = await runCli(["--no-ignore", "."], tmpDir);
     expect(withFlag.exitCode).toBe(1);
+  });
+
+  // bootstrap's gate `code:lint:05-linter` runs `linter --no-ignore <files>`
+  // and relies on this behavior. A change that keeps an ignore list active
+  // with --no-ignore is a breaking change.
+  test("--no-ignore lints explicit files on the built-in ignore list", async () => {
+    mkdirSync(`${tmpDir}/dist`);
+    copyFixture(FIXTURES.javascript.noUndef, `${tmpDir}/dist`);
+    writeFileSync(`${tmpDir}/AGENTS.md`, "# Test\n\n[empty]()\n");
+    const files = ["dist/no-undef.js", "AGENTS.md"];
+
+    const withoutFlag = await runCli(files, tmpDir);
+    expect(withoutFlag.exitCode).toBe(0);
+    expect(withoutFlag.stdout).toContain("File ignored");
+
+    const withFlag = await runCliJson(["--no-ignore", ...files], tmpDir);
+    expect(withFlag).toHaveLength(2);
+    for (const result of withFlag) {
+      expect(result.errorCount).toBeGreaterThan(0);
+      expect(JSON.stringify(result.messages)).not.toContain("File ignored");
+    }
+  });
+
+  test("--no-ignore lints paths in ignores of .config/linter.yaml", async () => {
+    mkdirSync(`${tmpDir}/.config`);
+    writeFileSync(
+      `${tmpDir}/.config/linter.yaml`,
+      "version: 1\nignores:\n  - \"generated/**\"\n",
+    );
+    mkdirSync(`${tmpDir}/generated`);
+    copyFixture(FIXTURES.javascript.noUndef, `${tmpDir}/generated`);
+
+    const withoutFlag = await runCli(["."], tmpDir);
+    expect(withoutFlag.exitCode).toBe(0);
+
+    const withFlag = await runCliJson(
+      ["--no-ignore", "generated/no-undef.js"],
+      tmpDir,
+    );
+    expect(withFlag).toHaveLength(1);
+    expect(withFlag[0]?.errorCount).toBeGreaterThan(0);
+    expect(JSON.stringify(withFlag[0]?.messages)).not.toContain(
+      "File ignored",
+    );
   });
 
   test("--debug does not crash", async () => {
