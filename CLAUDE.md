@@ -48,7 +48,8 @@ no CI runner can load it).
 
 - Every dependency and devDependency is pinned to an **exact** version.
 - `pnpm update --latest` excludes these packages. The exclusions are in
-  `.config/mise/tasks/setup/pnpm/upgrade` and `deps-update.yml`. Keep the two
+  `.config/mise/tasks/p/upgrade` (`p:upgrade`) and `deps-update.yml`. Keep the
+  two
   lists the same.
   - `typescript`: hold at 6.x. `typescript-eslint` does not support 7.
   - `@eslint/css`: hold at 1.x. `@poupe/eslint-plugin-tailwindcss` needs
@@ -76,6 +77,7 @@ mise x -- mise run p:test            # Build, then run all tests (unit + integra
 mise x -- mise run p:test-unit       # Build, then run unit tests only
 mise x -- mise run p:preflight       # Tests + pack + binding check + smoke.mjs (release.yml's Pack job, locally)
 mise x -- mise run p:preview         # Run p:test, then pnpm pack
+mise x -- mise run p:upgrade         # Upgrade the dependencies to latest, with the holds of the dependency policy
 mise x -- mise run setup             # Install the tools, the dependencies, the hooks and the AI plugins
 ```
 

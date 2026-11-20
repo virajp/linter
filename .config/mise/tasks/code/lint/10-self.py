@@ -57,7 +57,7 @@ def main():
       "--color",
       "--pass-on-no-patterns",
       "--concurrency",
-      "auto",
+      "off",
       "--no-error-on-unmatched-pattern",
       "--no-warn-ignored",
     ]
