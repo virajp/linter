@@ -1,7 +1,9 @@
+# Shared with bootstrap: repo/tools/pre-commit/files/.config/pre-commit-config.yaml.merge.toml.
+# A change in this file stays. A removed bootstrap item comes back at the next
+# sync, unless .config/bootstrap/tools.toml has an override for it.
 default_install_hook_types:
   - pre-commit
   - commit-msg
-
 repos:
   - repo: local
     hooks:
@@ -11,3 +13,106 @@ repos:
         files: (^|.*/)package\.json$
         language: system
         stages: [ pre-commit ]
+  - hooks:
+      - args:
+          - --maxkb=1024
+        id: check-added-large-files
+        name: Check for added large files (>1MB)
+      - id: check-case-conflict
+        name: Check for case-conflicting filenames
+      - id: check-illegal-windows-names
+        name: Check for filenames Windows cannot check out
+      - id: check-executables-have-shebangs
+        name: Check that executables have shebangs
+      - id: check-shebang-scripts-are-executable
+        name: Check that scripts with shebangs are executable
+      - id: check-merge-conflict
+        name: Check for merge conflict markers
+      - id: check-symlinks
+        name: Check for broken symlinks
+      - id: destroyed-symlinks
+        name: Check for destroyed symlinks
+      - exclude: (^|/)tsconfig[^/]*\.json$|(^|/)\.vscode/
+        id: check-json
+        name: Check JSON syntax
+      - exclude: \.merge\.toml$
+        id: check-toml
+        name: Check TOML syntax
+      - args:
+          - --allow-multiple-documents
+        id: check-yaml
+        name: Check YAML syntax
+      - id: detect-private-key
+        name: Check for committed private keys
+      - id: end-of-file-fixer
+        name: Ensure files end with a newline
+      - id: trailing-whitespace
+        name: Remove trailing whitespace
+      - args:
+          - --fix=lf
+        id: mixed-line-ending
+        name: Normalise line endings to LF
+    repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+  - hooks:
+      - always_run: true
+        description: The secret scan, over what is staged rather than over the
+          tree.
+        entry: mise x -- mise run code:sec --staged
+        id: sec
+        language: system
+        name: Secrets (mise run code:sec --staged)
+        pass_filenames: false
+    repo: local
+  - hooks:
+      - description: The repo's formatters, run over the files being committed.
+        entry: mise x -- mise run code:format --fix
+        id: format
+        language: system
+        name: Format (mise run code:format)
+        pass_filenames: true
+        require_serial: true
+    repo: local
+  - hooks:
+      - always_run: true
+        description: Prevents a local .git/config from overriding global user
+          and signing settings.
+        entry: mise x -- mise run code:git-config --fix
+        id: git-config
+        language: system
+        name: Forbidden local git-config
+        pass_filenames: false
+    repo: local
+  - hooks:
+      - args:
+          - --branch
+          - main
+        description: These branches take merges only. git runs pre-merge-commit
+          for a merge, so merges are not affected.
+        id: no-commit-to-branch
+        name: Refuse a direct commit to a protected branch
+    repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+  - hooks:
+      - args:
+          - --config
+          - .config/git-conventional-commits.yaml
+        id: conventional-commits
+        name: Conventional Commits
+        stages:
+          - commit-msg
+    repo: https://github.com/qoomon/git-conventional-commits
+    rev: v2.9.0
+  - hooks:
+      - description: The repo's linters, run over the files being committed.
+        entry: mise x -- mise run code:lint --fix
+        id: lint
+        language: system
+        name: Lint (mise run code:lint)
+        pass_filenames: true
+        require_serial: true
+    repo: local
+minimum_pre_commit_version: 3.2.0
+default_stages:
+  - pre-commit
+exclude: (^|/)\.config/mise/locks/

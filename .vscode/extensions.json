@@ -1,3 +1,6 @@
+// Shared with bootstrap: repo/tools/vscode/files/.vscode/extensions.json.merge.toml.
+// A change in this file stays. A removed bootstrap item comes back at the next
+// sync, unless .config/bootstrap/tools.toml has an override for it.
 {
   "recommendations": [
     "astro-build.astro-vscode",
@@ -18,6 +21,7 @@
     "pkief.material-icon-theme",
     "redhat.vscode-yaml",
     "tamasfe.even-better-toml",
-    "usernamehw.errorlens"
+    "usernamehw.errorlens",
+    "meta.pyrefly"
   ]
 }

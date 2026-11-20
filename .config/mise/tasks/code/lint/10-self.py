@@ -47,10 +47,19 @@ def main():
     with open(file_list, "rb") as f:
       names = f.read().replace(b"\n", b"\0")
     eslint = [
-      "mise", "x", "--", "pnpm", "exec", "eslint",
-      "--no-config-lookup", "--config", f"{root}/src/eslint.config.ts",
-      "--color", "--pass-on-no-patterns", "--concurrency", "auto",
-      "--no-error-on-unmatched-pattern", "--no-warn-ignored",
+      "mise",
+      "x",
+      "--",
+      f"{root}/node_modules/.bin/eslint",
+      "--no-config-lookup",
+      "--config",
+      f"{root}/src/eslint.config.ts",
+      "--color",
+      "--pass-on-no-patterns",
+      "--concurrency",
+      "auto",
+      "--no-error-on-unmatched-pattern",
+      "--no-warn-ignored",
     ]
     if flag("debug"):
       eslint.append("--debug")
