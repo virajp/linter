@@ -48,7 +48,8 @@ no CI runner can load it).
 
 - Every dependency and devDependency is pinned to an **exact** version.
 - `pnpm update --latest` excludes these packages. The exclusions are in
-  `.config/mise/tasks/p/upgrade` (`p:upgrade`) and `deps-update.yml`. Keep the
+  `.config/mise/tasks/p/upgrade.py` (`p:upgrade`) and `deps-update.yml`. Keep
+  the
   two
   lists the same.
   - `typescript`: hold at 6.x. `typescript-eslint` does not support 7.
