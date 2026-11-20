@@ -286,8 +286,10 @@ The release paths into that pipeline:
 - **Manual release**: `mise run p:release [--minor|--major]` runs `p:preflight`
   (tests, then the binding check and `smoke.mjs` against a locally packed
   tarball — the same scripts `release.yml` runs), bumps the version, commits
-  `ops: release vX.Y.Z`, and creates a **signed** tag — it does *not* push. Then
-  `git push && git push origin vX.Y.Z`; the tag push triggers
+  `ops: release vX.Y.Z` on the local branch `release/vX.Y.Z`, lands it with
+  `git:merge:main` (which pushes `main`), and creates a **signed** tag on the
+  merge commit — it does *not* push the tag. Then `git push origin vX.Y.Z`; the
+  tag push triggers
   `.github/workflows/release.yml`, which verifies tag == package.json version
   before running the pipeline above.
 - **Monthly auto-update**: `.github/workflows/deps-update.yml` (cron + manual)
