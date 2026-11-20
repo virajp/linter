@@ -2,7 +2,9 @@
 format = 3
 
 [tools.vscode]
-[tools.mise]
+[tools.mise.code_files]
+excludes = [ "tests/" ]
+
 [tools.git]
 [tools.pre-commit]
 [tools.dprint]
@@ -10,6 +12,6 @@ format = 3
 [tools.gitleaks]
 [tools.grype]
 [tools.osv-scanner]
-
-[tools.mise.code_files]
-excludes = [ "tests/" ]
+[tools.pnpm]
+[tools.github]
+[tools.claude]

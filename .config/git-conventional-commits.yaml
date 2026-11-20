@@ -20,7 +20,14 @@ convention:
   # One scope per project, from `scopes` of [commits] in .config/bootstrap/repo.toml,
   # else the names of the [members.*] tables.
   # A scope that stops existing stays listed: deleting it invalidates its commits.
-  commitScopes: []
+  commitScopes:
+    - "cli"
+    - "config"
+    - "deps"
+    - "fixtures"
+    - "integration"
+    - "tests"
+    - "unit"
 
   featureCommitTypes:
     - feat

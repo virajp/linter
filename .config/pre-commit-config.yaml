@@ -112,6 +112,14 @@ repos:
         pass_filenames: true
         require_serial: true
     repo: local
+  - hooks:
+      - entry: mise x -- actionlint
+        files: ^\.github/workflows/.*\.ya?ml$
+        id: actionlint
+        language: system
+        name: Lint GitHub Actions workflows (actionlint)
+        pass_filenames: true
+    repo: local
 minimum_pre_commit_version: 3.2.0
 default_stages:
   - pre-commit
