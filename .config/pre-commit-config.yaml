@@ -123,4 +123,4 @@ repos:
 minimum_pre_commit_version: 3.2.0
 default_stages:
   - pre-commit
-exclude: (^|/)\.config/mise/locks/
+exclude: (^|/)\.config/mise/locks/|^tests/fixtures/

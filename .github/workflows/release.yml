@@ -59,7 +59,7 @@ jobs:
 
       # Shared with the p:preflight task -- see the script for what it skips.
       - name: Verify every platform's native binding is bundled
-        run: bash .github/scripts/check-bindings.sh "$(ls *.tgz)"
+        run: bash .github/scripts/check-bindings.sh "$(ls -- *.tgz)"
 
       - name: Record version
         id: meta
@@ -117,7 +117,7 @@ jobs:
       - name: Smoke test the packed tarball
         shell: bash
         run: |
-          TARBALL="$(ls *.tgz)"
+          TARBALL="$(ls -- *.tgz)"
           if [ -n "${{ matrix.image }}" ]; then
             docker run --rm -v "$PWD:/work" -w /work "${{ matrix.image }}" \
               node .github/scripts/smoke.mjs "/work/$TARBALL"
@@ -175,7 +175,7 @@ jobs:
 
       - name: Publish to npm
         if: steps.existing.outputs.published != 'true'
-        run: npm publish "$(ls *.tgz)" --access public
+        run: npm publish "$(ls -- *.tgz)" --access public
 
       - name: Show npm debug log on failure
         if: failure()
