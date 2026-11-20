@@ -60,25 +60,24 @@ no CI runner can load it).
 
 ## Commands
 
-Run mise tasks through `mise x --` so the correct toolchain is on PATH. Node and
-pnpm come from `.config/mise.toml`. dprint, pre-commit, and taplo come from
-`.config/mise.dev.toml`.
+Run mise tasks through `mise x --` so the correct toolchain is on PATH. The
+`bootstrap` sync supplies the tools and the shared tasks (`code:*`, `setup*`,
+`git:*`): the values are in `.config/bootstrap/`, and `mise run setup:configs`
+syncs them. The tools are in `.config/mise/conf.d/<tool>/mise.<env>.toml`. The
+own mise config of this repository is in `.config/mise/conf.d/zz-repo/`.
 
 ```bash
-mise x -- mise run code:format --fix # Format with dprint (without --fix: check only)
-mise x -- mise run code:lint         # Self-lint via src/eslint.config.ts (--fix, --debug supported)
+mise x -- mise run code:format --fix # Format the uncommitted files (--all: every file; without --fix: check only)
+mise x -- mise run code:lint         # Lint: the published linter, then the self-lint via src/eslint.config.ts (code:lint:10-self)
 mise x -- mise run code:check        # tsc type-check (no emit)
-mise x -- mise run code:precommit    # Run all pre-commit hooks on all files
+mise x -- mise run code:precommit    # Run the pre-commit hooks on the uncommitted files (--all: every file)
 mise x -- mise run p:build           # Compile src/ -> dist/
 mise x -- mise run p:test            # Build, then run all tests (unit + integration)
 mise x -- mise run p:test-unit       # Build, then run unit tests only
 mise x -- mise run p:preflight       # Tests + pack + binding check + smoke.mjs (release.yml's Pack job, locally)
 mise x -- mise run p:preview         # Run p:test, then pnpm pack
-mise x -- mise run setup:all         # Bootstrap: clean install, upgrade deps, audit, AI plugins, pre-commit hooks
+mise x -- mise run setup             # Install the tools, the dependencies, the hooks and the AI plugins
 ```
-
-**WARNING:** `setup:all` deletes `node_modules/`, `dist/`, and `pnpm-lock.yaml`,
-then upgrades every dependency to its latest version.
 
 Direct equivalents that bypass mise:
 
