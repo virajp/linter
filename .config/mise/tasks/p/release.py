@@ -3,7 +3,7 @@
 # requires-python = ">=3.14"
 # dependencies = []
 # ///
-# MISE description="Bump version, commit, and tag a release (does not push)"
+# MISE description="Bump version, land it on main, and tag a release (does not push the tag)"
 # MISE tools={uv="latest", python="3.14"}
 
 # USAGE flag "--minor" help="Bump the minor version"
@@ -70,14 +70,23 @@ def main():
   helpers.print_subheader("Bumping the version ...")
   mise_run("p:version", *version_flag)
 
+  # main is protected, so the bump goes on a local branch, and git:merge:main
+  # lands it and pushes main. The tag goes on the merge commit of main.
   version = package_version()
-  helpers.print_subheader(f"Committing and tagging v{version} ...")
+  branch = f"release/v{version}"
+  helpers.print_subheader(f"Committing v{version} on {branch} ...")
+  git("switch", "-c", branch)
   git("add", "package.json")
   git("commit", "-m", f"ops: release v{version}")
+  mise_run("git:merge:main", branch)
+
+  helpers.print_subheader(f"Tagging v{version} on main ...")
+  git("switch", "main")
+  git("branch", "-d", branch)
   git("tag", "--sign", f"v{version}", "-m", f"ops: release v{version}")
 
   helpers.print_success(f"Release v{version} prepared")
-  helpers.print_warn(f"Push to publish via CI: git push && git push origin v{version}")
+  helpers.print_warn(f"Push the tag to publish via CI: git push origin v{version}")
 
 
 if __name__ == "__main__":
