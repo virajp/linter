@@ -1,0 +1,18 @@
+# The tools of bootstrap for this repository, and their values. See docs/sync/index.md of bootstrap.
+format = 3
+
+[tools.vscode]
+[tools.mise.code_files]
+excludes = [ "tests/" ]
+
+[tools.git]
+[tools.pre-commit]
+exclude = [ "^tests/fixtures/" ]
+[tools.dprint]
+[tools.linter]
+[tools.gitleaks]
+[tools.grype]
+[tools.osv-scanner]
+[tools.pnpm]
+[tools.github]
+[tools.claude]

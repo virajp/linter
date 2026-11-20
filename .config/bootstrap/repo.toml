@@ -1,0 +1,13 @@
+# The values of bootstrap for this repository. See docs/sync/index.md of bootstrap.
+
+format = 3
+
+# The bootstrap commit of the last sync. The sync writes it.
+bootstrap_commit = "9bae67ba53692588ea66be58d970ce5bc22c6866"
+core_branches = [ "main" ]
+environments = [ "dev", "ci" ]
+repo_name = "linter"
+repo_url = "https://github.com/virajp/linter"
+
+[commits]
+scopes = [ "cli", "config", "deps", "fixtures", "integration", "tests", "unit" ]

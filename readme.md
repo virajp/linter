@@ -193,11 +193,11 @@ the CLI to see code-block problems.
 ## Known Vulnerabilities
 
 These advisories have no fix in the allowed version range of the dependency that
-pulls them in. `osv-scanner` (the monthly dependency update) ignores them
-through [`.config/osv-scanner.toml`](./.config/osv-scanner.toml), and
-`pnpm audit` (`setup:pnpm:audit`) ignores them through `auditConfig.ignoreGhsas`
-in [`pnpm-workspace.yaml`](./pnpm-workspace.yaml). Remove an entry from both
-places when its fix can install.
+pulls them in. `osv-scanner` ignores them through
+[`.config/osv-scanner.toml`](./.config/osv-scanner.toml), `grype` through
+[`.config/grype.yaml`](./.config/grype.yaml), and `pnpm audit` through
+`auditConfig.ignoreGhsas` in [`pnpm-workspace.yaml`](./pnpm-workspace.yaml).
+Remove an entry from all three places when its fix can install.
 
 | Advisory                                                                 | Severity | Package             | Path                                                                               | Reason                                                                                                     |
 | ------------------------------------------------------------------------ | -------- | ------------------- | ---------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
