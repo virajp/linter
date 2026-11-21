@@ -1,0 +1,53 @@
+{
+  "language": "yml/yaml",
+  "parser": "yaml-eslint-parser",
+  "processor": null,
+  "rules": {
+    "no-irregular-whitespace": [
+      "off",
+      {
+        "skipComments": false,
+        "skipJSXText": false,
+        "skipRegExps": false,
+        "skipStrings": true,
+        "skipTemplates": false
+      }
+    ],
+    "no-unused-vars": [
+      "off",
+      {
+        "vars": "all",
+        "args": "after-used",
+        "ignoreRestSiblings": false,
+        "caughtErrors": "all",
+        "ignoreClassWithStaticInitBlock": false,
+        "ignoreUsingDeclarations": false,
+        "reportUsedIgnorePattern": false
+      }
+    ],
+    "spaced-comment": [
+      "off"
+    ],
+    "yml/no-empty-document": [
+      "error"
+    ],
+    "yml/no-empty-key": [
+      "error"
+    ],
+    "yml/no-empty-mapping-value": [
+      "error"
+    ],
+    "yml/no-empty-sequence-entry": [
+      "error"
+    ],
+    "yml/no-irregular-whitespace": [
+      "error"
+    ],
+    "yml/no-tab-indent": [
+      "error"
+    ],
+    "yml/vue-custom-block/no-parsing-error": [
+      "error"
+    ]
+  }
+}

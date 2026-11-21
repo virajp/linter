@@ -1,4 +1,32 @@
-.container {
-  display: flex;
-  padding: 1rem;
+@layer base, components;
+
+:root {
+  --gap: 1rem;
+}
+
+@layer components {
+  .container {
+    display: flex;
+    padding: var(--gap);
+
+    & > .item {
+      flex: 1;
+    }
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+}
+
+@media (width >= 40rem) {
+  .container {
+    gap: calc(var(--gap) * 2);
+  }
+}
+
+@container (min-width: 20rem) {
+  .card:has(> img) {
+    display: grid;
+  }
 }

@@ -1,2 +1,17 @@
 name: test
 version: "1.0.0"
+defaults: &defaults
+  retries: 3
+  timeout: 10
+service:
+  <<: *defaults
+  name: api
+description: |
+  A literal block
+  with two lines.
+summary: >
+  A folded block
+  on one line.
+tags: [a, b]
+---
+second: document

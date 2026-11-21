@@ -1,0 +1,73 @@
+{
+  "language": "html/html",
+  "parser": null,
+  "processor": null,
+  "rules": {
+    "html/attrs-newline": [
+      "error"
+    ],
+    "html/element-newline": [
+      "error",
+      {
+        "inline": [
+          "$inline"
+        ]
+      }
+    ],
+    "html/indent": [
+      "error",
+      2
+    ],
+    "html/no-duplicate-attrs": [
+      "error"
+    ],
+    "html/no-duplicate-id": [
+      "error"
+    ],
+    "html/no-duplicate-in-head": [
+      "error"
+    ],
+    "html/no-extra-spacing-tags": [
+      "error",
+      {
+        "enforceBeforeSelfClose": true
+      }
+    ],
+    "html/no-multiple-h1": [
+      "error"
+    ],
+    "html/no-obsolete-attrs": [
+      "error"
+    ],
+    "html/no-obsolete-tags": [
+      "error"
+    ],
+    "html/quotes": [
+      "error"
+    ],
+    "html/require-closing-tags": [
+      "error",
+      {
+        "selfClosing": "always"
+      }
+    ],
+    "html/require-doctype": [
+      "error"
+    ],
+    "html/require-img-alt": [
+      "error"
+    ],
+    "html/require-lang": [
+      "error"
+    ],
+    "html/require-li-container": [
+      "error"
+    ],
+    "html/require-title": [
+      "error"
+    ],
+    "html/use-baseline": [
+      "error"
+    ]
+  }
+}

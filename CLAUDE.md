@@ -77,6 +77,7 @@ mise x -- mise run code:precommit    # Run the pre-commit hooks on the uncommitt
 mise x -- mise run p:build           # Compile src/ -> dist/
 mise x -- mise run p:test            # Build, then run all tests (unit + integration)
 mise x -- mise run p:test-unit       # Build, then run unit tests only
+mise x -- mise run test:golden       # Build, then compare with the golden snapshots (--update: write them again)
 mise x -- mise run p:preflight       # Tests + pack + binding check + smoke.mjs (release.yml's Pack job, locally)
 mise x -- mise run p:preview         # Run p:test, then pnpm pack
 mise x -- mise run p:upgrade         # Upgrade the dependencies to latest, with the holds of the dependency policy
@@ -331,7 +332,23 @@ If `main` is branch-protected, allow `github-actions[bot]` to push.
 - **Integration** (`tests/integration/`) — spawn `dist/index.js` against fixture
   files in a temp dir (`tests/helpers/{run-cli,temp-dir,fixture-manifest}.ts`),
   asserting on real lint output, flag behavior, and `--init` file creation.
+- **Golden** (`tests/golden/`) — snapshots of what the shipped config does, in
+  `tests/golden/__snapshots__/`. `config/` has the language, the parser, the
+  processor and every rule with its severity and options for each file type.
+  `lint/problems.json` has each problem of each fixture, and `lint/fixes.json`
+  has each fixture that `--fix` changes. The same file also makes sure that
+  the CLI writes nothing to stderr and uses no deprecated rule. A dependency
+  update that changes a rule, a problem or a fix fails these tests. Examine
+  the diff, then run `mise x -- mise run test:golden --update` and commit the
+  snapshots. `p:test` runs them too.
+- **Peers** (`tests/unit/peers.test.ts`) — runs `pnpm peers check`. Each peer
+  mismatch must be in its `ALLOWED` list, and each entry of the list must still
+  match. Remove an entry when its mismatch is gone.
+- **`/auto`** (`tests/integration/auto-export.test.ts`) — loads `dist/auto.js`
+  through `eslint.config.mjs` with the ESLint API, as the VS Code extension
+  does.
 - **Fixtures** (`tests/fixtures/<lang>/`) — one `valid.*` file and one or more
   violating files for each language. `smoke.mjs` treats only `valid.*` as clean,
   so a fixture that must lint clean belongs in the `valid.*` file. Do not give
-  it another name.
+  it another name. The `valid.*` files use modern syntax of their language, so
+  that a parser regression shows. Add new syntax there.

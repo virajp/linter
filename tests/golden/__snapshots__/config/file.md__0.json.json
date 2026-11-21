@@ -1,0 +1,35 @@
+{
+  "language": "json/json",
+  "parser": null,
+  "processor": null,
+  "rules": {
+    "json/no-duplicate-keys": [
+      "error"
+    ],
+    "json/no-empty-keys": [
+      "error"
+    ],
+    "json/no-unnormalized-keys": [
+      "error",
+      {
+        "form": "NFC"
+      }
+    ],
+    "json/no-unsafe-values": [
+      "error"
+    ],
+    "json/sort-keys": [
+      "off",
+      "asc",
+      {
+        "allowLineSeparatedGroups": false,
+        "caseSensitive": true,
+        "minKeys": 2,
+        "natural": false
+      }
+    ],
+    "json/top-level-interop": [
+      "error"
+    ]
+  }
+}
