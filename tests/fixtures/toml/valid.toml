@@ -1,2 +1,19 @@
 name    = "test"
 version = "1.0.0"
+
+date    = 2026-11-21T10:00:00Z
+inline  = { key = "value", count = 2 }
+numbers = [1, 2, 3]
+text    = """
+A multi-line
+string."""
+
+[server]
+host = "localhost"
+port = 8080
+
+[[servers]]
+name = "a"
+
+[[servers]]
+name = "b"

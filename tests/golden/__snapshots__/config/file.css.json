@@ -1,0 +1,118 @@
+{
+  "language": "tailwindcss/css",
+  "parser": null,
+  "processor": null,
+  "rules": {
+    "css/font-family-fallbacks": [
+      "error"
+    ],
+    "css/no-duplicate-imports": [
+      "error"
+    ],
+    "css/no-duplicate-keyframe-selectors": [
+      "error"
+    ],
+    "css/no-empty-blocks": [
+      "error"
+    ],
+    "css/no-important": [
+      "error"
+    ],
+    "css/no-invalid-at-rule-placement": [
+      "error"
+    ],
+    "css/no-invalid-at-rules": [
+      "off"
+    ],
+    "css/no-invalid-named-grid-areas": [
+      "error"
+    ],
+    "css/no-invalid-properties": [
+      "error",
+      {
+        "allowUnknownVariables": false
+      }
+    ],
+    "css/no-unmatchable-selectors": [
+      "error"
+    ],
+    "css/use-baseline": [
+      "error",
+      {
+        "available": "widely",
+        "allowAtRules": [],
+        "allowFunctions": [],
+        "allowMediaConditions": [],
+        "allowProperties": [],
+        "allowPropertyValues": {},
+        "allowSelectors": [],
+        "allowUnits": []
+      }
+    ],
+    "tailwindcss/no-arbitrary-value-overuse": [
+      "warn",
+      {
+        "maxPerFile": 10,
+        "maxPerRule": 3,
+        "allowedUtilities": []
+      }
+    ],
+    "tailwindcss/no-conflicting-utilities": [
+      "error"
+    ],
+    "tailwindcss/no-duplicate-imports": [
+      "error"
+    ],
+    "tailwindcss/no-duplicate-reference": [
+      "error"
+    ],
+    "tailwindcss/no-empty-blocks": [
+      "error"
+    ],
+    "tailwindcss/no-important": [
+      "warn"
+    ],
+    "tailwindcss/no-invalid-at-rules": [
+      "error"
+    ],
+    "tailwindcss/no-invalid-named-grid-areas": [
+      "error"
+    ],
+    "tailwindcss/no-invalid-properties": [
+      "error"
+    ],
+    "tailwindcss/prefer-theme-tokens": [
+      "warn",
+      {
+        "categories": [
+          "colors",
+          "spacing"
+        ],
+        "ignoreProperties": [
+          "content",
+          "counter-reset",
+          "counter-increment"
+        ]
+      }
+    ],
+    "tailwindcss/require-reference-in-vue": [
+      "error"
+    ],
+    "tailwindcss/use-baseline": [
+      "error"
+    ],
+    "tailwindcss/valid-apply-directive": [
+      "error",
+      {
+        "maxUtilities": 20,
+        "allowEmpty": false
+      }
+    ],
+    "tailwindcss/valid-modifier-syntax": [
+      "error"
+    ],
+    "tailwindcss/valid-theme-function": [
+      "error"
+    ]
+  }
+}

@@ -1,0 +1,268 @@
+{
+  "astro/deprecated-resolve.astro": [
+    {
+      "ruleId": "astro/no-deprecated-astro-resolve",
+      "messageId": "deprecated",
+      "severity": 2,
+      "line": 2,
+      "column": 13,
+      "endLine": 2,
+      "endColumn": 26,
+      "fatal": false
+    }
+  ],
+  "astro/valid.astro": [],
+  "css/unknown-property.css": [
+    {
+      "ruleId": "tailwindcss/no-invalid-properties",
+      "messageId": "invalidProperty",
+      "severity": 2,
+      "line": 2,
+      "column": 3,
+      "endLine": 2,
+      "endColumn": 19,
+      "fatal": false
+    },
+    {
+      "ruleId": "css/no-invalid-properties",
+      "messageId": "unknownProperty",
+      "severity": 2,
+      "line": 2,
+      "column": 3,
+      "endLine": 2,
+      "endColumn": 19,
+      "fatal": false
+    },
+    {
+      "ruleId": "tailwindcss/prefer-theme-tokens",
+      "messageId": "useThemeToken",
+      "severity": 1,
+      "line": 3,
+      "column": 10,
+      "endLine": 3,
+      "endColumn": 13,
+      "fatal": false
+    }
+  ],
+  "css/valid.css": [],
+  "html/missing-alt.html": [
+    {
+      "ruleId": "html/require-img-alt",
+      "messageId": "missingAlt",
+      "severity": 2,
+      "line": 7,
+      "column": 5,
+      "endLine": 7,
+      "endColumn": 27,
+      "fatal": false
+    }
+  ],
+  "html/missing-self-close.html": [
+    {
+      "ruleId": "html/require-closing-tags",
+      "messageId": "missingSelf",
+      "severity": 2,
+      "line": 7,
+      "column": 41,
+      "endLine": 7,
+      "endColumn": 42,
+      "fatal": false
+    }
+  ],
+  "html/valid.html": [],
+  "javascript/console-warn.js": [
+    {
+      "ruleId": "no-console",
+      "messageId": "unexpected",
+      "severity": 1,
+      "line": 2,
+      "column": 1,
+      "endLine": 2,
+      "endColumn": 12,
+      "fatal": false
+    }
+  ],
+  "javascript/debugger-statement.js": [
+    {
+      "ruleId": "no-debugger",
+      "messageId": "unexpected",
+      "severity": 2,
+      "line": 3,
+      "column": 3,
+      "endLine": 3,
+      "endColumn": 12,
+      "fatal": false
+    }
+  ],
+  "javascript/no-undef.js": [
+    {
+      "ruleId": "no-undef",
+      "messageId": "undef",
+      "severity": 2,
+      "line": 3,
+      "column": 10,
+      "endLine": 3,
+      "endColumn": 27,
+      "fatal": false
+    }
+  ],
+  "javascript/unused-vars.js": [
+    {
+      "ruleId": "no-unused-vars",
+      "messageId": "unusedVar",
+      "severity": 2,
+      "line": 2,
+      "column": 7,
+      "endLine": 2,
+      "endColumn": 13,
+      "fatal": false
+    }
+  ],
+  "javascript/valid.js": [],
+  "json/trailing-comma.json": [
+    {
+      "ruleId": null,
+      "messageId": null,
+      "severity": 2,
+      "line": 4,
+      "column": 1,
+      "endLine": null,
+      "endColumn": null,
+      "fatal": true
+    }
+  ],
+  "json/valid.json": [],
+  "jsonc/missing-comma.jsonc": [
+    {
+      "ruleId": null,
+      "messageId": null,
+      "severity": 2,
+      "line": 4,
+      "column": 3,
+      "endLine": null,
+      "endColumn": null,
+      "fatal": true
+    }
+  ],
+  "jsonc/valid.jsonc": [],
+  "markdown/code-block-errors.md": [
+    {
+      "ruleId": "markdown/no-empty-links",
+      "messageId": "emptyLink",
+      "severity": 2,
+      "line": 3,
+      "column": 4,
+      "endLine": 3,
+      "endColumn": 13,
+      "fatal": false
+    },
+    {
+      "ruleId": "no-debugger",
+      "messageId": "unexpected",
+      "severity": 2,
+      "line": 6,
+      "column": 1,
+      "endLine": 6,
+      "endColumn": 10,
+      "fatal": false
+    },
+    {
+      "ruleId": null,
+      "messageId": null,
+      "severity": 2,
+      "line": 10,
+      "column": 11,
+      "endLine": null,
+      "endColumn": null,
+      "fatal": true
+    }
+  ],
+  "markdown/empty-links.md": [
+    {
+      "ruleId": "markdown/no-empty-links",
+      "messageId": "emptyLink",
+      "severity": 2,
+      "line": 3,
+      "column": 13,
+      "endLine": 3,
+      "endColumn": 27,
+      "fatal": false
+    }
+  ],
+  "markdown/table-column-count.md": [
+    {
+      "ruleId": "markdown/table-column-count",
+      "messageId": "extraCells",
+      "severity": 2,
+      "line": 7,
+      "column": 16,
+      "endLine": 7,
+      "endColumn": 25,
+      "fatal": false
+    }
+  ],
+  "markdown/valid.md": [],
+  "toml/duplicate-keys.toml": [
+    {
+      "ruleId": null,
+      "messageId": null,
+      "severity": 2,
+      "line": 2,
+      "column": 0,
+      "endLine": null,
+      "endColumn": null,
+      "fatal": true
+    }
+  ],
+  "toml/valid.toml": [],
+  "typescript/no-require-imports.ts": [
+    {
+      "ruleId": "@typescript-eslint/no-require-imports",
+      "messageId": "noRequireImports",
+      "severity": 2,
+      "line": 2,
+      "column": 12,
+      "endLine": 2,
+      "endColumn": 30,
+      "fatal": false
+    }
+  ],
+  "typescript/no-unused-vars.ts": [
+    {
+      "ruleId": "@typescript-eslint/no-unused-vars",
+      "messageId": "unusedVar",
+      "severity": 2,
+      "line": 3,
+      "column": 25,
+      "endLine": 3,
+      "endColumn": 30,
+      "fatal": false
+    }
+  ],
+  "typescript/prefer-as-const.ts": [
+    {
+      "ruleId": "@typescript-eslint/prefer-as-const",
+      "messageId": "preferConstAssertion",
+      "severity": 2,
+      "line": 3,
+      "column": 25,
+      "endLine": 3,
+      "endColumn": 37,
+      "fatal": false
+    }
+  ],
+  "typescript/valid.ts": [],
+  "yaml/duplicate-keys.yaml": [
+    {
+      "ruleId": null,
+      "messageId": null,
+      "severity": 2,
+      "line": 2,
+      "column": 0,
+      "endLine": null,
+      "endColumn": null,
+      "fatal": true
+    }
+  ],
+  "yaml/valid.yaml": []
+}

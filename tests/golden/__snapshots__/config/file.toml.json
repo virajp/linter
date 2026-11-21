@@ -1,0 +1,32 @@
+{
+  "language": "toml/toml",
+  "parser": null,
+  "processor": null,
+  "rules": {
+    "no-irregular-whitespace": [
+      "off",
+      {
+        "skipComments": false,
+        "skipJSXText": false,
+        "skipRegExps": false,
+        "skipStrings": true,
+        "skipTemplates": false
+      }
+    ],
+    "spaced-comment": [
+      "off"
+    ],
+    "toml/no-unreadable-number-separator": [
+      "error"
+    ],
+    "toml/precision-of-fractional-seconds": [
+      "error"
+    ],
+    "toml/precision-of-integer": [
+      "error"
+    ],
+    "toml/vue-custom-block/no-parsing-error": [
+      "error"
+    ]
+  }
+}

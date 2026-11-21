@@ -1,0 +1,4 @@
+{
+  "html/missing-self-close.html": "<!DOCTYPE html>\n<html lang=\"en\">\n  <head>\n    <title>Test</title>\n  </head>\n  <body>\n    <img src=\"test.png\" alt=\"Test image\" />\n  </body>\n</html>\n",
+  "typescript/prefer-as-const.ts": "// prefer-as-const.ts - should trigger @typescript-eslint/prefer-as-const (auto-fixable)\nexport const CONFIG = {\n  mode: \"production\" as const,\n};\n"
+}

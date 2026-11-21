@@ -25,3 +25,33 @@ const x = 1;
 ```sh
 npx @virajp.dev/linter --fix
 ```
+
+## Lists and Inline Syntax
+
+- [x] A task that is done
+- [ ] A task with ~~strikethrough~~ and `code`
+  1. A nested item with **bold** and _italic_
+  2. A nested item with a footnote[^note]
+
+An autolink: <https://example.com>. A [reference link][ref].
+A link to the [heading below](#lists-and-inline-syntax).
+
+![An image](image.png "Title")
+
+> A quote with a list:
+>
+> - One
+
+[ref]: https://example.com/ref
+
+[^note]: The text of the footnote.
+
+```yaml
+key: value
+```
+
+```css
+.a {
+  display: block;
+}
+```
