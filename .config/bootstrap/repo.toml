@@ -3,7 +3,7 @@
 format = 3
 
 # The bootstrap commit of the last sync. The sync writes it.
-bootstrap_commit = "9bae67ba53692588ea66be58d970ce5bc22c6866"
+bootstrap_commit = "d4264912911fc51ce7cb1baf7c491dc702088b52"
 core_branches = [ "main" ]
 environments = [ "dev", "ci" ]
 repo_name = "linter"
