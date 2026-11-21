@@ -28,6 +28,7 @@ export const FIXTURES = {
     valid: "markdown/valid.md",
     emptyLinks: "markdown/empty-links.md",
     codeBlockErrors: "markdown/code-block-errors.md",
+    tableColumnCount: "markdown/table-column-count.md",
   },
   yaml: {
     valid: "yaml/valid.yaml",

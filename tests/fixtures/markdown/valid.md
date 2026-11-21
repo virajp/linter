@@ -10,6 +10,10 @@ status: draft # draft | reviewed | stable
 
 This is a paragraph with a [link](https://example.com).
 
+| Name | Value |
+| ---- | ----- |
+| a    | 1     |
+
 ```ts
 const x = 1;
 ```

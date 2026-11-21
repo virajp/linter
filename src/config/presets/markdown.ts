@@ -4,6 +4,10 @@ import type { Linter } from "eslint";
 export const markdownConfig = {
   extends: [markdown.configs.recommended],
   files: ["**/*.md"],
+  // `recommended` sets "markdown/commonmark". Since @eslint/markdown 9,
+  // no-bare-urls and table-column-count support GFM only, and ESLint rejects
+  // them in CommonMark mode.
+  language: "markdown/gfm",
   // Frontmatter is a LANGUAGE option, not a setting. It was previously written
   // as `settings: { "markdown/frontmatter": true }`, which ESLint accepts and
   // silently ignores — unknown `settings` keys are never validated — so
@@ -28,11 +32,7 @@ export const markdownConfig = {
     // on above would fail every document that has both.
     "markdown/no-multiple-h1": ["error", { frontmatterTitle: "" }],
     "markdown/no-reference-like-urls": "error",
-    // ReDoS in the rule's `reversedPattern` (@eslint/markdown <=8.0.3): the
-    // label group nests `[\s\S]*` inside a `*`, so a paragraph with many
-    // parenthesised spans and no `)[` backtracks exponentially and hangs the
-    // lint. Re-enable once eslint/markdown#690 ships.
-    "markdown/no-reversed-media-syntax": "off",
+    "markdown/no-reversed-media-syntax": "error",
     "markdown/no-space-in-emphasis": "error",
     "markdown/table-column-count": "error",
   },
