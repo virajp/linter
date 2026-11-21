@@ -22,7 +22,6 @@ fail-on-severity: medium
 # The known advisories of readme.md ("Known Vulnerabilities"): no fix in
 # range. Remove an entry when its fix can install.
 ignore:
-  - vulnerability: GHSA-g3hv-75wg-m249
   - vulnerability: GHSA-238p-pmpm-9mq7
 
 # Other worktrees, which are not this tree.

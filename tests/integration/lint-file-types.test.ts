@@ -108,6 +108,13 @@ describe("lint file types", () => {
     expect(result.stdout).toContain("no-empty-links");
   });
 
+  test("lints markdown tables as GFM", async () => {
+    copyFixture(FIXTURES.markdown.tableColumnCount, tmpDir);
+    const result = await runCli(["--no-ignore", "."], tmpDir);
+    expect(result.exitCode).toBe(1);
+    expect(result.stdout).toContain("table-column-count");
+  });
+
   test("lints markdown content and code blocks in one run", async () => {
     copyFixture(FIXTURES.markdown.codeBlockErrors, tmpDir);
     const result = await runCli(["--no-ignore", "."], tmpDir);

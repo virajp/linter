@@ -56,20 +56,20 @@
     "@eslint/css": "1.4.0",
     "@eslint/js": "10.0.1",
     "@eslint/json": "2.1.1",
-    "@eslint/markdown": "8.0.3",
+    "@eslint/markdown": "9.0.0",
     "@html-eslint/eslint-plugin": "0.68.0",
     "@poupe/eslint-plugin-tailwindcss": "0.3.1",
-    "@typescript-eslint/parser": "8.72.1",
+    "@typescript-eslint/parser": "8.73.0",
     "astro-eslint-parser": "3.2.0",
     "debug": "4.4.3",
-    "eslint": "10.14.0",
+    "eslint": "10.15.0",
     "eslint-plugin-astro": "3.2.1",
     "eslint-plugin-toml": "1.5.0",
     "eslint-plugin-yml": "3.10.0",
     "globals": "17.14.0",
     "jsonc-parser": "3.3.1",
     "typescript": "6.0.3",
-    "typescript-eslint": "8.72.1",
+    "typescript-eslint": "8.73.0",
     "yaml": "2.9.1",
     "yaml-eslint-parser": "2.1.0"
   },
@@ -78,7 +78,7 @@
     "jiti": "2.7.0",
     "sort-package-json": "4.1.0",
     "tsx": "4.23.15",
-    "vitest": "5.1.0"
+    "vitest": "5.1.1"
   },
   "peerDependencies": {
     "eslint": "^10.0.0"

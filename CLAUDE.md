@@ -55,10 +55,11 @@ no CI runner can load it).
   - `typescript`: hold at 6.x. `typescript-eslint` does not support 7.
   - `@eslint/css`: hold at 1.x. `@poupe/eslint-plugin-tailwindcss` needs
     `^1.1.0`. With 2.x, ESLint rejects every `css/*` rule.
-- Advisories with no in-range fix are ignored in two places:
-  `.config/osv-scanner.toml` (CI) and `auditConfig.ignoreGhsas` in
-  `pnpm-workspace.yaml` (`pnpm audit`). The "Known Vulnerabilities" section of
-  `readme.md` records each one. Keep the three in sync.
+- Advisories with no in-range fix are ignored in three places:
+  `.config/osv-scanner.toml` (CI), `.config/grype.yaml` (`code:sec`), and
+  `auditConfig.ignoreGhsas` in `pnpm-workspace.yaml` (`pnpm audit`). The
+  "Known Vulnerabilities" section of `readme.md` records each one. Keep the
+  four in sync.
 
 ## Commands
 
