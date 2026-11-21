@@ -93,6 +93,7 @@ git	.config/mise/tasks/git/pull.py
 git	.config/mise/tasks/git/tag.py
 git	.config/mise/tasks/git/worktree/create.py
 git	.config/mise/tasks/git/worktree/delete.py
+git	.config/mise/tasks/release/linter/prod.py
 git	.gitattributes
 git	.gitignore	{"kind":"item","path":[],"value":"!**/src/bin/"}
 git	.gitignore	{"kind":"item","path":[],"value":"!.config/mise/tasks/**/build/"}

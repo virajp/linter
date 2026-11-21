@@ -283,15 +283,19 @@ version that is not on npm fails.
 
 The release paths into that pipeline:
 
-- **Manual release**: `mise run p:release [--minor|--major]` runs `p:preflight`
+- **Manual release**: the table `[release.linter.prod]` of
+  `.config/bootstrap/repo.toml` defines it, and bootstrap ships the task
+  `release:linter:prod`. Set the level first:
+  `mise x -- bootstrap config set releases.linter PATCH` (or `MINOR`,
+  `MAJOR`). Then `mise run release:linter:prod --push` runs `p:preflight`
   (tests, then the binding check and `smoke.mjs` against a locally packed
-  tarball — the same scripts `release.yml` runs), bumps the version, commits
-  `ops: release vX.Y.Z` on the local branch `release/vX.Y.Z`, lands it with
-  `git:merge:main` (which pushes `main`), and creates a **signed** tag on the
-  merge commit — it does *not* push the tag. Then `git push origin vX.Y.Z`; the
-  tag push triggers
-  `.github/workflows/release.yml`, which verifies tag == package.json version
-  before running the pipeline above.
+  tarball — the same scripts `release.yml` runs), bumps `package.json`,
+  commits `ops: release vX.Y.Z` with the cleared level on the local branch
+  `release/vX.Y.Z`, lands it with `git:merge:main` (which pushes `main`),
+  creates a **signed** tag on the merge commit, pushes the tag and watches
+  `release.yml`. Without `--push`, it prints the push command. The tag push
+  triggers `.github/workflows/release.yml`, which verifies tag == package.json
+  version before running the pipeline above.
 - **Monthly auto-update**: `.github/workflows/deps-update.yml` (cron + manual)
   runs `pnpm update --latest`, gates on `osv-scanner`, runs tests, then commits,
   bumps, annotated-tags, pushes, and hands off with
