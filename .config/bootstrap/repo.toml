@@ -1,13 +1,21 @@
-# The values of bootstrap for this repository. See docs/sync/index.md of bootstrap.
-
-format = 3
-
 # The bootstrap commit of the last sync. The sync writes it.
 bootstrap_commit = "d4264912911fc51ce7cb1baf7c491dc702088b52"
 core_branches = [ "main" ]
 environments = [ "dev", "ci" ]
+# The values of bootstrap for this repository. See docs/sync/index.md of bootstrap.
+format = 3
 repo_name = "linter"
 repo_url = "https://github.com/virajp/linter"
 
 [commits]
 scopes = [ "cli", "config", "deps", "fixtures", "integration", "tests", "unit" ]
+
+[projects.linter]
+folder = "."
+
+[release.linter.prod]
+preflight = [ "p:preflight" ]
+tag = "v{version}"
+type = "tag"
+version = "package.json"
+workflow = "release.yml"
