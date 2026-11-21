@@ -300,14 +300,26 @@ The release paths into that pipeline:
   `release.yml`. Without `--push`, it prints the push command. The tag push
   triggers `.github/workflows/release.yml`, which verifies tag == package.json
   version before running the pipeline above.
-- **Monthly auto-update**: `.github/workflows/deps-update.yml` (cron + manual)
-  runs `pnpm update --latest`, gates on `osv-scanner`, runs tests, then commits,
-  bumps, annotated-tags, pushes, and hands off with
-  `gh workflow run release.yml --ref vX.Y.Z`. A bot tag push can't trigger
-  `release.yml`, but `workflow_dispatch` is a documented exception to that rule
-  — it fires even from `GITHUB_TOKEN`. Dispatching against the **tag** ref keeps
-  `release.yml`'s version check active. If no dependency changed, it stops and
-  makes no release.
+- **Weekly auto-update**: `.github/workflows/deps-update.yml` runs each Monday
+  at 02:00 UTC, and on a manual dispatch. If no dependency changed, it stops
+  and makes no release. Else it does these steps:
+  1. It runs `pnpm update --latest` with the holds, and `osv-scanner`.
+  2. It writes the golden snapshots again (`vitest run tests/golden --update`),
+     so a changed rule, problem or fix is accepted and shows in the commit
+     diff.
+  3. It runs all the tests, packs the tarball, and runs `check-bindings.sh`
+     and `smoke.mjs` on it.
+  4. It commits `ops(deps): weekly dependency update`.
+  5. It does the steps of `release:linter:prod`, because CI has no `bootstrap`
+     binary for Linux and no signing key. The level is `releases.linter`, and
+     NONE gives PATCH. It bumps `package.json`, clears the level, and commits
+     `ops: release vX.Y.Z`. It makes an annotated tag that is **not signed**.
+  6. It pushes `main` and the tag in one atomic push, and starts `release.yml`
+     with `gh workflow run release.yml --ref vX.Y.Z`.
+
+  A tag that `GITHUB_TOKEN` pushes does not start `release.yml`, but a
+  `workflow_dispatch` does. A dispatch on the **tag** ref keeps the version
+  check of `release.yml` active.
 - **Local fallback**: `mise run p:publish [--dry-run]` (checks `npm whoami` →
   tests → builds → `npm publish`). Prefer CI so every version keeps the
   strongest npm trust level.
