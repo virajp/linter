@@ -285,9 +285,11 @@ The release paths into that pipeline:
 
 - **Manual release**: the table `[release.linter.prod]` of
   `.config/bootstrap/repo.toml` defines it, and bootstrap ships the task
-  `release:linter:prod`. Set the level first:
+  `release:linter:prod`. Set the level in the change that the release ships:
   `mise x -- bootstrap config set releases.linter PATCH` (or `MINOR`,
-  `MAJOR`). Then `mise run release:linter:prod --push` runs `p:preflight`
+  `MAJOR`), and land `.config/bootstrap/releases.toml` on `main` with that
+  change. The task refuses a dirty tree. Then, on a clean `main`,
+  `mise run release:linter:prod --push` runs `p:preflight`
   (tests, then the binding check and `smoke.mjs` against a locally packed
   tarball — the same scripts `release.yml` runs), bumps `package.json`,
   commits `ops: release vX.Y.Z` with the cleared level on the local branch
