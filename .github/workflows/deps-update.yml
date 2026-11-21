@@ -1,16 +1,21 @@
-name: Monthly Dependency Update
+name: Weekly Dependency Update
 
 on:
   schedule:
-    # 02:00 UTC on the 1st of every month
-    - cron: "0 2 1 * *"
+    # 02:00 UTC each Monday
+    - cron: "0 2 * * 1"
   workflow_dispatch: {}
 
-# Needs contents:write to push the refresh commit + tag, and actions:write to
-# dispatch release.yml. No id-token:write -- this workflow no longer publishes.
+# Needs contents:write to push the commits and the tag, and actions:write to
+# dispatch release.yml. No id-token:write: this workflow does not publish.
 permissions:
   contents: write
   actions: write
+
+# One run at a time. A second run waits, and then finds the first update.
+concurrency:
+  group: deps-update
+  cancel-in-progress: false
 
 env:
   MISE_ENV: ci
@@ -19,8 +24,11 @@ jobs:
   update:
     runs-on: ubuntu-latest
     steps:
+      # All the history and the tags, to make sure that the new tag is new.
       - name: Checkout
         uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
 
       - name: Set up mise
         uses: jdx/mise-action@v4
@@ -49,7 +57,7 @@ jobs:
       - name: Detect changes
         id: changed
         run: |
-          if [ -n "$(git status --porcelain)" ]; then
+          if [ -n "$(git status --porcelain -- package.json pnpm-lock.yaml)" ]; then
             echo "changed=true" >> "$GITHUB_OUTPUT"
           else
             echo "changed=false" >> "$GITHUB_OUTPUT"
@@ -61,9 +69,30 @@ jobs:
         run: osv-scanner scan source --config .config/osv-scanner.toml
           --lockfile=pnpm-lock.yaml
 
+      # A changed rule, problem or fix is accepted: the new snapshots go into
+      # the commit, so its diff shows each change. The tests below still fail
+      # on a crash, a parse error, a deprecated rule or a peer mismatch.
+      - name: Update the golden snapshots
+        if: steps.changed.outputs.changed == 'true'
+        run: |
+          pnpm run build
+          pnpx vitest run tests/golden --update
+
       - name: Build and test
         if: steps.changed.outputs.changed == 'true'
         run: pnpm run test:all
+
+      # The checks of p:preflight: pack, every native binding in the tarball,
+      # and the smoke test of the tarball on this runner. release.yml runs
+      # them again, and smoke tests the other platforms before it publishes.
+      - name: Pack and smoke test
+        if: steps.changed.outputs.changed == 'true'
+        run: |
+          pnpm pack --pack-destination "$RUNNER_TEMP"
+          TARBALL="$(ls -- "$RUNNER_TEMP"/*.tgz)"
+          bash .github/scripts/check-bindings.sh "$TARBALL"
+          node .github/scripts/smoke.mjs "$TARBALL"
+          pnpm install --frozen-lockfile
 
       - name: Configure git
         if: steps.changed.outputs.changed == 'true'
@@ -71,26 +100,46 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Commit dependency refresh
+      - name: Commit dependency update
         if: steps.changed.outputs.changed == 'true'
         run: |
-          git add package.json pnpm-lock.yaml
-          git commit -m "ops(deps): monthly dependency refresh"
+          git add package.json pnpm-lock.yaml tests/golden/__snapshots__
+          git commit -m "ops(deps): weekly dependency update"
 
+      # The steps of release:linter:prod of bootstrap, which CI cannot run: it
+      # has no bootstrap binary for Linux, and it signs the tag. The level is
+      # releases.linter of .config/bootstrap/releases.toml: a level that a
+      # person set ships in this release, and NONE gives PATCH. The release
+      # commit clears the level, as the task does.
       - name: Bump version and tag
         id: version
         if: steps.changed.outputs.changed == 'true'
         run: |
-          pnpm version patch --no-git-tag-version
+          LEVEL="$(yq -p toml -o yaml '.linter // "NONE"' .config/bootstrap/releases.toml)"
+          case "$LEVEL" in
+            MAJOR|MINOR|PATCH) ;;
+            NONE) LEVEL=PATCH ;;
+            *) echo "Unknown release level: $LEVEL" >&2; exit 1 ;;
+          esac
+          pnpm version "$(echo "$LEVEL" | tr '[:upper:]' '[:lower:]')" --no-git-tag-version
+          sed -i '/^linter = /d' .config/bootstrap/releases.toml
           NEW_VERSION="v$(node -p "require('./package.json').version")"
-          git add package.json
+          if git rev-parse --quiet --verify "refs/tags/${NEW_VERSION}" >/dev/null; then
+            echo "The tag ${NEW_VERSION} already exists." >&2
+            exit 1
+          fi
+          git add package.json .config/bootstrap/releases.toml
           git commit -m "ops: release ${NEW_VERSION}"
           git tag -a "${NEW_VERSION}" -m "ops: release ${NEW_VERSION}"
           echo "tag=${NEW_VERSION}" >> "$GITHUB_OUTPUT"
 
-      - name: Push commit and tag
+      # --atomic: main and the tag both land, or neither does. If main moved
+      # since the checkout, the push fails and the next run tries again.
+      - name: Push commits and tag
         if: steps.changed.outputs.changed == 'true'
-        run: git push origin HEAD:main --follow-tags
+        env:
+          TAG: ${{ steps.version.outputs.tag }}
+        run: git push --atomic origin HEAD:main "refs/tags/${TAG}"
 
       # npm allows exactly one trusted publisher per package, and
       # @virajp.dev/linter's is registered to release.yml -- publishing from here
