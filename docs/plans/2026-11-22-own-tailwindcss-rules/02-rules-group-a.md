@@ -21,7 +21,8 @@ The 10 rules: `consistent-spacing`, `no-arbitrary-value-overuse`,
 > D2 — Keep current names: our plugins register under the same keys
 > (tailwindcss/, ...). No consumer override breaks.
 
-> D4 — All 19 rules of @poupe/eslint-plugin-tailwindcss 0.3.1.
+> D4 — All 18 rules of @poupe/eslint-plugin-tailwindcss 0.3.1 except the
+> Vue-only rule require-reference-in-vue (D22).
 
 > D5 — Each ported file gets a one-line header that names its source.
 
@@ -54,27 +55,29 @@ The 10 rules: `consistent-spacing`, `no-arbitrary-value-overuse`,
 2. **`src/plugins/tailwindcss/rules/group-a.ts`** (new) — export
    `groupARules`, an object that maps each of the 10 rule names (without the
    `tailwindcss/` prefix) to its rule definition.
-3. **``tests/unit/plugins/tailwindcss/rules/<rule>.test.ts``** (10 new files) —
-   one test per rule with ESLint``s ``RuleTester``(from``eslint``). Each test
+3. **`tests/unit/plugins/tailwindcss/rules/<rule>.test.ts`** (10 new files) —
+   one test per rule with ESLint's `RuleTester` (from `eslint`). Each test
    file starts with the source header line of its upstream test path (D5).
-   This repo has no vitest globals, so each file
-   imports ``describe``, ``it``from``vitest``and sets``RuleTester.describe =
-   describe``, ``RuleTester.it = it``and``RuleTester.itOnly = it.only``before it
-   calls``run``. Use no shared helper file.
+   This repo has no vitest globals, so each file imports `describe` and `it`
+   from `vitest` and sets `RuleTester.describe = describe`,
+   `RuleTester.it = it` and `RuleTester.itOnly = it.only` before it calls
+   `run`. Use no shared helper file.
+
    Cases ported from the upstream test keep the upstream config exactly
-   (upstream uses ``{ language: "css/css", plugins: { css } }``with our rule
-   registered as``tailwindcss``, and no ``tolerant``or``customSyntax``unless the
-   upstream case sets them). New cases use the config of the css
-   preset:``plugins: { css, tailwindcss: { rules: groupARules } }``, ``language:
-   "css/css"``and``languageOptions: { tolerant: true, customSyntax:
-   tailwindSyntax }``. ``css``is the default export of``@eslint/css``. Import
-   from ``../../../../../src/plugins/tailwindcss/...js``, as the other unit
-   tests
-   import from ``src/``. Port every valid and
-   invalid case of the upstream test, with its message ids, locations
-   and ``output``. For ``no-arbitrary-value-overuse`, write cases for each
-   message
-   and each option from the rule's source.
+   (upstream uses `{ language: "css/css", plugins: { css } }` with our rule
+   registered as `tailwindcss`, and no `tolerant` or `customSyntax` unless
+   the upstream case sets them). New cases use the config of the css preset:
+   `plugins: { css, tailwindcss: { rules: groupARules } }`, `language:
+   "css/css"`
+   and `languageOptions: { tolerant: true, customSyntax: tailwindSyntax }`.
+   `css` is the default export of `@eslint/css`. Import from
+   `../../../../../src/plugins/tailwindcss/...js`, as the other unit tests
+   import from `src/`.
+
+   Port every valid and invalid case of the upstream test, with its message
+   ids, locations, `output` and `suggestions`. For `no-arbitrary-value-overuse`,
+   write
+   cases for each message and each option from the rule's source.
 
 ## Verification
 

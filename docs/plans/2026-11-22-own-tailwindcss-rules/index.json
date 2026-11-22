@@ -39,7 +39,7 @@
     {
       "id": "linter",
       "level": "MINOR",
-      "reason": "@eslint/css 2.x rules can report new problems on consumer CSS, and a consumer config that names the tailwindcss/css language stops working; no rule name changes"
+      "reason": "@eslint/css 2.x rules can report new problems on consumer CSS, a consumer config that names the tailwindcss/css language stops working, and the Vue-only rule tailwindcss/require-reference-in-vue is removed (no consumer config names it); no other rule name changes"
     }
   ],
   "dependencies": [
@@ -134,7 +134,6 @@
         "src/plugins/tailwindcss/rules/prefer-logical-properties.ts",
         "src/plugins/tailwindcss/rules/prefer-theme-tokens.ts",
         "src/plugins/tailwindcss/rules/relative-font-units.ts",
-        "src/plugins/tailwindcss/rules/require-reference-in-vue.ts",
         "src/plugins/tailwindcss/rules/use-baseline.ts",
         "src/plugins/tailwindcss/rules/use-layers.ts",
         "src/plugins/tailwindcss/rules/valid-apply-directive.ts",
@@ -143,7 +142,6 @@
         "tests/unit/plugins/tailwindcss/rules/prefer-logical-properties.test.ts",
         "tests/unit/plugins/tailwindcss/rules/prefer-theme-tokens.test.ts",
         "tests/unit/plugins/tailwindcss/rules/relative-font-units.test.ts",
-        "tests/unit/plugins/tailwindcss/rules/require-reference-in-vue.test.ts",
         "tests/unit/plugins/tailwindcss/rules/use-baseline.test.ts",
         "tests/unit/plugins/tailwindcss/rules/use-layers.test.ts",
         "tests/unit/plugins/tailwindcss/rules/valid-apply-directive.test.ts",
@@ -184,7 +182,7 @@
         "U2",
         "U3"
       ],
-      "waits": "the preset can use our plugin only once all 19 rules exist, and @eslint/css 2.x is blocked until the poupe plugin is gone",
+      "waits": "the preset can use our plugin only once all 18 rules exist, and @eslint/css 2.x is blocked until the poupe plugin is gone",
       "status": "pending",
       "started": "",
       "ended": "",
@@ -355,8 +353,8 @@
     {
       "id": "D4",
       "decision": "Which Tailwind rules do we port?",
-      "ruling": "All 19 rules of @poupe/eslint-plugin-tailwindcss 0.3.1.",
-      "rejected": "Only the 15 rules the preset enables",
+      "ruling": "All 18 rules of @poupe/eslint-plugin-tailwindcss 0.3.1 except the Vue-only rule require-reference-in-vue (D22).",
+      "rejected": "Only the 15 rules the preset enables; all 19",
       "units": [
         "U2",
         "U3"
@@ -409,7 +407,7 @@
     {
       "id": "D9",
       "decision": "How is parity proved before the upgrade?",
-      "ruling": "U4 first switches the preset to our plugin on @eslint/css 1.4.0 and runs the golden tests: lint/problems.json and lint/fixes.json must not change, and config/file.css.json may change only in its language (tailwindcss/css to css/css). Then U4 upgrades to 2.0.1, so the later golden diff shows only the upgrade.",
+      "ruling": "U4 first switches the preset to our plugin on @eslint/css 1.4.0 and runs the golden tests: lint/problems.json and lint/fixes.json must not change, and config/file.css.json may change only in its language (tailwindcss/css to css/css) and by the removal of tailwindcss/require-reference-in-vue (D22). Then U4 upgrades to 2.0.1, so the later golden diff shows only the upgrade.",
       "rejected": "Port and upgrade in one step",
       "units": [
         "U4",
@@ -450,7 +448,7 @@
     {
       "id": "D13",
       "decision": "Where does the rule configuration live?",
-      "ruling": "In the css preset, not in the plugin. The plugin index (src/plugins/tailwindcss/index.ts, written by U4) exports meta and rules only (no configs, no languages); it merges the rule registries rules/group-a.ts (U2) and rules/group-b.ts (U3). The preset reproduces the rule severities and the rule options of the poupe recommended config exactly. It keeps files [\"**/*.css\"]: extends intersects the poupe glob **/*.?(post)css with the preset glob, so the current preset lints .css files only. The language follows D8.",
+      "ruling": "In the css preset, not in the plugin. The plugin index (src/plugins/tailwindcss/index.ts, written by U4) exports meta and rules only (no configs, no languages); it merges the rule registries rules/group-a.ts (U2) and rules/group-b.ts (U3). The preset reproduces the rule severities and the rule options of the poupe recommended config exactly, except that it does not set tailwindcss/require-reference-in-vue (D22). It keeps files [\"**/*.css\"]: extends intersects the poupe glob **/*.?(post)css with the preset glob, so the current preset lints .css files only. The language follows D8.",
       "rejected": "configs.recommended inside our plugin; a plugin index created early by U1 (two units would then own one file)",
       "units": [
         "U4"
@@ -470,7 +468,7 @@
     {
       "id": "D15",
       "decision": "Is the release level MINOR?",
-      "ruling": "MINOR for @virajp.dev/linter: new rule behavior from @eslint/css 2.x and the removal of the tailwindcss/css language; no rule name changes.",
+      "ruling": "MINOR for @virajp.dev/linter: new rule behavior from @eslint/css 2.x, the removal of the tailwindcss/css language, and the removal of the Vue-only rule tailwindcss/require-reference-in-vue, which no consumer config names; no other rule name changes.",
       "rejected": "MAJOR (no rule name or preset name changes); PATCH",
       "units": []
     },
@@ -525,6 +523,16 @@
       "ruling": "U4 may change the expected results in tests of rules that wrap or reuse an @eslint/css rule (D16 and the wrappers in utils/css.ts), only where the upgrade changes them, and reports each as DECIDED. The review unit checks them. A failure in any other rule test stops the run with a QUESTION.",
       "rejected": "Stop with a QUESTION for every failing ported test",
       "units": [
+        "U4"
+      ]
+    },
+    {
+      "id": "D22",
+      "decision": "Do we port the Vue-only rule tailwindcss/require-reference-in-vue? (revision of 2026-11-22, after approval)",
+      "ruling": "No. The user never uses Vue: a scan of ~/Projects on 2026-11-22 found .vue files only in a third-party clone (tmp/mise), no Vue dependency in any package.json, and no Vue rule in any of the 25 .config/linter.yaml files. Do not port the rule or its test, and the preset does not set it. Plan 2 drops yml/vue-custom-block/no-parsing-error by the same ruling.",
+      "rejected": "Port it as approved",
+      "units": [
+        "U3",
         "U4"
       ]
     }

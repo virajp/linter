@@ -27,7 +27,9 @@
 > D9 — U4 first switches the preset to our plugin on @eslint/css 1.4.0 and
 > runs the golden tests: lint/problems.json and lint/fixes.json must not
 > change, and config/file.css.json may change only in its language
-> (tailwindcss/css to css/css). Then U4 upgrades to 2.0.1, so the later
+> (tailwindcss/css to css/css) and by the removal of
+> tailwindcss/require-reference-in-vue (D22). Then U4 upgrades to 2.0.1, so the
+> later
 > golden diff shows only the upgrade.
 
 > D12 — Add both @eslint/css-tree and @eslint/core as exact-pinned
@@ -46,7 +48,8 @@
 > D13 — The plugin index exports meta and rules only (no configs, no
 > languages); it merges the rule registries rules/group-a.ts (U2) and
 > rules/group-b.ts (U3). The preset reproduces the rule severities and the
-> rule options of the poupe recommended config exactly. It keeps files
+> rule options of the poupe recommended config exactly, except that it
+> does not set tailwindcss/require-reference-in-vue (D22). It keeps files
 > ["**/*.css"]: extends intersects the poupe glob **/*.?(post)css with the
 > preset glob, so the current preset lints .css files only. The language
 > follows D8.
@@ -65,7 +68,8 @@ Do the steps in this order. Steps 1 to 4 are on `@eslint/css` 1.4.0.
    `language: "css/css"`, `languageOptions: { tolerant: true, customSyntax:
    tailwindSyntax }`, and the `tailwindcss/*` rule severities and rule options
    exactly as the
-   poupe recommended config sets them (3 warn, 12 error; see the facts).
+   poupe recommended config sets them (3 warn, 11 error; see the facts), without
+   `tailwindcss/require-reference-in-vue` (D22).
    Keep `files: ["**/*.css"]`: the poupe glob `**/*.?(post)css` is
    intersected with the preset glob today, so only `.css` files are linted.
    Keep `"css/no-invalid-at-rules": "off"`. Do not copy anything else from the
@@ -81,7 +85,9 @@ Do the steps in this order. Steps 1 to 4 are on `@eslint/css` 1.4.0.
    `pnpx vitest run tests/golden` (no `--update`). Pass condition:
    `lint/problems.json` and `lint/fixes.json` match, and the only failure in
    `config/` is `file.css.json`, with a difference only in `language`
-   (`tailwindcss/css` to `css/css`). Record the vitest summary for the return
+   (`tailwindcss/css` to `css/css`) and the removal of the
+   `tailwindcss/require-reference-in-vue` entry (D22). Record the vitest summary
+   for the return
    block. If
    any other snapshot differs, stop and return a QUESTION with the diff
    summary. Do not continue to step 5.
