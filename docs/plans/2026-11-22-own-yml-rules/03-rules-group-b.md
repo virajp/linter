@@ -16,6 +16,15 @@ The 10 rules: `key-name-casing`, `key-spacing`, `max-len`, `no-boolean-key`,
 
 ## Ruling
 
+> D18 — A ported upstream test case that fails only because ESLint 10's
+> RuleTester or the vitest wiring is stricter than upstream's setup (jest
+> on ESLint 9) — not because the rule behaves differently — may have its
+> test setup changed: for example, remove a duplicate case, or add a
+> property that ESLint 10 requires. Never change the expected messages,
+> message ids, locations, output or suggestions. List each change as
+> DECIDED; the review unit checks them. A case whose expected result
+> differs stops the run with a QUESTION.
+
 > D1 — Keep the yml/ namespace. A one-line source header in each ported
 > file, test files included. The code goes in src/plugins/yml/.
 
@@ -70,9 +79,10 @@ The 10 rules: `key-name-casing`, `key-spacing`, `max-len`, `no-boolean-key`,
   team, tell U2 and U4 so that they do not write the same helper again.
 - Do not create `src/plugins/yml/index.ts` or another group registry.
 - Do not edit `package.json`, `pnpm-lock.yaml`, a preset or a fixture.
-- A rule must not change behavior. If an upstream test fails against the
-  ported rule because of a difference between the upstream test setup and
-  ours, return a QUESTION. Do not change the expected result.
+- A rule must not change behavior. A case that fails only because ESLint 10
+  or vitest is stricter may have its setup changed, never its expected
+  result, and each change is listed as `DECIDED:` (D18). Any other failing
+  upstream case returns a QUESTION.
 - Before you return, run `mise x -- mise run code:format --fix`, so that
   the unit gate (check only) passes (D17).
 - Delete with `rm`, never `git rm`.
