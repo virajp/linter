@@ -13,8 +13,8 @@
   "gaps_of": [],
   "execution": "teams",
   "status": {
-    "state": "APPROVED",
-    "detail": "APPROVED 2026-11-22 by the user"
+    "state": "RUNNING",
+    "detail": "RUNNING since 2026-11-22T20:51:53Z in .worktrees/all-2026-11-23-0136"
   },
   "consent": {
     "merge": true,
@@ -76,11 +76,11 @@
       ],
       "depends_on": [],
       "waits": "",
-      "status": "pending",
-      "started": "",
-      "ended": "",
+      "status": "green",
+      "started": "2026-11-22T20:52:24.884Z",
+      "ended": "2026-11-22T20:59:26.280Z",
       "commit": "",
-      "rounds": 0
+      "rounds": 1
     },
     {
       "id": "U2",
@@ -265,9 +265,9 @@
   "waves": [
     {
       "id": "W1",
-      "status": "pending",
-      "started": "",
-      "ended": ""
+      "status": "green",
+      "started": "2026-11-22T20:52:24.842Z",
+      "ended": "2026-11-22T21:01:52.433Z"
     },
     {
       "id": "W2",
@@ -600,7 +600,12 @@
     }
   },
   "gaps": [],
-  "overrides": [],
+  "overrides": [
+    {
+      "id": "O1",
+      "text": "shared worktree: all-2026-11-23-0136"
+    }
+  ],
   "run": {
     "worktree": ".worktrees/all-2026-11-23-0136",
     "log": "~/Library/Caches/vwf/linter/2026-11-22-own-tailwindcss-rules.jsonl"
