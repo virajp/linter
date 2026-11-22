@@ -47,6 +47,14 @@ no CI runner can load it).
 
 ### Dependency policy
 
+The dependency criterion: a direct dependency is not a concern, because we
+control its version. The problem is the transitive dependencies that each
+direct dependency adds, above all the shared ones that cause version conflicts
+between direct dependencies. Keep a direct dependency that has no peers and
+whose transitive dependencies are none or already pinned. Port the code of a
+package that brings peer ranges or a conflicting tree into
+`src/plugins/<name>/`.
+
 - Every dependency and devDependency is pinned to an **exact** version.
 - `pnpm update --latest` excludes this package. The exclusions are in
   `.config/mise/tasks/p/upgrade.py` (`p:upgrade`) and `deps-update.yml`. Keep
@@ -144,8 +152,8 @@ example `**/AGENTS.md` and `.claude/**/*.md`) apply to every consumer repo.
 
 ### Our own plugins
 
-B08 moves the rules of third-party plugins into this package. Today only the
-Tailwind rules are moved. Each plugin is in
+B08 moves the rules of third-party plugins into this package. Today the
+Tailwind rules and the YAML rules and language are moved. Each plugin is in
 `src/plugins/<name>/` and compiles into `dist/` with the rest of `src/`. Its
 rules keep the rule names of the plugin they replace, so consumer `overrides`
 do not change.
@@ -157,6 +165,14 @@ do not change.
   exports `meta` and `rules` only: the `css` preset sets the rule severities
   and options. The preset uses the `css/css` language of `@eslint/css`, with
   the Tailwind 4 syntax of `syntax.ts` as `customSyntax` and `tolerant: true`.
+- **`src/plugins/yml/`** — the `yml/` rules and the `yml/yaml` language of the
+  `yaml` preset (`index.ts`, `meta.ts`, `types.ts`, `language/`, `utils/`,
+  `rules/`). The rules and the language are ported from
+  `eslint-plugin-yml`, which is not a dependency now. The Vue-only rule
+  `vue-custom-block/no-parsing-error` is not ported. The plugin exports
+  `meta`, `rules` and `languages` (`yaml`): the `yaml` preset sets the
+  language and the rule severities. The language parses with
+  `yaml-eslint-parser`.
 - A ported file starts with a one-line header that names its source. Each
   source has an entry with its license text and copyright in
   `THIRD_PARTY_NOTICES.md`, which `files` of `package.json` ships in the
@@ -164,16 +180,23 @@ do not change.
 - Type-only imports come from the exact-pinned devDependencies `@eslint/core`
   and `@eslint/css-tree` (`import type` only), so `tsc` does not depend on how
   pnpm hoists a transitive package. They add nothing to the tarball.
+- The `yml` plugin also has runtime dependencies: `yaml-eslint-parser`,
+  `@eslint/plugin-kit`, `@ota-meshi/ast-token-store`, `natural-compare`,
+  `diff-sequences` and `escape-string-regexp`. Each one is an exact-pinned
+  dependency in `bundledDependencies` (see the dependency criterion in
+  [Dependency policy](#dependency-policy)). `natural-compare` has no types,
+  so `src/plugins/yml/natural-compare.d.ts` declares its module.
 
 ### Adding a language or plugin
 
 1. Write the rules in `src/plugins/<name>/` (see
    [Our own plugins](#our-own-plugins)). Do not add a new third-party plugin.
    A file ported from another project gets a one-line source header and an
-   entry in `THIRD_PARTY_NOTICES.md`. If a runtime package is necessary (an
-   ESLint core package, or a peer like `typescript`), add it to
-   `dependencies` **and to `bundledDependencies`**. A dependency that is not
-   bundled does not reach consumers.
+   entry in `THIRD_PARTY_NOTICES.md`. If a runtime package is necessary (a
+   package that meets the dependency criterion of
+   [Dependency policy](#dependency-policy), or a peer like `typescript`), add
+   it to `dependencies` **and to `bundledDependencies`**. A dependency that is
+   not bundled does not reach consumers.
 2. Create a preset in `src/config/presets/` with a `name`, `files`, `plugins`
    and/or `extends`, and `language` / `languageOptions` as needed.
 3. Register the preset in `composeBaseConfig()` (`src/config/index.ts`).
@@ -368,8 +391,15 @@ If `main` is branch-protected, allow `github-actions[bot]` to push.
 - **Unit** (`tests/unit/`) — args parsing, preset shape, config factory, init
   scaffolding; helpers in `tests/helpers/run-unit.ts`.
   `tests/unit/plugins/<name>/` has the tests of our own plugins: a RuleTester
-  test for each rule (`rules/<rule>.test.ts`), and tests of the syntax and the
-  helpers.
+  test for each rule (`rules/<rule>.test.ts`, or `rules/<group>/<rule>.test.ts`
+  for `yml`), and tests of the language, the syntax and the helpers. A plugin
+  can keep the upstream fixtures of its ported tests in
+  `tests/unit/plugins/<name>/fixtures/`, with the upstream fixture loader in
+  `helpers/` (for `yml`, `fixtures/rules/` and the copy
+  `fixtures/upstream-package.json`). The global `exclude` of
+  `.config/pre-commit-config.yaml` is `^tests/(.*/)?fixtures/`, so the hooks
+  do not change these fixtures or `tests/fixtures/`. Change it in
+  `.config/bootstrap/tools.toml` too, so that a bootstrap sync keeps it.
 - **Integration** (`tests/integration/`) — spawn `dist/index.js` against fixture
   files in a temp dir (`tests/helpers/{run-cli,temp-dir,fixture-manifest}.ts`),
   asserting on real lint output, flag behavior, and `--init` file creation.
