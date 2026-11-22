@@ -1,5 +1,5 @@
 # The bootstrap commit of the last sync. The sync writes it.
-bootstrap_commit = "d4264912911fc51ce7cb1baf7c491dc702088b52"
+bootstrap_commit = "48bb61a39b2a30dfabda27a28b1bbbdc91f42d7e"
 core_branches = [ "main" ]
 environments = [ "dev", "ci" ]
 # The values of bootstrap for this repository. See docs/sync/index.md of bootstrap.
