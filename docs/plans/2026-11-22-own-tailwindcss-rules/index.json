@@ -155,7 +155,7 @@
       "status": "green",
       "started": "2026-11-22T21:02:39.587Z",
       "ended": "2026-11-22T21:59:41.685Z",
-      "commit": "c50fbe4",
+      "commit": "fde0d68",
       "rounds": 2
     },
     {
@@ -183,11 +183,11 @@
         "U3"
       ],
       "waits": "the preset can use our plugin only once all 18 rules exist, and @eslint/css 2.x is blocked until the poupe plugin is gone",
-      "status": "pending",
-      "started": "",
-      "ended": "",
+      "status": "green",
+      "started": "2026-11-22T22:04:00.730Z",
+      "ended": "2026-11-22T22:07:39.994Z",
       "commit": "",
-      "rounds": 0
+      "rounds": 1
     },
     {
       "id": "U5",
@@ -277,9 +277,9 @@
     },
     {
       "id": "W3",
-      "status": "pending",
-      "started": "",
-      "ended": ""
+      "status": "green",
+      "started": "2026-11-22T22:04:00.687Z",
+      "ended": "2026-11-22T22:09:48.906Z"
     },
     {
       "id": "W4",
@@ -608,7 +608,15 @@
       "ended": ""
     }
   },
-  "gaps": [],
+  "gaps": [
+    {
+      "id": "G1",
+      "unit": "U4",
+      "stage": "",
+      "text": "U4 Verification grep \"poupe\" over tests/unit cannot return nothing: D5 and D26 require line-1 headers naming the source · settled by the rulings (R3): all matches are the required line-1 headers, none elsewhere; no change",
+      "state": "closed"
+    }
+  ],
   "overrides": [
     {
       "id": "O1",
