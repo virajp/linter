@@ -112,6 +112,8 @@
   `node_modules` until U4 lists them.
 - Do not run `pnpm add`, `pnpm install` or `pnpm update`.
 - Never run a bare `dprint fmt`. It reformats the fixtures.
+- Before you return, run `mise x -- mise run code:format --fix`, so that
+  the unit gate (check only) passes (D23).
 - Delete with `rm`, never `git rm`.
 
 ## Commit

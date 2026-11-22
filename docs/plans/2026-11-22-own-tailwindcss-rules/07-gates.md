@@ -46,6 +46,8 @@
 - Change only `tests/golden/__snapshots__/` and, by D19,
   `tests/fixtures/css/valid.css`. Never run a bare `dprint fmt`.
 - Do not bump a version.
+- Before you return, run `mise x -- mise run code:format --fix`, so that
+  the unit gate (check only) passes (D23).
 - Delete with `rm`, never `git rm`.
 
 ## Commit

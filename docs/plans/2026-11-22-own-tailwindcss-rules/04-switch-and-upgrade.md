@@ -156,6 +156,8 @@ Do the steps in this order. Steps 1 to 4 are on `@eslint/css` 1.4.0.
   compile error that the upgrade causes, with no change in behavior (D17).
   If a golden difference comes from a rule, return a QUESTION.
 - Do not touch the `typescript` hold in `upgrade.py` or `deps-update.yml`.
+- Before you return, run `mise x -- mise run code:format --fix`, so that
+  the unit gate (check only) passes (D23).
 - Delete with `rm`, never `git rm`.
 
 ## Commit
