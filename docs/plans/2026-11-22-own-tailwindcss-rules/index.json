@@ -549,6 +549,16 @@
         "U6",
         "U7"
       ]
+    },
+    {
+      "id": "D24",
+      "decision": "What does a unit do when a ported upstream test fails only because ESLint 10 or vitest is stricter? (ruled by the user on 2026-11-22 for all B08 plans)",
+      "ruling": "A ported upstream test case that fails only because ESLint 10's RuleTester or the vitest wiring is stricter than upstream's setup (jest on ESLint 9) — not because the rule behaves differently — may have its test setup changed: for example, remove a duplicate case, or add a property that ESLint 10 requires. Never change the expected messages, message ids, locations, output or suggestions. List each change as DECIDED; the review unit checks them. A case whose expected result differs stops the run with a QUESTION.",
+      "rejected": "Stop and ask for each case; apply it to one plan only",
+      "units": [
+        "U2",
+        "U3"
+      ]
     }
   ],
   "stages": {

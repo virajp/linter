@@ -18,6 +18,15 @@ The 10 rules: `consistent-spacing`, `no-arbitrary-value-overuse`,
 
 ## Ruling
 
+> D24 — A ported upstream test case that fails only because ESLint 10's
+> RuleTester or the vitest wiring is stricter than upstream's setup (jest
+> on ESLint 9) — not because the rule behaves differently — may have its
+> test setup changed: for example, remove a duplicate case, or add a
+> property that ESLint 10 requires. Never change the expected messages,
+> message ids, locations, output or suggestions. List each change as
+> DECIDED; the review unit checks them. A case whose expected result
+> differs stops the run with a QUESTION.
+
 > D2 — Keep current names: our plugins register under the same keys
 > (tailwindcss/, ...). No consumer override breaks.
 
@@ -98,9 +107,10 @@ The 10 rules: `consistent-spacing`, `no-arbitrary-value-overuse`,
   same helper a second time.
 - Do not create `src/plugins/tailwindcss/index.ts` or `rules/group-b.ts`.
 - Do not edit `package.json`, `pnpm-lock.yaml` or any preset.
-- A rule must not change behavior. If an upstream test fails against the
-  ported rule because of a difference between the upstream test setup and
-  ours, return a QUESTION. Do not change the expected result.
+- A rule must not change behavior. A case that fails only because ESLint 10
+  or vitest is stricter may have its setup changed, never its expected
+  result, and each change is listed as `DECIDED:` (D24). Any other failing
+  upstream case returns a QUESTION.
 - Before you return, run `mise x -- mise run code:format --fix`, so that
   the unit gate (check only) passes (D23).
 - Delete with `rm`, never `git rm`.

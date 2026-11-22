@@ -17,6 +17,15 @@ The 11 rules: `no-non-decimal-integer`, `no-space-dots`,
 
 ## Ruling
 
+> D9 — A ported upstream test case that fails only because ESLint 10's
+> RuleTester or the vitest wiring is stricter than upstream's setup (jest
+> on ESLint 9) — not because the rule behaves differently — may have its
+> test setup changed: for example, remove a duplicate case, or add a
+> property that ESLint 10 requires. Never change the expected messages,
+> message ids, locations, output or suggestions. List each change as
+> DECIDED; the review unit checks them. A case whose expected result
+> differs stops the run with a QUESTION.
+
 > D1 — Keep the toml/ namespace. Credit the MIT code in
 > THIRD_PARTY_NOTICES.md plus a one-line source header in each ported file,
 > test files included. Put the code in src/plugins/toml/. No Vue support.
@@ -64,9 +73,10 @@ The 11 rules: `no-non-decimal-integer`, `no-space-dots`,
   team, tell U2.
 - Do not create `src/plugins/toml/index.ts` or the other group registry.
 - Do not edit `package.json`, `pnpm-lock.yaml`, a preset or a fixture.
-- A rule must not change behavior. If an upstream test fails because of a
-  difference between the upstream test setup and ours, return a QUESTION. Do
-  not change the expected result.
+- A rule must not change behavior. A case that fails only because ESLint 10
+  or vitest is stricter may have its setup changed, never its expected
+  result, and each change is listed as `DECIDED:` (D9). Any other failing
+  upstream case returns a QUESTION.
 - Before you return, run `mise x -- mise run code:format --fix`, so that
   the unit gate (check only) passes (D1).
 - Delete with `rm`, never `git rm`.
