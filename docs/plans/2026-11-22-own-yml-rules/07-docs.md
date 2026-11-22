@@ -26,7 +26,7 @@
    fixtures/` and the wider pre-commit exclude.
 3. **`readme.md`** — any passage that names `eslint-plugin-yml`.
 4. **`docs/memory/decisions/2026-11-22-own-yml-rules.md`** (new) — a
-   decisions doc per the vwf memory rule, with D1 to D18 of this plan in one
+   decisions doc per the vwf memory rule, with D1 to D19 of this plan in one
    line each. Mark D2 as the dependency criterion that plans 3 to 6 of B08
    inherit.
 

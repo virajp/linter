@@ -12,6 +12,17 @@
 
 ## Ruling
 
+> D14 — (a) A ported file may drop an eslint-disable or eslint-enable comment
+> that names a rule this repo does not define, or rewrite it to the rule
+> of this repo that it means; ESLint 10 reports an unknown rule in such a
+> comment as an error, so code:lint would fail. (b) Where the repo's
+> strict TypeScript (noUncheckedIndexedAccess, verbatimModuleSyntax, .js
+> import extensions) rejects ported code, a unit fixes it only with
+> changes that have no runtime effect: non-null assertions, casts, type
+> annotations, import type, and .js or /index.js on relative imports. No
+> runtime guard is added. List each kind of change as DECIDED. (Ruled for
+> all B08 plans on 2026-11-22, from the rulings review of plan 6.)
+
 > D12 — (a) The helper keeps the parserOptions remap; only the
 > TEST_ESLINT_LEGACY_CONFIG branch is dropped (amends D11 f). (b) Drop
 > upstream capo.d.ts; @rviscomi/capo.js ships its own types. (c) U6 adds

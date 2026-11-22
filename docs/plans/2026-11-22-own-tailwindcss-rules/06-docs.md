@@ -34,7 +34,7 @@
    names do not change, so an override example with a `tailwindcss/` rule
    stays.
 4. **`docs/memory/decisions/2026-11-22-own-tailwindcss-rules.md`** (new) — a
-   decisions doc per the vwf memory rule, with D1 to D24 of this plan in one
+   decisions doc per the vwf memory rule, with D1 to D25 of this plan in one
    line each. D1, D2, D5 and D7 apply to all of B08, so mark them as the
    rulings that the later B08 plans inherit.
 
