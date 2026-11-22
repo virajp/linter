@@ -22,7 +22,7 @@
    `eslint-plugin-toml` as a dependency, if docs-sync finds one. The language
    tables (`CLAUDE.md`, `readme.md`) name no plugin: leave them unchanged.
 3. **`docs/memory/decisions/2026-11-22-own-toml-rules.md`** (new) — a
-   decisions doc per the vwf memory rule, with D1 to D9 of this plan in one
+   decisions doc per the vwf memory rule, with D1 to D10 of this plan in one
    line each.
 
 ## Verification

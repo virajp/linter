@@ -26,7 +26,7 @@
    findings plus every `DOCS FALSIFIED:` line. The language tables of
    `CLAUDE.md` and `readme.md` name no plugin: leave them unchanged.
 2. **`docs/memory/decisions/2026-11-22-own-html-rules.md`** (new) — a
-   decisions doc per the vwf memory rule, with D1 to D13 of this plan in one
+   decisions doc per the vwf memory rule, with D1 to D14 of this plan in one
    line each.
 
 ## Verification

@@ -10,6 +10,17 @@
 
 ## Ruling
 
+> D10 — (a) A ported file may drop an eslint-disable or eslint-enable comment
+> that names a rule this repo does not define, or rewrite it to the rule
+> of this repo that it means; ESLint 10 reports an unknown rule in such a
+> comment as an error, so code:lint would fail. (b) Where the repo's
+> strict TypeScript (noUncheckedIndexedAccess, verbatimModuleSyntax, .js
+> import extensions) rejects ported code, a unit fixes it only with
+> changes that have no runtime effect: non-null assertions, casts, type
+> annotations, import type, and .js or /index.js on relative imports. No
+> runtime guard is added. List each kind of change as DECIDED. (Ruled for
+> all B08 plans on 2026-11-22, from the rulings review of plan 6.)
+
 > D1 — Keep the toml/ namespace. Credit the MIT code in
 > THIRD_PARTY_NOTICES.md plus a one-line source header in each ported file,
 > test files included. Put the code in src/plugins/toml/. No Vue support.

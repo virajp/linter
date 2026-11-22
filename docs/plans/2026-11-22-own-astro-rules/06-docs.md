@@ -60,7 +60,7 @@
 3. **`CLAUDE.md`, `readme.md`** — add the presets `astro-client-js` and
    `astro-client-ts` to the preset lists for `overrides` (D12 b).
 4. **`docs/memory/decisions/2026-11-22-own-astro-rules.md`** (new) — a
-   decisions doc per the vwf memory rule, with D1 to D13 of this plan in one
+   decisions doc per the vwf memory rule, with D1 to D14 of this plan in one
    line each.
 
 ## Verification
