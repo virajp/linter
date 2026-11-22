@@ -237,7 +237,7 @@
       "status": "green",
       "started": "2026-11-22T22:12:39.657Z",
       "ended": "2026-11-22T22:15:16.727Z",
-      "commit": "",
+      "commit": "c6e0995",
       "rounds": 2
     },
     {
@@ -255,11 +255,11 @@
         "U6"
       ],
       "waits": "",
-      "status": "pending",
-      "started": "",
-      "ended": "",
+      "status": "green",
+      "started": "2026-11-22T22:18:27.810Z",
+      "ended": "2026-11-22T22:19:39.871Z",
       "commit": "",
-      "rounds": 0
+      "rounds": 1
     }
   ],
   "waves": [
@@ -295,9 +295,9 @@
     },
     {
       "id": "W6",
-      "status": "pending",
-      "started": "",
-      "ended": ""
+      "status": "green",
+      "started": "2026-11-22T22:18:27.768Z",
+      "ended": "2026-11-22T22:20:21.859Z"
     }
   ],
   "shared_files": [

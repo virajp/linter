@@ -1,5 +1,5 @@
 {
-  "language": "tailwindcss/css",
+  "language": "css/css",
   "parser": null,
   "processor": null,
   "rules": {
@@ -94,9 +94,6 @@
           "counter-increment"
         ]
       }
-    ],
-    "tailwindcss/require-reference-in-vue": [
-      "error"
     ],
     "tailwindcss/use-baseline": [
       "error"
