@@ -1,0 +1,39 @@
+config_format: 26
+blueprint_format: 25
+
+product:
+  name: linter
+
+topology: monorepo
+topology_reason: The repo will hold more projects, such as the planned site;
+  today it has one project at the root.
+ui: false
+integrations: false
+
+stacks: [ stackgen ]
+
+repo:
+  stack:
+    template: unresolved
+    package_manager: pnpm
+    tools: []
+
+projects:
+  linter:
+    stack:
+      template: unresolved
+      backing_template: unresolved
+      deploy_template: unresolved
+      languages: []
+      frameworks: []
+      dependencies: []
+
+harness:
+  dev: n/a
+  e2e_local: n/a
+  local_stack: n/a
+  e2e_staging: n/a
+  health: n/a
+  screenshots: n/a
+  goldens: n/a
+  test:load: n/a
