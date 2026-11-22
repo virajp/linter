@@ -1,0 +1,988 @@
+// Ported from eslint-plugin-yml v3.10.0 (MIT), src/rules/sort-sequence-values.ts.
+import type { RuleTextEditor } from "@eslint/core";
+import naturalCompare from "natural-compare";
+import type { AST } from "yaml-eslint-parser";
+import { getStaticYAMLValue } from "yaml-eslint-parser";
+import type { YAMLSourceCode } from "../language/yaml-source-code.js";
+import type { YAMLToken } from "../types.js";
+import { isComma } from "../utils/ast-utils.js";
+import { calcShortestEditScript } from "../utils/calc-shortest-edit-script.js";
+import { createRule } from "../utils/index.js";
+
+type YAMLValue = ReturnType<typeof getStaticYAMLValue>;
+
+// ------------------------------------------------------------------------------
+// Helpers
+// ------------------------------------------------------------------------------
+
+type UserOptions = PatternOption[];
+type OrderTypeOption = "asc" | "desc";
+type PatternOption = {
+  pathPattern: string;
+  order:
+    | OrderObject
+    | (
+      | string
+      | {
+        valuePattern?: string;
+        order?: OrderObject;
+      }
+    )[];
+  minValues?: number;
+};
+type OrderObject = {
+  type?: OrderTypeOption;
+  caseSensitive?: boolean;
+  natural?: boolean;
+  key?: string;
+};
+type ParsedOption = {
+  isTargetArray: (node: YAMLSequenceData) => boolean;
+  ignore: (data: YAMLEntryData) => boolean;
+  isValidOrder: Validator;
+  orderText: (data: YAMLEntryData) => string;
+  key?: string;
+};
+type Validator = (a: YAMLEntryData, b: YAMLEntryData) => boolean;
+
+type YAMLEntry = AST.YAMLSequence["entries"][number];
+type AroundTokens = { before: YAMLToken; after: YAMLToken };
+class YAMLEntryData {
+  public readonly sequence: YAMLSequenceData;
+
+  public readonly node: YAMLEntry;
+
+  public readonly index: number;
+
+  public readonly anchorAlias: {
+    anchors: Set<string>;
+    aliases: Set<string>;
+  };
+
+  private cached: { value: YAMLValue } | null = null;
+
+  private cachedRange: [number, number] | null = null;
+
+  private cachedAroundTokens: AroundTokens | null = null;
+
+  public get reportLoc() {
+    if (this.node) {
+      return this.node.loc;
+    }
+    const aroundTokens = this.aroundTokens;
+    return {
+      start: aroundTokens.before.loc.end,
+      end: aroundTokens.after.loc.start,
+    };
+  }
+
+  public get range(): [number, number] {
+    if (this.node) {
+      return this.node.range;
+    }
+    if (this.cachedRange) {
+      return this.cachedRange;
+    }
+    const aroundTokens = this.aroundTokens;
+    return (this.cachedRange = [
+      aroundTokens.before.range[1],
+      aroundTokens.after.range[0],
+    ]);
+  }
+
+  public get aroundTokens(): AroundTokens {
+    if (this.cachedAroundTokens) {
+      return this.cachedAroundTokens;
+    }
+    const sourceCode = this.sequence.sourceCode;
+    if (this.node) {
+      return (this.cachedAroundTokens = {
+        before: sourceCode.getTokenBefore(this.node)!,
+        after: sourceCode.getTokenAfter(this.node)!,
+      });
+    }
+    const before = this.index > 0
+      ? this.sequence.entries[this.index - 1]!.aroundTokens.after
+      : sourceCode.getFirstToken(this.sequence.node);
+    const after = sourceCode.getTokenAfter(before)!;
+    return (this.cachedAroundTokens = { before, after });
+  }
+
+  public constructor(
+    sequence: YAMLSequenceData,
+    node: YAMLEntry,
+    index: number,
+    anchorAlias: {
+      anchors: Set<string>;
+      aliases: Set<string>;
+    },
+  ) {
+    this.sequence = sequence;
+    this.node = node;
+    this.index = index;
+    this.anchorAlias = anchorAlias;
+  }
+
+  public get value() {
+    return (
+      this.cached
+        ?? (this.cached = {
+          value: this.node == null ? null : getStaticYAMLValue(this.node),
+        })
+    )
+      .value;
+  }
+
+  public getValueForKey(key: string): YAMLValue | undefined {
+    const val = this.value;
+    if (val !== null && typeof val === "object" && !Array.isArray(val)) {
+      return (val as Record<string, YAMLValue>)[key];
+    }
+    return undefined;
+  }
+}
+class YAMLSequenceData {
+  public readonly node: AST.YAMLSequence;
+
+  public readonly sourceCode: YAMLSourceCode;
+
+  private readonly anchorAliasMap: Map<
+    AST.YAMLContent | AST.YAMLWithMeta | null,
+    { anchors: Set<string>; aliases: Set<string> }
+  >;
+
+  private cachedEntries: YAMLEntryData[] | null = null;
+
+  public constructor(
+    node: AST.YAMLSequence,
+    sourceCode: YAMLSourceCode,
+    anchorAliasMap: Map<
+      YAMLEntry,
+      {
+        anchors: Set<string>;
+        aliases: Set<string>;
+      }
+    >,
+  ) {
+    this.node = node;
+    this.sourceCode = sourceCode;
+    this.anchorAliasMap = anchorAliasMap;
+  }
+
+  public get entries() {
+    return (this.cachedEntries ??= this.node.entries.map(
+      (e, index) => new YAMLEntryData(this, e, index, this.anchorAliasMap.get(e)!),
+    ));
+  }
+}
+
+/**
+ * Build function which check that the given 2 names are in specific order.
+ */
+function buildValidatorFromType(
+  order: OrderTypeOption,
+  insensitive: boolean,
+  natural: boolean,
+  key?: string,
+): Validator {
+  type Compare<T> = ([a, b]: T[]) => boolean;
+
+  let compareValue: Compare<
+    any
+  > = ([a, b]) => a <= b;
+  let compareText: Compare<string> = compareValue;
+
+  if (natural) {
+    compareText = ([a, b]) => naturalCompare(a!, b!) <= 0;
+  }
+  if (insensitive) {
+    const baseCompareText = compareText;
+    compareText = ([a, b]: string[]) => baseCompareText([a!.toLowerCase(), b!.toLowerCase()]);
+  }
+  if (order === "desc") {
+    const baseCompareText = compareText;
+    compareText = (args: string[]) => baseCompareText(args.reverse());
+    const baseCompareValue = compareValue;
+    compareValue = (args) => baseCompareValue(args.reverse());
+  }
+
+  /**
+   * Compare resolved sequence entry values.
+   */
+  function compare(aVal: YAMLValue, bVal: YAMLValue): boolean {
+    if (typeof aVal === "string" && typeof bVal === "string") {
+      return compareText([aVal, bVal]);
+    }
+    const type = getYAMLPrimitiveType(aVal);
+    if (type && type === getYAMLPrimitiveType(bVal)) {
+      return compareValue([aVal, bVal]);
+    }
+    // Unknown
+    return true;
+  }
+
+  return (a: YAMLEntryData, b: YAMLEntryData) => {
+    if (key) {
+      const aVal = a.getValueForKey(key);
+      const bVal = b.getValueForKey(key);
+      if (aVal === undefined || bVal === undefined) { return true; }
+      return compare(aVal, bVal);
+    }
+
+    return compare(a.value, b.value);
+  };
+}
+
+/**
+ * Parse options
+ */
+function parseOptions(
+  options: UserOptions,
+  sourceCode: YAMLSourceCode,
+): ParsedOption[] {
+  return options.map((opt) => {
+    const order = opt.order;
+    const pathPattern = new RegExp(opt.pathPattern);
+    const minValues: number = opt.minValues ?? 2;
+    if (!Array.isArray(order)) {
+      const type: OrderTypeOption = order.type ?? "asc";
+      const insensitive = order.caseSensitive === false;
+      const natural = Boolean(order.natural);
+      const key = order.key;
+
+      return {
+        isTargetArray,
+        ignore: key ? (v) => v.getValueForKey(key) === undefined : () => false,
+        isValidOrder: buildValidatorFromType(type, insensitive, natural, key),
+        orderText(data) {
+          const base = typeof data.value === "string" || key
+            ? `${natural ? "natural " : ""}${insensitive ? "insensitive " : ""}${type}ending`
+            : `${type}ending`;
+          return key ? `${base} by '${key}'` : base;
+        },
+        ...(key ? { key } : {}),
+      };
+    }
+    const parsedOrder: {
+      test: (v: YAMLEntryData) => boolean;
+      isValidNestOrder: Validator;
+    }[] = [];
+    for (const o of order) {
+      if (typeof o === "string") {
+        parsedOrder.push({
+          test: (v) => v.value === o,
+          isValidNestOrder: () => true,
+        });
+      } else {
+        const valuePattern = o.valuePattern ? new RegExp(o.valuePattern) : null;
+        const nestOrder = o.order ?? {};
+        const type: OrderTypeOption = nestOrder.type ?? "asc";
+        const insensitive = nestOrder.caseSensitive === false;
+        const natural = Boolean(nestOrder.natural);
+        const itemKey = nestOrder.key;
+        parsedOrder.push({
+          test: (v) => {
+            if (itemKey) {
+              const keyVal = v.getValueForKey(itemKey);
+              return valuePattern
+                ? keyVal !== undefined && valuePattern.test(String(keyVal))
+                : keyVal !== undefined;
+            }
+            return valuePattern
+              ? Boolean(getYAMLPrimitiveType(v.value))
+                && valuePattern.test(String(v.value))
+              : true;
+          },
+          isValidNestOrder: buildValidatorFromType(
+            type,
+            insensitive,
+            natural,
+            itemKey,
+          ),
+        });
+      }
+    }
+
+    return {
+      isTargetArray,
+      ignore: (v) => parsedOrder.every((p) => !p.test(v)),
+      isValidOrder(a, b) {
+        for (const p of parsedOrder) {
+          const matchA = p.test(a);
+          const matchB = p.test(b);
+          if (!matchA || !matchB) {
+            if (matchA) {
+              return true;
+            }
+            if (matchB) {
+              return false;
+            }
+            continue;
+          }
+          return p.isValidNestOrder(a, b);
+        }
+        return false;
+      },
+      orderText: () => "specified",
+    };
+
+    /**
+     * Checks whether given node data is verify target
+     */
+    function isTargetArray(data: YAMLSequenceData) {
+      if (data.node.entries.length < minValues) {
+        return false;
+      }
+
+      // Check whether the path is match or not.
+      let path = "";
+      let curr: AST.YAMLNode = data.node;
+      let p: AST.YAMLNode | null = curr.parent;
+      while (p) {
+        if (p.type === "YAMLPair") {
+          const name = getPropertyName(p);
+          if (/^[$a-z_][\w$]*$/iu.test(name)) {
+            path = `.${name}${path}`;
+          } else {
+            path = `[${JSON.stringify(name)}]${path}`;
+          }
+        } else if (p.type === "YAMLSequence") {
+          const index = p.entries.indexOf(curr as never);
+          path = `[${index}]${path}`;
+        }
+        curr = p;
+        p = curr.parent;
+      }
+      if (path.startsWith(".")) {
+        path = path.slice(1);
+      }
+      return pathPattern.test(path);
+    }
+  });
+
+  /**
+   * Gets the property name of the given `YAMLPair` node.
+   */
+  function getPropertyName(node: AST.YAMLPair): string {
+    const prop = node.key;
+    if (prop == null) {
+      return "";
+    }
+    const target = prop.type === "YAMLWithMeta" ? prop.value : prop;
+    if (target == null) {
+      return "";
+    }
+    if (target.type === "YAMLScalar" && typeof target.value === "string") {
+      return target.value;
+    }
+    return sourceCode.text.slice(...target.range);
+  }
+}
+
+/**
+ * Get the type name from given value when value is primitive like value
+ */
+function getYAMLPrimitiveType(val: YAMLValue) {
+  const t = typeof val;
+  if (t === "string" || t === "number" || t === "boolean" || t === "bigint") {
+    return t;
+  }
+  if (val === null) {
+    return "null";
+  }
+  if (val === undefined) {
+    return "undefined";
+  }
+  if (val instanceof RegExp) {
+    return "regexp";
+  }
+  return null;
+}
+
+const ALLOW_ORDER_TYPES: OrderTypeOption[] = ["asc", "desc"];
+const ORDER_OBJECT_SCHEMA = {
+  type: "object",
+  properties: {
+    type: {
+      enum: ALLOW_ORDER_TYPES,
+    },
+    caseSensitive: {
+      type: "boolean",
+    },
+    natural: {
+      type: "boolean",
+    },
+    key: {
+      type: "string",
+    },
+  },
+  additionalProperties: false,
+} as const;
+
+// ------------------------------------------------------------------------------
+// Rule Definition
+// ------------------------------------------------------------------------------
+
+export default createRule("sort-sequence-values", {
+  meta: {
+    docs: {
+      description: "require sequence values to be sorted",
+      categories: null,
+      extensionRule: false,
+      layout: false,
+    },
+    fixable: "code",
+    schema: {
+      type: "array",
+      items: {
+        type: "object",
+        properties: {
+          pathPattern: { type: "string" },
+          order: {
+            oneOf: [
+              {
+                type: "array",
+                items: {
+                  anyOf: [
+                    { type: "string" },
+                    {
+                      type: "object",
+                      properties: {
+                        valuePattern: {
+                          type: "string",
+                        },
+                        order: ORDER_OBJECT_SCHEMA,
+                      },
+                      additionalProperties: false,
+                    },
+                  ],
+                },
+                uniqueItems: true,
+              },
+              ORDER_OBJECT_SCHEMA,
+            ],
+          },
+          minValues: {
+            type: "integer",
+            minimum: 2,
+          },
+        },
+        required: ["pathPattern", "order"],
+        additionalProperties: false,
+      },
+      minItems: 1,
+    },
+
+    messages: {
+      shouldBeBefore:
+        "Expected sequence values to be in {{orderText}} order. '{{thisValue}}' should be before '{{targetValue}}'.",
+      shouldBeAfter:
+        "Expected sequence values to be in {{orderText}} order. '{{thisValue}}' should be after '{{targetValue}}'.",
+    },
+    type: "suggestion",
+  },
+  create(context) {
+    const sourceCode = context.sourceCode;
+    if (!sourceCode.parserServices?.isYAML) {
+      return {};
+    }
+    // Parse options.
+    const parsedOptions = parseOptions(context.options, sourceCode);
+
+    /**
+     * Checks whether the given two entries are in should be kept order.
+     */
+    function shouldKeepOrder(prevData: YAMLEntryData, nextData: YAMLEntryData) {
+      if (
+        (prevData.anchorAlias.aliases.size === 0
+          && prevData.anchorAlias.anchors.size === 0)
+        || (nextData.anchorAlias.aliases.size === 0
+          && nextData.anchorAlias.anchors.size === 0)
+      ) {
+        return false;
+      }
+      for (const aliasName of nextData.anchorAlias.aliases) {
+        if (prevData.anchorAlias.anchors.has(aliasName)) {
+          // The current order is correct for handling anchors.
+          return true;
+        }
+      }
+      for (const anchorName of nextData.anchorAlias.anchors) {
+        if (prevData.anchorAlias.aliases.has(anchorName)) {
+          // The current order is correct for handling anchors.
+          return true;
+        }
+      }
+      return false;
+    }
+
+    /**
+     * Sort entries by bubble sort.
+     */
+    function bubbleSort(entries: YAMLEntryData[], option: ParsedOption) {
+      const l = entries.length;
+      const result = [...entries];
+      let swapped: boolean;
+      do {
+        swapped = false;
+        for (let nextIndex = 1; nextIndex < l; nextIndex++) {
+          const prevIndex = nextIndex - 1;
+          if (
+            option.isValidOrder(result[prevIndex]!, result[nextIndex]!)
+            || shouldKeepOrder(result[prevIndex]!, result[nextIndex]!)
+          ) {
+            continue;
+          }
+          [result[prevIndex], result[nextIndex]] = [
+            result[nextIndex]!,
+            result[prevIndex]!,
+          ];
+          swapped = true;
+        }
+      } while (swapped);
+      return result;
+    }
+
+    /**
+     * Verify for sequence entries
+     */
+    function verifyArrayElements(
+      entries: YAMLEntryData[],
+      option: ParsedOption,
+    ) {
+      const sorted = bubbleSort(entries, option);
+      const editScript = calcShortestEditScript(entries, sorted);
+      for (let index = 0; index < editScript.length; index++) {
+        const edit = editScript[index]!;
+        if (edit.type !== "delete") { continue; }
+        const insertEditIndex = editScript.findIndex(
+          (e) => e.type === "insert" && e.b === edit.a,
+        );
+        if (insertEditIndex === -1) {
+          // should not happen
+          continue;
+        }
+        if (index < insertEditIndex) {
+          const target = findInsertAfterTarget(edit.a, insertEditIndex);
+          if (!target) {
+            // should not happen
+            continue;
+          }
+          context.report({
+            loc: edit.a.reportLoc,
+            messageId: "shouldBeAfter",
+            data: {
+              thisValue: toText(edit.a, option.key),
+              targetValue: toText(target, option.key),
+              orderText: option.orderText(edit.a),
+            },
+            *fix(fixer) {
+              if (edit.a.sequence.node.style === "flow") {
+                yield* fixToMoveDownForFlow(fixer, edit.a, target);
+              } else {
+                yield* fixToMoveDownForBlock(fixer, edit.a, target);
+              }
+            },
+          });
+        } else {
+          const target = findInsertBeforeTarget(edit.a, insertEditIndex);
+          if (!target) {
+            // should not happen
+            continue;
+          }
+          context.report({
+            loc: edit.a.reportLoc,
+            messageId: "shouldBeBefore",
+            data: {
+              thisValue: toText(edit.a, option.key),
+              targetValue: toText(target, option.key),
+              orderText: option.orderText(edit.a),
+            },
+            *fix(fixer) {
+              if (edit.a.sequence.node.style === "flow") {
+                yield* fixToMoveUpForFlow(fixer, edit.a, target);
+              } else {
+                yield* fixToMoveUpForBlock(fixer, edit.a, target);
+              }
+            },
+          });
+        }
+      }
+
+      /**
+       * Find insert after target
+       */
+      function findInsertAfterTarget(
+        entry: YAMLEntryData,
+        insertEditIndex: number,
+      ) {
+        let candidate: YAMLEntryData | null = null;
+        for (let index = insertEditIndex - 1; index >= 0; index--) {
+          const edit = editScript[index]!;
+          if (edit.type === "delete" && edit.a === entry) { break; }
+          if (edit.type !== "common") { continue; }
+          candidate = edit.a;
+          break;
+        }
+        const entryIndex = entries.indexOf(entry);
+        if (candidate) {
+          for (let index = entryIndex + 1; index < entries.length; index++) {
+            const element = entries[index]!;
+            if (element === candidate) { return candidate; }
+            if (shouldKeepOrder(entry, element)) {
+              break;
+            }
+          }
+        }
+
+        let lastTarget: YAMLEntryData | null = null;
+        for (let index = entryIndex + 1; index < entries.length; index++) {
+          const element = entries[index]!;
+          if (
+            option.isValidOrder(element, entry)
+            && !shouldKeepOrder(entry, element)
+          ) {
+            lastTarget = element;
+            continue;
+          }
+          return lastTarget;
+        }
+        return lastTarget;
+      }
+
+      /**
+       * Find insert before target
+       */
+      function findInsertBeforeTarget(
+        entry: YAMLEntryData,
+        insertEditIndex: number,
+      ) {
+        let candidate: YAMLEntryData | null = null;
+        for (
+          let index = insertEditIndex + 1;
+          index < editScript.length;
+          index++
+        ) {
+          const edit = editScript[index]!;
+          if (edit.type === "delete" && edit.a === entry) { break; }
+          if (edit.type !== "common") { continue; }
+          candidate = edit.a;
+          break;
+        }
+        const entryIndex = entries.indexOf(entry);
+        if (candidate) {
+          for (let index = entryIndex - 1; index >= 0; index--) {
+            const element = entries[index]!;
+            if (element === candidate) { return candidate; }
+            if (shouldKeepOrder(element, entry)) {
+              break;
+            }
+          }
+        }
+
+        let lastTarget: YAMLEntryData | null = null;
+        for (let index = entryIndex - 1; index >= 0; index--) {
+          const element = entries[index]!;
+          if (
+            option.isValidOrder(entry, element)
+            && !shouldKeepOrder(element, entry)
+          ) {
+            lastTarget = element;
+            continue;
+          }
+          return lastTarget;
+        }
+        return lastTarget;
+      }
+    }
+
+    /**
+     * Convert to display text.
+     */
+    function toText(data: YAMLEntryData, key?: string) {
+      if (key) {
+        const keyVal = data.getValueForKey(key);
+        if (keyVal !== undefined) {
+          return String(keyVal);
+        }
+      }
+      if (getYAMLPrimitiveType(data.value)) {
+        return String(data.value);
+      }
+      return sourceCode.getText(data.node!);
+    }
+
+    type EntryStack = {
+      upper: EntryStack | null;
+      anchors: Set<string>;
+      aliases: Set<string>;
+    };
+    let entryStack: EntryStack = {
+      upper: null,
+      anchors: new Set<string>(),
+      aliases: new Set<string>(),
+    };
+    const anchorAliasMap = new Map<
+      YAMLEntry,
+      {
+        anchors: Set<string>;
+        aliases: Set<string>;
+      }
+    >();
+
+    return {
+      "YAMLSequence > *"(node: YAMLEntry & { parent: AST.YAMLSequence }) {
+        if (!node.parent.entries.includes(node)) {
+          return;
+        }
+        entryStack = {
+          upper: entryStack,
+          anchors: new Set<string>(),
+          aliases: new Set<string>(),
+        };
+        if (node.type === "YAMLAlias") {
+          entryStack.aliases.add(node.name);
+        }
+      },
+      "YAMLAnchor"(node: AST.YAMLAnchor) {
+        if (entryStack) {
+          entryStack.anchors.add(node.name);
+        }
+      },
+      "YAMLAlias"(node: AST.YAMLAlias) {
+        if (entryStack) {
+          entryStack.aliases.add(node.name);
+        }
+      },
+      "YAMLSequence > *:exit"(node: YAMLEntry & { parent: AST.YAMLSequence }) {
+        if (!node.parent.entries.includes(node)) {
+          return;
+        }
+        anchorAliasMap.set(node, entryStack);
+        const { anchors, aliases } = entryStack;
+        entryStack = entryStack.upper!;
+        entryStack.anchors = new Set([...entryStack.anchors, ...anchors]);
+        entryStack.aliases = new Set([...entryStack.aliases, ...aliases]);
+      },
+      "YAMLSequence:exit"(node: AST.YAMLSequence) {
+        const data = new YAMLSequenceData(node, sourceCode, anchorAliasMap);
+        const option = parsedOptions.find((o) => o.isTargetArray(data));
+        if (!option) {
+          return;
+        }
+        verifyArrayElements(
+          data.entries.filter((d) => !option.ignore(d)),
+          option,
+        );
+      },
+    };
+
+    /**
+     * Fix by moving the node after the target node for flow.
+     */
+    function* fixToMoveDownForFlow(
+      fixer: RuleTextEditor,
+      data: YAMLEntryData,
+      moveTarget: YAMLEntryData,
+    ) {
+      const beforeToken = data.aroundTokens.before;
+      const afterToken = data.aroundTokens.after;
+      let insertCode: string,
+        removeRange: AST.Range,
+        insertTargetToken: YAMLToken;
+      if (isComma(afterToken)) {
+        // e.g. |# comment\n value,|
+        removeRange = [beforeToken.range[1], afterToken.range[1]];
+        const moveTargetAfterToken = moveTarget.aroundTokens.after;
+        if (isComma(moveTargetAfterToken)) {
+          // e.g. value,
+          insertTargetToken = moveTargetAfterToken;
+          insertCode = sourceCode.text.slice(...removeRange);
+        } else {
+          // e.g. value]
+          insertTargetToken = moveTarget.node
+            ? sourceCode.getLastToken(moveTarget.node)
+            : moveTarget.aroundTokens.before;
+          insertCode = sourceCode.text.slice(
+            beforeToken.range[1],
+            afterToken.range[0],
+          );
+          insertCode = `,${insertCode}`;
+        }
+      } else {
+        if (isComma(beforeToken)) {
+          // e.g. |, # comment\n value|
+          removeRange = [beforeToken.range[0], data.range[1]];
+          insertCode = sourceCode.text.slice(...removeRange);
+          insertTargetToken = moveTarget.node
+            ? sourceCode.getLastToken(moveTarget.node)
+            : moveTarget.aroundTokens.before;
+        } else {
+          // e.g. |[# comment\n value|
+          removeRange = [beforeToken.range[1], data.range[1]];
+          insertCode = `,${sourceCode.text.slice(...removeRange)}`;
+          insertTargetToken = moveTarget.node
+            ? sourceCode.getLastToken(moveTarget.node)
+            : moveTarget.aroundTokens.before;
+        }
+      }
+      yield fixer.removeRange(removeRange);
+      yield fixer.insertTextAfterRange(insertTargetToken.range, insertCode);
+    }
+
+    /**
+     * Fix by moving the node before the target node for flow.
+     */
+    function* fixToMoveUpForFlow(
+      fixer: RuleTextEditor,
+      data: YAMLEntryData,
+      moveTarget: YAMLEntryData,
+    ) {
+      const beforeToken = data.aroundTokens.before;
+      const afterToken = data.aroundTokens.after;
+      let insertCode: string,
+        removeRange: AST.Range,
+        insertTargetToken: YAMLToken;
+      if (isComma(afterToken)) {
+        // e.g. |# comment\n value,|
+        removeRange = [beforeToken.range[1], afterToken.range[1]];
+        insertCode = sourceCode.text.slice(...removeRange);
+        insertTargetToken = moveTarget.aroundTokens.before;
+      } else {
+        // e.g. |, # comment\n value|
+        removeRange = [beforeToken.range[0], data.range[1]];
+        if (isComma(moveTarget.aroundTokens.before)) {
+          // [ a , target ]
+          //    ^ insert
+          insertCode = sourceCode.text.slice(...removeRange);
+          insertTargetToken = sourceCode.getTokenBefore(
+            moveTarget.aroundTokens.before,
+          )!;
+        } else {
+          // [ target ]
+          //  ^ insert
+          insertCode = `${
+            sourceCode.text.slice(
+              beforeToken.range[1],
+              data.range[1],
+            )
+          },`;
+          insertTargetToken = moveTarget.aroundTokens.before;
+        }
+      }
+      yield fixer.insertTextAfterRange(insertTargetToken.range, insertCode);
+
+      yield fixer.removeRange(removeRange);
+    }
+
+    /**
+     * Fix by moving the node after the target node for block.
+     */
+    function* fixToMoveDownForBlock(
+      fixer: RuleTextEditor,
+      data: YAMLEntryData,
+      moveTarget: YAMLEntryData,
+    ) {
+      const moveDataList = data.sequence.entries.slice(
+        data.index,
+        moveTarget.index + 1,
+      );
+
+      let replacementCodeRange = getBlockEntryRange(data);
+      for (const target of moveDataList.reverse()) {
+        const range = getBlockEntryRange(target);
+        yield fixer.replaceTextRange(
+          range,
+          sourceCode.text.slice(...replacementCodeRange),
+        );
+        replacementCodeRange = range;
+      }
+    }
+
+    /**
+     * Fix by moving the node before the target node for block.
+     */
+    function* fixToMoveUpForBlock(
+      fixer: RuleTextEditor,
+      data: YAMLEntryData,
+      moveTarget: YAMLEntryData,
+    ) {
+      const moveDataList = data.sequence.entries.slice(
+        moveTarget.index,
+        data.index + 1,
+      );
+
+      let replacementCodeRange = getBlockEntryRange(data);
+      for (const target of moveDataList) {
+        const range = getBlockEntryRange(target);
+        yield fixer.replaceTextRange(
+          range,
+          sourceCode.text.slice(...replacementCodeRange),
+        );
+        replacementCodeRange = range;
+      }
+    }
+
+    /**
+     * Get range of entry
+     */
+    function getBlockEntryRange(data: YAMLEntryData): AST.Range {
+      return [getBlockEntryStartOffset(data), getBlockEntryEndOffset(data)];
+    }
+
+    /**
+     * Get start offset of entry
+     */
+    function getBlockEntryStartOffset(data: YAMLEntryData) {
+      const beforeHyphenToken = sourceCode.getTokenBefore(
+        data.aroundTokens.before,
+      );
+      if (!beforeHyphenToken) {
+        const comment = sourceCode.getTokenBefore(data.aroundTokens.before, {
+          includeComments: true,
+        });
+        if (
+          comment
+          && data.aroundTokens.before.loc.start.column <= comment.loc.start.column
+        ) {
+          return comment.range[0];
+        }
+
+        return data.aroundTokens.before.range[0];
+      }
+      let next = sourceCode.getTokenAfter(beforeHyphenToken, {
+        includeComments: true,
+      })!;
+      while (
+        beforeHyphenToken.loc.end.line === next.loc.start.line
+        && next.range[1] < data.aroundTokens.before.range[0]
+      ) {
+        next = sourceCode.getTokenAfter(next, {
+          includeComments: true,
+        })!;
+      }
+      return next.range[0];
+    }
+
+    /**
+     * Get start offset of entry
+     */
+    function getBlockEntryEndOffset(data: YAMLEntryData) {
+      const valueEndToken = data.node ?? data.aroundTokens.before;
+      let last = valueEndToken;
+      let afterToken = sourceCode.getTokenAfter(last, {
+        includeComments: true,
+      });
+      while (
+        afterToken
+        && valueEndToken.loc.end.line === afterToken.loc.start.line
+      ) {
+        last = afterToken;
+        afterToken = sourceCode.getTokenAfter(last, {
+          includeComments: true,
+        });
+      }
+      return last.range[1];
+    }
+  },
+});
