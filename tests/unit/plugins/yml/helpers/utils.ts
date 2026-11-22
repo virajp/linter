@@ -123,11 +123,14 @@ export function loadTestCases(
     }
   }
   if (invalid.some((test) => test.output) && !options?.skipOutputTest) {
+    // Filter before describe: vitest runs the callback after the
+    // skipOutputTest flags are deleted below.
+    const outputTests = invalid.filter(
+      ({ filename, skipOutputTest }: any) =>
+        isYaml(filename) && !skipOutputTest,
+    );
     describe(`Output test for ${ruleName}`, () => {
-      for (const test of invalid.filter(
-        ({ filename, skipOutputTest }: any) =>
-          isYaml(filename) && !skipOutputTest,
-      )) {
+      for (const test of outputTests) {
         it(test.filename || test.code, () => {
           const input = yamlESLintParser.parseForESLint(test.code);
           const output = yamlESLintParser.parseForESLint(
@@ -152,6 +155,10 @@ export function loadTestCases(
 }
 
 function listupInput(rootDir: string) {
+  // A rule may have no valid/ or invalid/ directory: no cases.
+  if (!fs.existsSync(rootDir)) {
+    return [];
+  }
   return [...itrListupInput(rootDir)];
 }
 
