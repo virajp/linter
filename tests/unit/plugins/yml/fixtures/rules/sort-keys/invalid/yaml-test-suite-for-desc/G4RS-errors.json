@@ -1,0 +1,17 @@
+[
+  {
+    "message": "Expected mapping keys to be in descending order. 'control' should be after 'quoted'.",
+    "line": 3,
+    "column": 1
+  },
+  {
+    "message": "Expected mapping keys to be in descending order. 'hex esc' should be after 'quoted'.",
+    "line": 4,
+    "column": 1
+  },
+  {
+    "message": "Expected mapping keys to be in descending order. 'tie-fighter' should be before 'single'.",
+    "line": 8,
+    "column": 1
+  }
+]

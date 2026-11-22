@@ -1,0 +1,7 @@
+[
+  {
+    "message": "Expected mapping keys to be in descending order. 'explicit' should be after 'implicit'.",
+    "line": 3,
+    "column": 3
+  }
+]

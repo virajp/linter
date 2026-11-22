@@ -1,0 +1,7 @@
+[
+  {
+    "message": "Expected sequence values to be in descending order. 'double quoted' should be after 'plain text'.",
+    "line": 3,
+    "column": 1
+  }
+]

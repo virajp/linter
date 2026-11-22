@@ -1,0 +1,7 @@
+[
+  {
+    "message": "Expected sequence values to be in ascending order. 'flow in block' should be after 'Block scalar\n'.",
+    "line": 3,
+    "column": 3
+  }
+]

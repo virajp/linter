@@ -1,0 +1,5 @@
+# sort-keys/invalid/yaml-test-suite-for-desc/ZWK4-input.yaml
+---
+? b
+&anchor c: 3
+a: 1

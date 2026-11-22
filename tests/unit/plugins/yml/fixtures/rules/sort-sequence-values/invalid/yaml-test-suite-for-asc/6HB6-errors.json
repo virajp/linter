@@ -1,0 +1,7 @@
+[
+  {
+    "message": "Expected sequence values to be in ascending order. 'By two' should be after 'Also by two'.",
+    "line": 10,
+    "column": 4
+  }
+]

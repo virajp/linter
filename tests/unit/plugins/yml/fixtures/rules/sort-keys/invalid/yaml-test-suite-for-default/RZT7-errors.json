@@ -1,0 +1,17 @@
+[
+  {
+    "message": "Expected mapping keys to be in ascending order. 'User' should be after 'Stack'.",
+    "line": 16,
+    "column": 1
+  },
+  {
+    "message": "Expected mapping keys to be in ascending order. 'code' should be before 'file'.",
+    "line": 22,
+    "column": 5
+  },
+  {
+    "message": "Expected mapping keys to be in ascending order. 'code' should be before 'file'.",
+    "line": 26,
+    "column": 5
+  }
+]

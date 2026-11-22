@@ -1,0 +1,12 @@
+[
+  {
+    "message": "Expected sequence values to be in ascending order. '::vector' should be after ': - ()'.",
+    "line": 3,
+    "column": 3
+  },
+  {
+    "message": "Expected sequence values to be in ascending order. '::vector' should be after ': - ()'.",
+    "line": 9,
+    "column": 5
+  }
+]

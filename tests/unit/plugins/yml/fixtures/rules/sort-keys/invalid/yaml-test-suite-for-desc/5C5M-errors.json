@@ -1,0 +1,12 @@
+[
+  {
+    "message": "Expected mapping keys to be in descending order. 'one' should be after 'three'.",
+    "line": 2,
+    "column": 5
+  },
+  {
+    "message": "Expected mapping keys to be in descending order. 'five' should be after 'seven'.",
+    "line": 3,
+    "column": 4
+  }
+]
