@@ -433,5 +433,8 @@
   },
   "gaps": [],
   "overrides": [],
-  "run": {}
+  "run": {
+    "worktree": ".worktrees/all-2026-11-23-0136",
+    "log": "~/Library/Caches/vwf/linter/2026-11-22-own-toml-rules.jsonl"
+  }
 }
