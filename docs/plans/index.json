@@ -74,6 +74,25 @@
       "backlog_pieces": [
         "B08"
       ]
+    },
+    {
+      "id": "2026-11-22-own-astro-rules",
+      "folder": "docs/plans/2026-11-22-own-astro-rules",
+      "kind": "change",
+      "title": "Own the Astro rules and processor, and fix TypeScript in client scripts",
+      "target_repo": null,
+      "priority": 50,
+      "status": "APPROVED",
+      "started": "",
+      "ended": "",
+      "gaps": null,
+      "requires": [
+        "2026-11-22-own-html-rules"
+      ],
+      "backlog": [],
+      "backlog_pieces": [
+        "B08"
+      ]
     }
   ]
 }
