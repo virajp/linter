@@ -20,9 +20,15 @@ importers:
       '@eslint/markdown':
         specifier: 9.0.0
         version: 9.0.0
+      '@eslint/plugin-kit':
+        specifier: 0.7.3
+        version: 0.7.3
       '@html-eslint/eslint-plugin':
         specifier: 0.68.0
         version: 0.68.0(eslint@10.15.0(jiti@2.7.0))
+      '@ota-meshi/ast-token-store':
+        specifier: 0.3.0
+        version: 0.3.0
       '@typescript-eslint/parser':
         specifier: 8.73.0
         version: 8.73.0(eslint@10.15.0(jiti@2.7.0))(typescript@6.0.3)
@@ -32,6 +38,12 @@ importers:
       debug:
         specifier: 4.4.3
         version: 4.4.3
+      diff-sequences:
+        specifier: 29.6.3
+        version: 29.6.3
+      escape-string-regexp:
+        specifier: 5.0.0
+        version: 5.0.0
       eslint:
         specifier: 10.15.0
         version: 10.15.0(jiti@2.7.0)
@@ -41,15 +53,15 @@ importers:
       eslint-plugin-toml:
         specifier: 1.5.0
         version: 1.5.0(eslint@10.15.0(jiti@2.7.0))
-      eslint-plugin-yml:
-        specifier: 3.10.0
-        version: 3.10.0(eslint@10.15.0(jiti@2.7.0))
       globals:
         specifier: 17.14.0
         version: 17.14.0
       jsonc-parser:
         specifier: 3.3.1
         version: 3.3.1
+      natural-compare:
+        specifier: 1.4.0
+        version: 1.4.0
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -835,12 +847,6 @@ packages:
   eslint-plugin-toml@1.5.0:
     resolution: {integrity: sha512-qBjRywEkKxO2uYOjus//6GVF1r+Hg5QDkRO8RTY6XcaXgWfBU0DhwpFmJa2Ljf0Sz49r7DdZlpKwwHmJ4nmH1Q==}
     engines: {node: ^20.19.0 || ^22.13.0 || >=24}
-    peerDependencies:
-      eslint: '>=9.38.0'
-
-  eslint-plugin-yml@3.10.0:
-    resolution: {integrity: sha512-9Qfg0JMZ0YUPa/m6FwWhzKFDwXf/oGnM+EvTzRkM72UccHuzCFk/L77R6qtABZ/As/UJVvx1lYYcbwgO+gcioA==}
-    engines: {node: ^20.19.0 || ^22.13.0 || >=24.0.0}
     peerDependencies:
       eslint: '>=9.38.0'
 
@@ -2213,17 +2219,6 @@ snapshots:
       toml-eslint-parser: 1.0.3
     transitivePeerDependencies:
       - supports-color
-
-  eslint-plugin-yml@3.10.0(eslint@10.15.0(jiti@2.7.0)):
-    dependencies:
-      '@eslint/core': 1.2.1
-      '@eslint/plugin-kit': 0.7.3
-      '@ota-meshi/ast-token-store': 0.3.0
-      diff-sequences: 29.6.3
-      escape-string-regexp: 5.0.0
-      eslint: 10.15.0(jiti@2.7.0)
-      natural-compare: 1.4.0
-      yaml-eslint-parser: 2.1.0
 
   eslint-scope@9.1.2:
     dependencies:

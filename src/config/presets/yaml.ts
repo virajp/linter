@@ -1,12 +1,21 @@
 import type { Linter } from "eslint";
-import yaml from "eslint-plugin-yml";
-import * as yamlParser from "yaml-eslint-parser";
+
+import yml from "../../plugins/yml/index.js";
 
 export const yamlConfig = {
-  extends: [yaml.configs["flat/recommended"]],
   files: ["**/*.yaml", "**/*.yml"],
-  languageOptions: { parser: yamlParser },
+  language: "yml/yaml",
   name: "yaml",
-  plugins: { yml: yaml },
-  rules: {},
-} satisfies Linter.Config & { extends?: unknown };
+  plugins: { yml },
+  rules: {
+    "no-irregular-whitespace": "off",
+    "no-unused-vars": "off",
+    "spaced-comment": "off",
+    "yml/no-empty-document": "error",
+    "yml/no-empty-key": "error",
+    "yml/no-empty-mapping-value": "error",
+    "yml/no-empty-sequence-entry": "error",
+    "yml/no-irregular-whitespace": "error",
+    "yml/no-tab-indent": "error",
+  },
+} satisfies Linter.Config;
