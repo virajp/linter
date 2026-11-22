@@ -224,11 +224,11 @@
         "U4"
       ],
       "waits": "the plugin index imports all 30 rules, and the plugin can leave the dependencies only once the preset no longer uses it",
-      "status": "pending",
-      "started": "",
-      "ended": "",
-      "commit": "",
-      "rounds": 0
+      "status": "green",
+      "started": "2026-11-22T22:57:49.883Z",
+      "ended": "2026-11-22T23:00:29.913Z",
+      "commit": "1b84814",
+      "rounds": 1
     },
     {
       "id": "U6",
@@ -319,9 +319,9 @@
     },
     {
       "id": "W3",
-      "status": "pending",
-      "started": "",
-      "ended": ""
+      "status": "green",
+      "started": "2026-11-22T22:57:49.805Z",
+      "ended": "2026-11-22T23:02:57.060Z"
     },
     {
       "id": "W4",
