@@ -13,8 +13,8 @@
   "gaps_of": [],
   "execution": "teams",
   "status": {
-    "state": "RUNNING",
-    "detail": "RUNNING since 2026-11-22T20:51:53Z in .worktrees/all-2026-11-23-0136"
+    "state": "COMPLETE",
+    "detail": "COMPLETE 2026-11-23 — 33395a6 50139c9 fde0d68 4263fd4 c6e0995 cdc70f2"
   },
   "consent": {
     "merge": true,
@@ -258,7 +258,7 @@
       "status": "green",
       "started": "2026-11-22T22:18:27.810Z",
       "ended": "2026-11-22T22:19:39.871Z",
-      "commit": "",
+      "commit": "cdc70f2",
       "rounds": 1
     }
   ],
