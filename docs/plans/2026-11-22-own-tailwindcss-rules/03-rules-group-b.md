@@ -112,6 +112,8 @@ The 8 rules: `prefer-logical-properties`, `prefer-theme-tokens`,
 - A rule must not change behavior. If an upstream test fails against the
   ported rule because of a difference between the upstream test setup and
   ours, return a QUESTION. Do not change the expected result.
+- Before you return, run `mise x -- mise run code:format --fix`, so that
+  the unit gate (check only) passes (D23).
 - Delete with `rm`, never `git rm`.
 
 ## Commit
