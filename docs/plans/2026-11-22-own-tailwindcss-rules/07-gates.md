@@ -27,7 +27,7 @@
 3. Examine `git diff --stat tests/golden/__snapshots__/` and the diff itself.
    Pass condition: only `config/file.css.json` and the CSS entries of
    `lint/problems.json` and `lint/fixes.json` change. In
-   `config/file.css.json`, the `language` is `css/css`, the 15
+   `config/file.css.json`, the `language` is `css/css`, the 14
    `tailwindcss/` rule keys that the preset sets keep their severities, and
    any other change is in a `css/` rule, or in a `tailwindcss/` rule that
    wraps or reuses an `@eslint/css` rule (D16; read the rule source to

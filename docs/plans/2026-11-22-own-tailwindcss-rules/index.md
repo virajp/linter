@@ -142,6 +142,8 @@ and answers; the resumed unit applies them and returns the whole block again.
 
 ## Out of scope
 
+- The Vue-only rule `require-reference-in-vue` (D22, a revision after
+  approval): the user never uses Vue.
 - The other 5 languages of B08 (YAML, TOML, HTML, Astro, TypeScript). Each
   gets its own plan folder (D1).
 - TypeScript 7. Its hold stays; plan 6 of B08 decides it.
