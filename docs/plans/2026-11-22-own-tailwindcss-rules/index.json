@@ -1,0 +1,561 @@
+{
+  "format": 1,
+  "type": "vwf-change-plan",
+  "title": "Own the Tailwind CSS rules and upgrade @eslint/css to 2.x",
+  "requires": [],
+  "source": [
+    "B08"
+  ],
+  "backlog": [],
+  "backlog_pieces": [
+    "B08"
+  ],
+  "gaps_of": [],
+  "execution": "teams",
+  "status": {
+    "state": "APPROVED",
+    "detail": "APPROVED 2026-11-22 by the user"
+  },
+  "consent": {
+    "merge": true,
+    "end_all_run": false
+  },
+  "gates": {
+    "unit": [
+      "mise x -- mise run code:format"
+    ],
+    "wave": [
+      "mise x -- mise run code:lint",
+      "mise x -- mise run code:check"
+    ],
+    "plan": [
+      "mise x -- mise run code:precommit",
+      "mise x -- mise run p:preflight"
+    ],
+    "keeps": []
+  },
+  "after_landing": [],
+  "release_levels": [
+    {
+      "id": "linter",
+      "level": "MINOR",
+      "reason": "@eslint/css 2.x rules can report new problems on consumer CSS, and a consumer config that names the tailwindcss/css language stops working; no rule name changes"
+    }
+  ],
+  "dependencies": [
+    {
+      "id": "N1",
+      "package": "@eslint/css-tree (devDependency, exact pin)",
+      "purpose": "type-only imports of CSSTree AST node types in the ported rules; ESLint-org package already in the tree under @eslint/css; adds nothing to the tarball",
+      "preferred_over": "relying on pnpm hoisting of a transitive package; own type definitions",
+      "unit": "U4"
+    },
+    {
+      "id": "N2",
+      "package": "@eslint/core (devDependency, exact pin)",
+      "purpose": "type-only imports of RuleDefinition, RuleContext and Language types; ESLint-org package already in the tree under @eslint/css; adds nothing to the tarball",
+      "preferred_over": "relying on pnpm hoisting of a transitive package; own type definitions",
+      "unit": "U4"
+    }
+  ],
+  "units": [
+    {
+      "id": "U1",
+      "title": "Tailwind syntax, types and shared helpers",
+      "wave": 1,
+      "file": "01-plugin-base.md",
+      "kind": "edit",
+      "model": "opus",
+      "owns": [
+        "src/plugins/tailwindcss/syntax.ts",
+        "src/plugins/tailwindcss/types.ts",
+        "src/plugins/tailwindcss/utils/",
+        "THIRD_PARTY_NOTICES.md",
+        "tests/unit/plugins/tailwindcss/syntax.test.ts",
+        "tests/unit/plugins/tailwindcss/utils.test.ts"
+      ],
+      "depends_on": [],
+      "waits": "",
+      "status": "pending",
+      "started": "",
+      "ended": "",
+      "commit": "",
+      "rounds": 0
+    },
+    {
+      "id": "U2",
+      "title": "Tailwind rules, group A (consistent-spacing to no-invalid-properties)",
+      "wave": 2,
+      "file": "02-rules-group-a.md",
+      "kind": "edit",
+      "model": "opus",
+      "owns": [
+        "src/plugins/tailwindcss/rules/group-a.ts",
+        "src/plugins/tailwindcss/rules/consistent-spacing.ts",
+        "src/plugins/tailwindcss/rules/no-arbitrary-value-overuse.ts",
+        "src/plugins/tailwindcss/rules/no-conflicting-utilities.ts",
+        "src/plugins/tailwindcss/rules/no-duplicate-imports.ts",
+        "src/plugins/tailwindcss/rules/no-duplicate-reference.ts",
+        "src/plugins/tailwindcss/rules/no-empty-blocks.ts",
+        "src/plugins/tailwindcss/rules/no-important.ts",
+        "src/plugins/tailwindcss/rules/no-invalid-at-rules.ts",
+        "src/plugins/tailwindcss/rules/no-invalid-named-grid-areas.ts",
+        "src/plugins/tailwindcss/rules/no-invalid-properties.ts",
+        "tests/unit/plugins/tailwindcss/rules/consistent-spacing.test.ts",
+        "tests/unit/plugins/tailwindcss/rules/no-arbitrary-value-overuse.test.ts",
+        "tests/unit/plugins/tailwindcss/rules/no-conflicting-utilities.test.ts",
+        "tests/unit/plugins/tailwindcss/rules/no-duplicate-imports.test.ts",
+        "tests/unit/plugins/tailwindcss/rules/no-duplicate-reference.test.ts",
+        "tests/unit/plugins/tailwindcss/rules/no-empty-blocks.test.ts",
+        "tests/unit/plugins/tailwindcss/rules/no-important.test.ts",
+        "tests/unit/plugins/tailwindcss/rules/no-invalid-at-rules.test.ts",
+        "tests/unit/plugins/tailwindcss/rules/no-invalid-named-grid-areas.test.ts",
+        "tests/unit/plugins/tailwindcss/rules/no-invalid-properties.test.ts"
+      ],
+      "depends_on": [
+        "U1"
+      ],
+      "waits": "it imports the helpers, types and syntax that U1 creates",
+      "status": "pending",
+      "started": "",
+      "ended": "",
+      "commit": "",
+      "rounds": 0
+    },
+    {
+      "id": "U3",
+      "title": "Tailwind rules, group B (prefer-logical-properties to valid-theme-function)",
+      "wave": 2,
+      "file": "03-rules-group-b.md",
+      "kind": "edit",
+      "model": "opus",
+      "owns": [
+        "src/plugins/tailwindcss/rules/group-b.ts",
+        "src/plugins/tailwindcss/rules/prefer-logical-properties.ts",
+        "src/plugins/tailwindcss/rules/prefer-theme-tokens.ts",
+        "src/plugins/tailwindcss/rules/relative-font-units.ts",
+        "src/plugins/tailwindcss/rules/require-reference-in-vue.ts",
+        "src/plugins/tailwindcss/rules/use-baseline.ts",
+        "src/plugins/tailwindcss/rules/use-layers.ts",
+        "src/plugins/tailwindcss/rules/valid-apply-directive.ts",
+        "src/plugins/tailwindcss/rules/valid-modifier-syntax.ts",
+        "src/plugins/tailwindcss/rules/valid-theme-function.ts",
+        "tests/unit/plugins/tailwindcss/rules/prefer-logical-properties.test.ts",
+        "tests/unit/plugins/tailwindcss/rules/prefer-theme-tokens.test.ts",
+        "tests/unit/plugins/tailwindcss/rules/relative-font-units.test.ts",
+        "tests/unit/plugins/tailwindcss/rules/require-reference-in-vue.test.ts",
+        "tests/unit/plugins/tailwindcss/rules/use-baseline.test.ts",
+        "tests/unit/plugins/tailwindcss/rules/use-layers.test.ts",
+        "tests/unit/plugins/tailwindcss/rules/valid-apply-directive.test.ts",
+        "tests/unit/plugins/tailwindcss/rules/valid-modifier-syntax.test.ts",
+        "tests/unit/plugins/tailwindcss/rules/valid-theme-function.test.ts"
+      ],
+      "depends_on": [
+        "U1"
+      ],
+      "waits": "it imports the helpers, types and syntax that U1 creates",
+      "status": "pending",
+      "started": "",
+      "ended": "",
+      "commit": "",
+      "rounds": 0
+    },
+    {
+      "id": "U4",
+      "title": "Create the plugin index, switch the css preset to it, then upgrade @eslint/css to 2.0.1",
+      "wave": 3,
+      "file": "04-switch-and-upgrade.md",
+      "kind": "edit",
+      "model": "opus",
+      "owns": [
+        "src/plugins/tailwindcss/",
+        "src/config/presets/css.ts",
+        "package.json",
+        "pnpm-lock.yaml",
+        "pnpm-workspace.yaml",
+        "tests/unit/peers.test.ts",
+        "src/cli/commands/version.ts",
+        ".config/mise/tasks/p/upgrade.py",
+        ".github/workflows/deps-update.yml",
+        "tests/unit/plugins/tailwindcss/malformed-css.test.ts",
+        "tests/unit/plugins/tailwindcss/"
+      ],
+      "depends_on": [
+        "U2",
+        "U3"
+      ],
+      "waits": "the preset can use our plugin only once all 19 rules exist, and @eslint/css 2.x is blocked until the poupe plugin is gone",
+      "status": "pending",
+      "started": "",
+      "ended": "",
+      "commit": "",
+      "rounds": 0
+    },
+    {
+      "id": "U5",
+      "title": "Review: the Tailwind plugin, its rules and the @eslint/css upgrade",
+      "wave": 4,
+      "file": "05-review.md",
+      "kind": "review",
+      "model": "opus",
+      "owns": [],
+      "depends_on": [
+        "U1",
+        "U2",
+        "U3",
+        "U4"
+      ],
+      "waits": "",
+      "status": "pending",
+      "started": "",
+      "ended": "",
+      "commit": "",
+      "rounds": 0,
+      "range": {
+        "from": "",
+        "to": ""
+      }
+    },
+    {
+      "id": "U6",
+      "title": "Docs",
+      "wave": 5,
+      "file": "06-docs.md",
+      "kind": "edit",
+      "model": "opus",
+      "owns": [
+        "CLAUDE.md",
+        "readme.md",
+        "docs/memory/"
+      ],
+      "depends_on": [
+        "U1",
+        "U2",
+        "U3",
+        "U4",
+        "U5"
+      ],
+      "waits": "",
+      "status": "pending",
+      "started": "",
+      "ended": "",
+      "commit": "",
+      "rounds": 0
+    },
+    {
+      "id": "U7",
+      "title": "Gates",
+      "wave": 6,
+      "file": "07-gates.md",
+      "kind": "edit",
+      "model": "opus",
+      "owns": [
+        "tests/golden/__snapshots__/",
+        "tests/fixtures/css/valid.css"
+      ],
+      "depends_on": [
+        "U6"
+      ],
+      "waits": "",
+      "status": "pending",
+      "started": "",
+      "ended": "",
+      "commit": "",
+      "rounds": 0
+    }
+  ],
+  "waves": [
+    {
+      "id": "W1",
+      "status": "pending",
+      "started": "",
+      "ended": ""
+    },
+    {
+      "id": "W2",
+      "status": "pending",
+      "started": "",
+      "ended": ""
+    },
+    {
+      "id": "W3",
+      "status": "pending",
+      "started": "",
+      "ended": ""
+    },
+    {
+      "id": "W4",
+      "status": "pending",
+      "started": "",
+      "ended": ""
+    },
+    {
+      "id": "W5",
+      "status": "pending",
+      "started": "",
+      "ended": ""
+    },
+    {
+      "id": "W6",
+      "status": "pending",
+      "started": "",
+      "ended": ""
+    }
+  ],
+  "shared_files": [
+    {
+      "id": "S1",
+      "file": "tests/golden/__snapshots__/",
+      "why": "generated by vitest --update; regenerating mid-wave races",
+      "owner": "U7"
+    },
+    {
+      "id": "S2",
+      "file": "CLAUDE.md, readme.md",
+      "why": "human-facing docs that several units falsify",
+      "owner": "U6"
+    },
+    {
+      "id": "S3",
+      "file": "package.json, pnpm-lock.yaml",
+      "why": "U4 changes dependencies and adds the type packages; one owner keeps the lock file consistent",
+      "owner": "U4"
+    }
+  ],
+  "decisions": [
+    {
+      "id": "D1",
+      "decision": "How is B08 split into plan folders?",
+      "ruling": "One per language, 6 folders in a chain: 1) plugin base + CSS/Tailwind, 2) YAML, 3) TOML, 4) HTML, 5) Astro, 6) TypeScript. Each later folder requires folder 1.",
+      "rejected": "Two folders (base + CSS, then all others); one folder for all 6 languages",
+      "units": [
+        "U6"
+      ]
+    },
+    {
+      "id": "D2",
+      "decision": "Which rule namespace do our own rules use?",
+      "ruling": "Keep current names: our plugins register under the same keys (tailwindcss/, html/, yml/, toml/, astro/, @typescript-eslint/). No consumer override breaks, and the golden snapshots keep the same rule names, which proves parity.",
+      "rejected": "One new namespace for all rules; a new key per language (both break consumer overrides: a MAJOR release)",
+      "units": [
+        "U2",
+        "U3",
+        "U4"
+      ]
+    },
+    {
+      "id": "D3",
+      "decision": "Does tailwind-csstree stay as a dependency?",
+      "ruling": "Write our own Tailwind 4 syntax for CSSTree in the repo. Zero new packages.",
+      "rejected": "Keep tailwind-csstree 0.4.2 (0 deps, by the ESLint author, Apache-2.0)",
+      "units": [
+        "U1"
+      ]
+    },
+    {
+      "id": "D4",
+      "decision": "Which Tailwind rules do we port?",
+      "ruling": "All 19 rules of @poupe/eslint-plugin-tailwindcss 0.3.1.",
+      "rejected": "Only the 15 rules the preset enables",
+      "units": [
+        "U2",
+        "U3"
+      ]
+    },
+    {
+      "id": "D5",
+      "decision": "How do we credit the MIT code that we port?",
+      "ruling": "One notices file: THIRD_PARTY_NOTICES.md with the license text and copyright of each source, added to the files of package.json so it ships. Each ported file gets a one-line header that names its source. Later plans add their entries to the same file.",
+      "rejected": "The full MIT notice in a comment in each file; a clean-room rewrite from docs only",
+      "units": [
+        "U1",
+        "U2",
+        "U3",
+        "U4"
+      ]
+    },
+    {
+      "id": "D6",
+      "decision": "What test bar does each ported rule meet?",
+      "ruling": "A RuleTester test for each rule in tests/unit/, with valid and invalid cases ported from the upstream test files at tag v0.3.1 where they exist, plus each fix output. New tests for the 5 rules with no upstream test. The golden snapshots must keep the same problems and fixes before the @eslint/css upgrade.",
+      "rejected": "Golden snapshots only",
+      "units": [
+        "U2",
+        "U3"
+      ]
+    },
+    {
+      "id": "D7",
+      "decision": "Where does our plugin code live?",
+      "ruling": "Inside this package: src/plugins/tailwindcss/ (index.ts, syntax.ts, types.ts, utils/, rules/), compiled into dist/ with the rest. Later plans add src/plugins/<name>/.",
+      "rejected": "A separate npm package in a workspace",
+      "units": [
+        "U1",
+        "U6"
+      ]
+    },
+    {
+      "id": "D8",
+      "decision": "Which language does the css preset use?",
+      "ruling": "No own language. The css preset uses the css/css language of @eslint/css with our Tailwind syntax as customSyntax and tolerant: true. @eslint/css 2.0.0 adds meta.languages to its rules, so css/* rules run only on css/css. Our rules declare meta.languages [\"css/css\"].",
+      "rejected": "Keep a tailwindcss/css language in our plugin (2.x rejects every css/* rule on it)",
+      "units": [
+        "U1",
+        "U2",
+        "U3",
+        "U4"
+      ]
+    },
+    {
+      "id": "D9",
+      "decision": "How is parity proved before the upgrade?",
+      "ruling": "U4 first switches the preset to our plugin on @eslint/css 1.4.0 and runs the golden tests: lint/problems.json and lint/fixes.json must not change, and config/file.css.json may change only in its language (tailwindcss/css to css/css). Then U4 upgrades to 2.0.1, so the later golden diff shows only the upgrade.",
+      "rejected": "Port and upgrade in one step",
+      "units": [
+        "U4",
+        "U7"
+      ]
+    },
+    {
+      "id": "D10",
+      "decision": "Does this change plan need a review unit?",
+      "ruling": "Yes, one review unit after U4. The change lands runnable code: about 3,500 lines of rule source shipped in the package.",
+      "rejected": "Wave review only",
+      "units": [
+        "U5"
+      ]
+    },
+    {
+      "id": "D11",
+      "decision": "Execution mode",
+      "ruling": "teams: wave 2 has two edit units (the two rule groups), which can message each other about shared helpers. If a team cannot start, the run uses solo.",
+      "rejected": "solo",
+      "units": [
+        "U2",
+        "U3"
+      ]
+    },
+    {
+      "id": "D12",
+      "decision": "Do we list the type-only packages @eslint/css-tree and @eslint/core?",
+      "ruling": "Add both as exact-pinned devDependencies, at the versions that @eslint/css 2.0.1 resolves. They add nothing to the tarball. Justification: tsc must not depend on how pnpm hoists a transitive package. Imports from them are type-only (import type).",
+      "rejected": "Do not list them (rely on nodeLinker hoisted); own type definitions",
+      "units": [
+        "U1",
+        "U2",
+        "U3",
+        "U4"
+      ]
+    },
+    {
+      "id": "D13",
+      "decision": "Where does the rule configuration live?",
+      "ruling": "In the css preset, not in the plugin. The plugin index (src/plugins/tailwindcss/index.ts, written by U4) exports meta and rules only (no configs, no languages); it merges the rule registries rules/group-a.ts (U2) and rules/group-b.ts (U3). The preset reproduces the rule severities and the rule options of the poupe recommended config exactly. It keeps files [\"**/*.css\"]: extends intersects the poupe glob **/*.?(post)css with the preset glob, so the current preset lints .css files only. The language follows D8.",
+      "rejected": "configs.recommended inside our plugin; a plugin index created early by U1 (two units would then own one file)",
+      "units": [
+        "U4"
+      ]
+    },
+    {
+      "id": "D14",
+      "decision": "Where do the rule units get the source to port?",
+      "ruling": "From the TypeScript source of github.com/poupe-ui/eslint-plugin-tailwindcss at tag v0.3.1, read with gh api (src/rules, src/utils, src/types.ts, src/__tests__). Not from the bundled dist in node_modules.",
+      "rejected": "Port from the bundled node_modules dist",
+      "units": [
+        "U1",
+        "U2",
+        "U3"
+      ]
+    },
+    {
+      "id": "D15",
+      "decision": "Is the release level MINOR?",
+      "ruling": "MINOR for @virajp.dev/linter: new rule behavior from @eslint/css 2.x and the removal of the tailwindcss/css language; no rule name changes.",
+      "rejected": "MAJOR (no rule name or preset name changes); PATCH",
+      "units": []
+    },
+    {
+      "id": "D16",
+      "decision": "How do we port prefer-logical-properties, relative-font-units and use-layers, which upstream only re-exports from @eslint/css?",
+      "ruling": "Wrap the core rule: a new object that spreads the @eslint/css rule and sets meta.languages [\"css/css\"] (a new meta object, so the shared core object stays unchanged). The rules follow @eslint/css after the 2.x upgrade, as they do upstream today.",
+      "rejected": "Copy the 1.4.0 source of each core rule into the repo",
+      "units": [
+        "U3"
+      ]
+    },
+    {
+      "id": "D17",
+      "decision": "What does U4 do when the @eslint/css 2.0.1 upgrade breaks tsc in a file that U1 to U3 wrote?",
+      "ruling": "U4 may edit files under src/plugins/tailwindcss/ only to fix compile errors that the upgrade causes, with no change in behavior, and reports each as DECIDED. The review unit checks them. U4 creates src/plugins/tailwindcss/index.ts in the same directory.",
+      "rejected": "U4 stops with a QUESTION",
+      "units": [
+        "U4"
+      ]
+    },
+    {
+      "id": "D18",
+      "decision": "Does THIRD_PARTY_NOTICES.md get an entry for tailwind-csstree, which syntax.ts uses as a reference with no copied code?",
+      "ruling": "Yes. An acknowledgement section with the Apache-2.0 license text of tailwind-csstree (the version read, 0.3.3), its repository, and its author as its package.json writes it, worded as a reference, not as copied code. Its LICENSE has no copyright line, so the section adds none.",
+      "rejected": "No entry, as syntax.ts is original work",
+      "units": [
+        "U1"
+      ]
+    },
+    {
+      "id": "D19",
+      "decision": "What happens when @eslint/css 2.x reports a new problem on tests/fixtures/css/valid.css?",
+      "ruling": "U7 owns tests/fixtures/css/valid.css. It may change only the CSS that the new problem reports, keeps the CSS features the file has (modern syntax, so a parser regression still shows), and reports the change. It writes the golden snapshots after the fix.",
+      "rejected": "Stop with a QUESTION",
+      "units": [
+        "U7"
+      ]
+    },
+    {
+      "id": "D20",
+      "decision": "Does a changed tailwindcss/ problem in the golden diff after the upgrade pass?",
+      "ruling": "Only when its rule wraps or reuses an @eslint/css rule (D16). Any other tailwindcss/ change stops the run with a QUESTION.",
+      "rejected": "Accept every change after the upgrade",
+      "units": [
+        "U7"
+      ]
+    },
+    {
+      "id": "D21",
+      "decision": "Who updates a ported rule test whose expected result the @eslint/css 2.0.1 upgrade changes?",
+      "ruling": "U4 may change the expected results in tests of rules that wrap or reuse an @eslint/css rule (D16 and the wrappers in utils/css.ts), only where the upgrade changes them, and reports each as DECIDED. The review unit checks them. A failure in any other rule test stops the run with a QUESTION.",
+      "rejected": "Stop with a QUESTION for every failing ported test",
+      "units": [
+        "U4"
+      ]
+    }
+  ],
+  "stages": {
+    "renders": {
+      "state": "pending",
+      "detail": "",
+      "started": "",
+      "ended": ""
+    },
+    "acceptance": {
+      "state": "pending",
+      "detail": "",
+      "started": "",
+      "ended": ""
+    },
+    "ux": {
+      "state": "pending",
+      "detail": "",
+      "started": "",
+      "ended": ""
+    },
+    "reconcile": {
+      "state": "pending",
+      "detail": "",
+      "started": "",
+      "ended": ""
+    }
+  },
+  "gaps": [],
+  "overrides": [],
+  "run": {}
+}
