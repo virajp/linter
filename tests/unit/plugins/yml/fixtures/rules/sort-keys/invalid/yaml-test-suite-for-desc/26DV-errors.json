@@ -1,0 +1,22 @@
+[
+  {
+    "message": "Expected mapping keys to be in descending order. 'top1' should be after 'top2'.",
+    "line": 2,
+    "column": 1
+  },
+  {
+    "message": "Expected mapping keys to be in descending order. 'top3' should be after 'top4'.",
+    "line": 6,
+    "column": 1
+  },
+  {
+    "message": "Expected mapping keys to be in descending order. 'top5' should be before 'top2'.",
+    "line": 10,
+    "column": 1
+  },
+  {
+    "message": "Expected mapping keys to be in descending order. 'top6' should be before 'top2'.",
+    "line": 12,
+    "column": 1
+  }
+]

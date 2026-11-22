@@ -1,0 +1,7 @@
+- "double quoted"
+- 'single quoted'
+- >
+  block
+# sort-sequence-values/invalid/yaml-test-suite-for-asc/MZX3-input.yaml
+- plain
+- plain again

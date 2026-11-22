@@ -1,6 +1,6 @@
 {
   "language": "yml/yaml",
-  "parser": "yaml-eslint-parser",
+  "parser": null,
   "processor": null,
   "rules": {
     "no-irregular-whitespace": [
@@ -44,9 +44,6 @@
       "error"
     ],
     "yml/no-tab-indent": [
-      "error"
-    ],
-    "yml/vue-custom-block/no-parsing-error": [
       "error"
     ]
   }

@@ -1,0 +1,12 @@
+/security-review engine, loop U6, round 1, range 2e5bc60..a2c8a85 (the Skill ran against the main checkout and saw an empty diff, so its procedure was run by a sub-task against the worktree range).
+
+No high-confidence vulnerabilities found.
+
+- src/plugins/yml/language/yaml-language.ts:89: parseYAML from yaml-eslint-parser builds an AST from repository files; no deserialization into live objects, no custom tags or constructors; same call path as the removed eslint-plugin-yml. Rejected.
+- src/plugins/yml/rules/plain-scalar.ts:192, key-name-casing.ts:100, sort-sequence-values.ts:130: parseForESLint and getStaticYAMLValue yield plain JS values only compared or reported; no evaluation, no prototype-pollution path; matches upstream. Rejected.
+- new RegExp(...) from rule options in indent/key-spacing/sort-keys/sort-sequence-values/spaced-comment/key-name-casing: options come from trusted consumer config; regex injection and ReDoS excluded. Rejected.
+- src/plugins/yml/meta.ts:2: readFileSync of the package's own manifest at a fixed relative path. Rejected.
+- src/plugins/yml/rules/file-extension.ts:43: path.extname(context.filename) used only in a report message. Rejected.
+- package.json new bundled deps (@eslint/plugin-kit 0.7.3, @ota-meshi/ast-token-store 0.3.0, natural-compare 1.4.0, diff-sequences 29.6.3, escape-string-regexp 5.0.0): exact-pinned, bundled, well-known. Rejected.
+- src/cli/commands/version.ts:92: a name filter on the version listing only. Rejected.
+- .config/pre-commit-config.yaml:126, .config/bootstrap/tools.toml:10: the widened exclude ^tests/(.*/)?fixtures/ stops hooks (gitleaks included) scanning tests/**/fixtures/; a dev-workflow hardening matter on test data. Rejected (missing hardening excluded).

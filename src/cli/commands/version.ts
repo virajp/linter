@@ -89,7 +89,9 @@ export function runVersion(): void {
   ];
 
   const depNames = deps
-    ? Object.keys(deps).filter((name) => patterns.some((pattern) => pattern.test(name)))
+    ? Object.keys(deps).filter((name) =>
+      name !== "@eslint/plugin-kit" && patterns.some((pattern) => pattern.test(name))
+    )
     : [];
 
   const pluginVersions: { name: string; version: string }[] = [];

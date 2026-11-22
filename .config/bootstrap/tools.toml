@@ -7,7 +7,7 @@ excludes = [ "tests/" ]
 
 [tools.git]
 [tools.pre-commit]
-exclude = [ "^tests/fixtures/" ]
+exclude = [ "^tests/(.*/)?fixtures/" ]
 
 [tools.dprint]
 [tools.linter]

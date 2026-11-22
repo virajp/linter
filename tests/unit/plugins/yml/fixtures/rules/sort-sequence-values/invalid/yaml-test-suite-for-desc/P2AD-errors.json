@@ -1,0 +1,7 @@
+[
+  {
+    "message": "Expected sequence values to be in descending order. ' folded\n' should be after ' strip'.",
+    "line": 4,
+    "column": 3
+  }
+]

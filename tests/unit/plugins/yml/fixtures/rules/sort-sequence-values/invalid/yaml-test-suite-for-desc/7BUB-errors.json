@@ -1,0 +1,7 @@
+[
+  {
+    "message": "Expected sequence values to be in descending order. 'Mark McGwire' should be after 'Sammy Sosa'.",
+    "line": 4,
+    "column": 5
+  }
+]

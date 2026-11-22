@@ -1,0 +1,12 @@
+[
+  {
+    "message": "Expected sequence values to be in descending order. 'b' should be after 'c'.",
+    "line": 2,
+    "column": 6
+  },
+  {
+    "message": "Expected sequence values to be in descending order. 'd' should be after 'e'.",
+    "line": 2,
+    "column": 14
+  }
+]

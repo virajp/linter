@@ -1,0 +1,17 @@
+[
+  {
+    "message": "Expected mapping keys to be in descending order. 'a' should be after 'g'.",
+    "line": 2,
+    "column": 1
+  },
+  {
+    "message": "Expected mapping keys to be in descending order. 'c' should be after 'g'.",
+    "line": 3,
+    "column": 1
+  },
+  {
+    "message": "Expected mapping keys to be in descending order. 'e' should be after 'g'.",
+    "line": 4,
+    "column": 1
+  }
+]

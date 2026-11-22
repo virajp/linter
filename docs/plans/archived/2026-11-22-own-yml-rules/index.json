@@ -1,0 +1,658 @@
+{
+  "format": 1,
+  "type": "vwf-change-plan",
+  "title": "Own the YAML rules and language",
+  "requires": [
+    "docs/plans/2026-11-22-own-tailwindcss-rules"
+  ],
+  "source": [
+    "B08"
+  ],
+  "backlog": [],
+  "backlog_pieces": [
+    "B08"
+  ],
+  "gaps_of": [],
+  "execution": "teams",
+  "status": {
+    "state": "COMPLETE",
+    "detail": "COMPLETE 2026-11-23 — 25368af 5c29f3a 77c27cf dd93e4a 08ea728 1b84814 0720c35 841e8bd"
+  },
+  "consent": {
+    "merge": true,
+    "end_all_run": false
+  },
+  "gates": {
+    "unit": [
+      "mise x -- mise run code:format"
+    ],
+    "wave": [
+      "mise x -- mise run code:lint",
+      "mise x -- mise run code:check"
+    ],
+    "plan": [
+      "mise x -- mise run code:precommit",
+      "mise x -- mise run p:preflight"
+    ],
+    "keeps": []
+  },
+  "after_landing": [],
+  "release_levels": [
+    {
+      "id": "linter",
+      "level": "MINOR",
+      "reason": "the Vue-only rule yml/vue-custom-block/no-parsing-error is removed; no consumer config names it; the other rules and the behavior stay the same"
+    }
+  ],
+  "dependencies": [
+    {
+      "id": "N1",
+      "package": "@eslint/plugin-kit (dependency, exact pin, bundled)",
+      "purpose": "runtime base classes of the YAML SourceCode (TextSourceCodeBase, ConfigCommentParser, VisitNodeStep, CallMethodStep, Directive); ESLint-org; transitives @eslint/core and levn; no peers; already in the tree",
+      "preferred_over": "porting plugin-kit; keeping eslint-plugin-yml",
+      "unit": "U5"
+    },
+    {
+      "id": "N2",
+      "package": "@ota-meshi/ast-token-store (dependency, exact pin, bundled)",
+      "purpose": "the token store of the YAML SourceCode; 0 dependencies, no peers; already in the tree",
+      "preferred_over": "porting it",
+      "unit": "U5"
+    },
+    {
+      "id": "N3",
+      "package": "natural-compare (dependency, exact pin, bundled)",
+      "purpose": "natural ordering in yml/sort-keys and yml/sort-sequence-values; 0 dependencies, no peers; already in the tree",
+      "preferred_over": "porting it",
+      "unit": "U5"
+    },
+    {
+      "id": "N4",
+      "package": "diff-sequences (dependency, exact pin, bundled)",
+      "purpose": "the shortest edit script of the sort-* fixers (utils/calc-shortest-edit-script); 0 dependencies, no peers; already in the tree",
+      "preferred_over": "porting it",
+      "unit": "U5"
+    },
+    {
+      "id": "N5",
+      "package": "escape-string-regexp (dependency, exact pin, bundled)",
+      "purpose": "yml/spaced-comment markers and exceptions; 0 dependencies, no peers; already in the tree",
+      "preferred_over": "porting it",
+      "unit": "U5"
+    }
+  ],
+  "units": [
+    {
+      "id": "U1",
+      "title": "YAML language, source code, utils and test fixtures",
+      "wave": 1,
+      "file": "01-language-base.md",
+      "kind": "edit",
+      "model": "opus",
+      "owns": [
+        "src/plugins/yml/language/",
+        "src/plugins/yml/utils/",
+        "src/plugins/yml/types.ts",
+        "src/plugins/yml/meta.ts",
+        "src/plugins/yml/natural-compare.d.ts",
+        "THIRD_PARTY_NOTICES.md",
+        "tests/unit/plugins/yml/fixtures/",
+        "tests/unit/plugins/yml/helpers/",
+        "tests/unit/plugins/yml/language/",
+        ".config/pre-commit-config.yaml",
+        ".config/bootstrap/tools.toml"
+      ],
+      "depends_on": [],
+      "waits": "",
+      "status": "green",
+      "started": "2026-11-22T22:27:40.074Z",
+      "ended": "2026-11-22T22:49:19.661Z",
+      "commit": "5c29f3a",
+      "rounds": 2
+    },
+    {
+      "id": "U2",
+      "title": "YAML rules, group A (block-mapping-colon-indicator-newline to indent)",
+      "wave": 2,
+      "file": "02-rules-group-a.md",
+      "kind": "edit",
+      "model": "opus",
+      "owns": [
+        "src/plugins/yml/rules/group-a.ts",
+        "src/plugins/yml/rules/block-mapping-colon-indicator-newline.ts",
+        "src/plugins/yml/rules/block-mapping-question-indicator-newline.ts",
+        "src/plugins/yml/rules/block-mapping.ts",
+        "src/plugins/yml/rules/block-sequence-hyphen-indicator-newline.ts",
+        "src/plugins/yml/rules/block-sequence.ts",
+        "src/plugins/yml/rules/file-extension.ts",
+        "src/plugins/yml/rules/flow-mapping-curly-newline.ts",
+        "src/plugins/yml/rules/flow-mapping-curly-spacing.ts",
+        "src/plugins/yml/rules/flow-sequence-bracket-newline.ts",
+        "src/plugins/yml/rules/flow-sequence-bracket-spacing.ts",
+        "src/plugins/yml/rules/indent.ts",
+        "tests/unit/plugins/yml/rules/group-a/"
+      ],
+      "depends_on": [
+        "U1"
+      ],
+      "waits": "it imports the language, utils and test helpers that U1 creates",
+      "status": "green",
+      "started": "2026-11-22T22:38:38.644Z",
+      "ended": "2026-11-22T22:53:12.324Z",
+      "commit": "77c27cf",
+      "rounds": 3
+    },
+    {
+      "id": "U3",
+      "title": "YAML rules, group B (key-name-casing to no-multiple-empty-lines)",
+      "wave": 2,
+      "file": "03-rules-group-b.md",
+      "kind": "edit",
+      "model": "opus",
+      "owns": [
+        "src/plugins/yml/rules/group-b.ts",
+        "src/plugins/yml/rules/key-name-casing.ts",
+        "src/plugins/yml/rules/key-spacing.ts",
+        "src/plugins/yml/rules/max-len.ts",
+        "src/plugins/yml/rules/no-boolean-key.ts",
+        "src/plugins/yml/rules/no-empty-document.ts",
+        "src/plugins/yml/rules/no-empty-key.ts",
+        "src/plugins/yml/rules/no-empty-mapping-value.ts",
+        "src/plugins/yml/rules/no-empty-sequence-entry.ts",
+        "src/plugins/yml/rules/no-irregular-whitespace.ts",
+        "src/plugins/yml/rules/no-multiple-empty-lines.ts",
+        "tests/unit/plugins/yml/rules/group-b/"
+      ],
+      "depends_on": [
+        "U1"
+      ],
+      "waits": "it imports the language, utils and test helpers that U1 creates",
+      "status": "green",
+      "started": "2026-11-22T22:38:38.716Z",
+      "ended": "2026-11-22T22:53:12.470Z",
+      "commit": "dd93e4a",
+      "rounds": 2
+    },
+    {
+      "id": "U4",
+      "title": "YAML rules, group C (no-tab-indent to spaced-comment)",
+      "wave": 2,
+      "file": "04-rules-group-c.md",
+      "kind": "edit",
+      "model": "opus",
+      "owns": [
+        "src/plugins/yml/rules/group-c.ts",
+        "src/plugins/yml/rules/no-tab-indent.ts",
+        "src/plugins/yml/rules/no-trailing-spaces.ts",
+        "src/plugins/yml/rules/no-trailing-zeros.ts",
+        "src/plugins/yml/rules/plain-scalar.ts",
+        "src/plugins/yml/rules/quotes.ts",
+        "src/plugins/yml/rules/require-string-key.ts",
+        "src/plugins/yml/rules/sort-keys.ts",
+        "src/plugins/yml/rules/sort-sequence-values.ts",
+        "src/plugins/yml/rules/spaced-comment.ts",
+        "tests/unit/plugins/yml/rules/group-c/"
+      ],
+      "depends_on": [
+        "U1"
+      ],
+      "waits": "it imports the language, utils and test helpers that U1 creates",
+      "status": "green",
+      "started": "2026-11-22T22:38:38.788Z",
+      "ended": "2026-11-22T22:53:12.608Z",
+      "commit": "08ea728",
+      "rounds": 2
+    },
+    {
+      "id": "U5",
+      "title": "Create the yml plugin index, switch the yaml preset to it, and change the dependencies",
+      "wave": 3,
+      "file": "05-switch-preset.md",
+      "kind": "edit",
+      "model": "opus",
+      "owns": [
+        "src/plugins/yml/index.ts",
+        "src/config/presets/yaml.ts",
+        "package.json",
+        "pnpm-lock.yaml",
+        "tests/unit/plugins/yml/language/with-rules.test.ts",
+        "src/cli/commands/version.ts"
+      ],
+      "depends_on": [
+        "U2",
+        "U3",
+        "U4"
+      ],
+      "waits": "the plugin index imports all 30 rules, and the plugin can leave the dependencies only once the preset no longer uses it",
+      "status": "green",
+      "started": "2026-11-22T22:57:49.883Z",
+      "ended": "2026-11-22T23:00:29.913Z",
+      "commit": "1b84814",
+      "rounds": 1
+    },
+    {
+      "id": "U6",
+      "title": "Review: the YAML language, its 30 rules and the preset switch",
+      "wave": 4,
+      "file": "06-review.md",
+      "kind": "review",
+      "model": "opus",
+      "owns": [],
+      "depends_on": [
+        "U1",
+        "U2",
+        "U3",
+        "U4",
+        "U5"
+      ],
+      "waits": "",
+      "status": "green",
+      "started": "2026-11-22T23:03:25.767Z",
+      "ended": "2026-11-22T23:05:02.661Z",
+      "commit": "",
+      "rounds": 1,
+      "range": {
+        "from": "2e5bc60",
+        "to": "a2c8a85"
+      }
+    },
+    {
+      "id": "U7",
+      "title": "Docs",
+      "wave": 5,
+      "file": "07-docs.md",
+      "kind": "edit",
+      "model": "opus",
+      "owns": [
+        "CLAUDE.md",
+        "readme.md",
+        "docs/memory/"
+      ],
+      "depends_on": [
+        "U1",
+        "U2",
+        "U3",
+        "U4",
+        "U5",
+        "U6"
+      ],
+      "waits": "",
+      "status": "green",
+      "started": "2026-11-22T23:08:15.273Z",
+      "ended": "2026-11-22T23:10:29.429Z",
+      "commit": "0720c35",
+      "rounds": 2
+    },
+    {
+      "id": "U8",
+      "title": "Gates",
+      "wave": 6,
+      "file": "08-gates.md",
+      "kind": "edit",
+      "model": "opus",
+      "owns": [
+        "tests/golden/__snapshots__/"
+      ],
+      "depends_on": [
+        "U7"
+      ],
+      "waits": "",
+      "status": "green",
+      "started": "2026-11-22T23:13:27.698Z",
+      "ended": "2026-11-22T23:14:32.881Z",
+      "commit": "841e8bd",
+      "rounds": 1
+    }
+  ],
+  "waves": [
+    {
+      "id": "W1",
+      "status": "green",
+      "started": "2026-11-22T22:27:40.007Z",
+      "ended": "2026-11-22T22:38:19.159Z"
+    },
+    {
+      "id": "W2",
+      "status": "green",
+      "started": "2026-11-22T22:38:38.568Z",
+      "ended": "2026-11-22T22:57:29.457Z"
+    },
+    {
+      "id": "W3",
+      "status": "green",
+      "started": "2026-11-22T22:57:49.805Z",
+      "ended": "2026-11-22T23:02:57.060Z"
+    },
+    {
+      "id": "W4",
+      "status": "green",
+      "started": "2026-11-22T23:03:25.583Z",
+      "ended": "2026-11-22T23:06:16.119Z"
+    },
+    {
+      "id": "W5",
+      "status": "green",
+      "started": "2026-11-22T23:08:15.168Z",
+      "ended": "2026-11-22T23:13:10.586Z"
+    },
+    {
+      "id": "W6",
+      "status": "green",
+      "started": "2026-11-22T23:13:27.628Z",
+      "ended": "2026-11-22T23:15:45.735Z"
+    }
+  ],
+  "shared_files": [
+    {
+      "id": "S1",
+      "file": "tests/golden/__snapshots__/",
+      "why": "generated by vitest --update; regenerating mid-wave races",
+      "owner": "U8"
+    },
+    {
+      "id": "S2",
+      "file": "CLAUDE.md, readme.md",
+      "why": "human-facing docs that several units falsify",
+      "owner": "U7"
+    },
+    {
+      "id": "S3",
+      "file": "package.json, pnpm-lock.yaml",
+      "why": "one owner keeps the lock file consistent; the rule units resolve the small packages through the hoisted node_modules until U5 lists them",
+      "owner": "U5"
+    }
+  ],
+  "decisions": [
+    {
+      "id": "D1",
+      "decision": "Which rulings does this plan inherit from plan 1?",
+      "ruling": "Keep the yml/ namespace (plan 1 D2). Credit the MIT code in THIRD_PARTY_NOTICES.md plus a one-line source header in each ported file, test files included (plan 1 D5). Put the code in src/plugins/yml/ inside this package (plan 1 D7).",
+      "rejected": "A new namespace; a separate package",
+      "units": [
+        "U1",
+        "U2",
+        "U3",
+        "U4",
+        "U5"
+      ]
+    },
+    {
+      "id": "D2",
+      "decision": "Which packages are kept and which are ported?",
+      "ruling": "The user's criterion: a direct dependency is not a concern; the problem is transitive dependencies that conflict between direct dependencies. Port eslint-plugin-yml (peer eslint >=9.38.0, its own ranges on @eslint/core and @eslint/plugin-kit). Keep yaml-eslint-parser (transitives yaml, which we pin, and eslint-visitor-keys ^5, which ESLint pins as ^5.0.1; no peers). Add @eslint/plugin-kit, @ota-meshi/ast-token-store, natural-compare, diff-sequences and escape-string-regexp as direct, exact-pinned, bundled dependencies (no peers; transitives none or already pinned by ESLint).",
+      "rejected": "Port yaml-eslint-parser; port the small packages",
+      "units": [
+        "U1",
+        "U2",
+        "U3",
+        "U4",
+        "U5"
+      ]
+    },
+    {
+      "id": "D3",
+      "decision": "Which yml rules do we port?",
+      "ruling": "All 30 rules of eslint-plugin-yml 3.10.0 except the Vue-only rule vue-custom-block/no-parsing-error (D12).",
+      "rejected": "Only the 7 enabled rules; the 16 non-layout rules; all 31",
+      "units": [
+        "U2",
+        "U3",
+        "U4"
+      ]
+    },
+    {
+      "id": "D4",
+      "decision": "Do we port the YAML language?",
+      "ruling": "Yes: upstream src/language/ (YAMLLanguage and YAMLSourceCode) becomes src/plugins/yml/language/. The plugin registers it as languages.yaml, so the language name stays yml/yaml.",
+      "rejected": "Keep eslint-plugin-yml for its language",
+      "units": [
+        "U1",
+        "U5"
+      ]
+    },
+    {
+      "id": "D5",
+      "decision": "What test bar do the rules and the language meet?",
+      "ruling": "A RuleTester test for each rule, ported from the upstream test at tag v3.10.0 with the upstream config (plugins { yml: our plugin }, language yml/yaml) and the upstream fixture loader; plus the upstream language tests and the casing utils test, as D13 c and D14 limit them. The golden snapshots must keep the same problems and fixes.",
+      "rejected": "Golden snapshots only",
+      "units": [
+        "U1",
+        "U2",
+        "U3",
+        "U4"
+      ]
+    },
+    {
+      "id": "D6",
+      "decision": "How do we port the upstream fixtures?",
+      "ruling": "Copy upstream tests/fixtures/rules/ at tag v3.10.0 to tests/unit/plugins/yml/fixtures/rules/, except the .vue files and their sidecars (D10, D15 c) and tests/fixtures/rules/vue-custom-block/ (D12); yaml-test-suite/ and integrations/ are not copied (D14, D15 b). Port the upstream loader (tests/utils/utils.ts without makeSuiteTests, and apply-fixer.ts) to tests/unit/plugins/yml/helpers/. Widen the pre-commit exclude from ^tests/fixtures/ to ^tests/(.*/)?fixtures/ in .config/pre-commit-config.yaml and in .config/bootstrap/tools.toml (D15 a).",
+      "rejected": "Inline cases only; fetch the fixtures at test time",
+      "units": [
+        "U1",
+        "U2",
+        "U3",
+        "U4"
+      ]
+    },
+    {
+      "id": "D7",
+      "decision": "Where does the rule configuration live?",
+      "ruling": "In the yaml preset, as in plan 1 D13. The plugin index (written by U5) exports meta, rules (merged from rules/group-a.ts, group-b.ts, group-c.ts) and languages { yaml }. No configs. The preset reproduces the flat/recommended config of eslint-plugin-yml exactly (language, the yml/ rule severities and options, and the core rules it turns off), except that it does not set yml/vue-custom-block/no-parsing-error (D12), and it keeps files [\"**/*.yaml\", \"**/*.yml\"] (D13).",
+      "rejected": "configs inside our plugin",
+      "units": [
+        "U5"
+      ]
+    },
+    {
+      "id": "D8",
+      "decision": "How is parity proved?",
+      "ruling": "After U5, lint/problems.json and lint/fixes.json of the golden tests do not change. The config snapshots of file.yaml and file.yml can change only in their parser field and by the removal of the yml/vue-custom-block/no-parsing-error entry. Any other golden change stops the run with a QUESTION.",
+      "rejected": "Accept any golden change",
+      "units": [
+        "U5",
+        "U8"
+      ]
+    },
+    {
+      "id": "D9",
+      "decision": "Review unit and execution mode",
+      "ruling": "One review unit after U5, because the change ships runnable code. Execution mode teams, because wave 2 has three edit units; if a team cannot start, the run uses solo.",
+      "rejected": "Wave review only; solo",
+      "units": [
+        "U2",
+        "U3",
+        "U4",
+        "U6"
+      ]
+    },
+    {
+      "id": "D10",
+      "decision": "How do we treat the 37 .vue fixtures?",
+      "ruling": "Skip them: do not copy the .vue fixture files, and drop the vue-eslint-parser branch of the loader. This linter has no Vue preset, and the user never uses Vue.",
+      "rejected": "Add vue-eslint-parser as an exact-pinned devDependency",
+      "units": [
+        "U1"
+      ]
+    },
+    {
+      "id": "D11",
+      "decision": "Release level",
+      "ruling": "MINOR: the Vue-only rule yml/vue-custom-block/no-parsing-error is removed (a scan of ~/Projects on 2026-11-22 found no consumer .config/linter.yaml that names it); the other 30 rules, the language name and the behavior stay the same.",
+      "rejected": "PATCH; MAJOR",
+      "units": []
+    },
+    {
+      "id": "D12",
+      "decision": "Do we port the Vue-only rule vue-custom-block/no-parsing-error?",
+      "ruling": "No. The user never uses Vue: a scan of ~/Projects on 2026-11-22 found .vue files only in a third-party clone (tmp/mise), no Vue dependency in any package.json, and no Vue rule in any of the 25 .config/linter.yaml files. Do not port the rule, its tests or its fixtures (upstream tests/fixtures/rules/vue-custom-block/). A YAML syntax error is still a fatal parse error of the language. Plan 1 drops tailwindcss/require-reference-in-vue by the same ruling.",
+      "rejected": "Keep and port it",
+      "units": [
+        "U4",
+        "U5"
+      ]
+    },
+    {
+      "id": "D13",
+      "decision": "Round 1 rulings review: how do the ported files fit wave order, types and tooling?",
+      "ruling": "(a) U1 does not port upstream src/utils/rules.ts; the group registries and the plugin index replace it. (b) The ported loadTestCases takes the plugin object as a parameter; it imports no plugin index. (c) The upstream test yaml-source-code-with-stylistic-rules is not ported: it needs @stylistic/eslint-plugin, a new third-party plugin. (d) natural-compare ships no types: U1 writes src/plugins/yml/natural-compare.d.ts with a local declare module; no @types package. The ported code takes JSON-schema types from @eslint/core (for example RulesMeta[\"schema\"]), never from json-schema. (e) U5 owns src/cli/commands/version.ts and keeps @eslint/plugin-kit out of the --version plugin list, which lists plugins only. (f) The preset keeps files [\"**/*.yaml\", \"**/*.yml\"], the same set as upstream, since **/ also matches the root. (g) The ported loader never writes a fixture: a missing errors.json or output file fails the test.",
+      "rejected": "Port utils/rules.ts; a lazy import of the plugin index; add @stylistic/eslint-plugin; add @types/natural-compare; print @eslint/plugin-kit in --version; copy the upstream files list; keep the fixture write path",
+      "units": [
+        "U1",
+        "U2",
+        "U3",
+        "U4",
+        "U5"
+      ]
+    },
+    {
+      "id": "D14",
+      "decision": "Round 2 rulings review: which upstream tests and fixtures are ported?",
+      "ruling": "(a) U1 does not port tests/src/language/directive-comments.ts, because each of its 20 cases needs yml/no-empty-key; U5 ports it whole into tests/unit/plugins/yml/language/with-rules.test.ts. (b) makeSuiteTests of tests/utils/utils.ts is dropped: it only writes fixtures, and no test calls it. (c) U1 ports tests/src/utils/casing.ts to tests/unit/plugins/yml/language/casing.test.ts. (d) The tests of src/utils/rules.ts, src/meta.ts, tests/src/eslint-plugin.ts and tests/src/configs/ are not ported: we port no rules.ts, no upstream meta and no configs. (e) So U1 copies only tests/fixtures/rules/ (D15 b).",
+      "rejected": "Port every upstream test file; copy all fixture directories",
+      "units": [
+        "U1",
+        "U5"
+      ]
+    },
+    {
+      "id": "D15",
+      "decision": "Round 3 rulings review: the bootstrap exclude, the dead suite fixtures and the .vue sidecars",
+      "ruling": "(a) U1 also owns .config/bootstrap/tools.toml and widens [tools.pre-commit] exclude from ^tests/fixtures/ to ^tests/(.*/)?fixtures/, the same value as in .config/pre-commit-config.yaml, so that a bootstrap sync keeps it. (b) U1 copies only upstream tests/fixtures/rules/; yaml-test-suite/ is read only by the dropped makeSuiteTests. (c) U1 skips the sidecar files of each .vue fixture: for an input <dir>/<stem>-input.vue, every <dir>/<stem>-* file.",
+      "rejected": "Accept the drift with bootstrap; copy yaml-test-suite/; copy the orphan sidecars",
+      "units": [
+        "U1"
+      ]
+    },
+    {
+      "id": "D16",
+      "decision": "Round 4: the sort-keys case that lints the upstream package.json",
+      "ruling": "U1 copies the upstream package.json at tag v3.10.0, byte for byte, to tests/unit/plugins/yml/fixtures/upstream-package.json. The ported sort-keys test lints that copy with OPTIONS_FOR_PACKAGE_JSON, in place of ../../../package.json.",
+      "rejected": "Lint this repo package.json; drop the case",
+      "units": [
+        "U1",
+        "U4"
+      ]
+    },
+    {
+      "id": "D17",
+      "decision": "Round 4: who formats the files before the check-only unit gate?",
+      "ruling": "Each edit unit runs mise x -- mise run code:format --fix before it returns, so that the unit gate (code:format, check only) passes. test:golden --update stays as written: the task passes a part flag with no --.",
+      "rejected": "A --fix unit gate",
+      "units": [
+        "U1",
+        "U2",
+        "U3",
+        "U4",
+        "U5",
+        "U7",
+        "U8"
+      ]
+    },
+    {
+      "id": "D18",
+      "decision": "What does a unit do when a ported upstream test fails only because ESLint 10 or vitest is stricter? (ruled by the user on 2026-11-22 for all B08 plans)",
+      "ruling": "A ported upstream test case that fails only because ESLint 10's RuleTester or the vitest wiring is stricter than upstream's setup (jest on ESLint 9) — not because the rule behaves differently — may have its test setup changed: for example, remove a duplicate case, or add a property that ESLint 10 requires. Never change the expected messages, message ids, locations, output or suggestions. List each change as DECIDED; the review unit checks them. A case whose expected result differs stops the run with a QUESTION.",
+      "rejected": "Stop and ask for each case; apply it to one plan only",
+      "units": [
+        "U2",
+        "U3",
+        "U4"
+      ]
+    },
+    {
+      "id": "D19",
+      "decision": "How are eslint-disable comments for unknown rules and strict-TypeScript errors in ported code handled?",
+      "ruling": "(a) A ported file may drop an eslint-disable or eslint-enable comment that names a rule this repo does not define, or rewrite it to the rule of this repo that it means; ESLint 10 reports an unknown rule in such a comment as an error, so code:lint would fail. (b) Where the repo's strict TypeScript (noUncheckedIndexedAccess, verbatimModuleSyntax, .js import extensions) rejects ported code, a unit fixes it only with changes that have no runtime effect: non-null assertions, casts, type annotations, import type, and .js or /index.js on relative imports. No runtime guard is added. List each kind of change as DECIDED. (Ruled for all B08 plans on 2026-11-22, from the rulings review of plan 6.)",
+      "rejected": "Define the unknown rules; add runtime guards",
+      "units": [
+        "U1",
+        "U2",
+        "U3",
+        "U4",
+        "U5"
+      ]
+    },
+    {
+      "id": "D20",
+      "decision": "Q1: Does ruling D19 (b) also allow the TypeScript override keyword, which noImplicitOverride requires on a ported subclass method (YAMLSourceCode.traverse)?",
+      "ruling": "Allow override under D19 (b) for all B08 plans — U1 stays as written, and later language ports may use it too.",
+      "rejected": "Keep D19 (b) closed — the port needs a tsconfig change or another ruling",
+      "units": [
+        "U1"
+      ]
+    },
+    {
+      "id": "D21",
+      "decision": "Q2: How is the self-lint error no-useless-assignment at src/plugins/yml/rules/flow-sequence-bracket-newline.ts:82 (ported upstream `let minItems = 0;`) cleared?",
+      "ruling": "Add `// eslint-disable-next-line no-useless-assignment -- ported upstream code` above the line — the code stays identical to upstream.",
+      "rejected": "Change it to `let minItems: number;`; Leave it and keep code:lint red",
+      "units": [
+        "U2"
+      ]
+    },
+    {
+      "id": "D22",
+      "decision": "Q3: How is the max-len fixture test fixed when tests/unit/plugins/yml/fixtures/rules/max-len/invalid/ does not exist (its only upstream fixture was .vue)?",
+      "ruling": "Change the U1 loader to treat a missing valid/ or invalid/ directory as empty — a setup-only fix in a U1-owned file, made by a re-dispatched U1.",
+      "rejected": "Change max-len.test.ts under D18 to run only valid/; Add a placeholder .gitkeep",
+      "units": [
+        "U3"
+      ]
+    },
+    {
+      "id": "D23",
+      "decision": "Q4: How are the 3 sort-keys 2XXW output-test failures fixed, caused by the U1 loader filtering skipOutputTest inside a describe callback that vitest defers past the delete?",
+      "ruling": "Fix the U1 loader so the filtered list is computed before the describe — a setup-only fix in a U1-owned file, made by a re-dispatched U1.",
+      "rejected": "Pass { skipOutputTest: true } in sort-keys.test.ts; Leave the 3 failures",
+      "units": [
+        "U4"
+      ]
+    },
+    {
+      "id": "D24",
+      "decision": "Q5: Should ported yml rule tests keep upstream `new RuleTester({})` where upstream has it, or always pass { plugins: { yml: plugin }, language: \"yml/yaml\" }?",
+      "ruling": "Keep upstream `new RuleTester({})` where upstream has it, and U2 reverts its 9 constructors — the port stays a line-for-line copy of upstream, and the three groups match.",
+      "rejected": "Always pass plugins and language; U3 and U4 change their 6 constructors",
+      "units": [
+        "U2"
+      ]
+    }
+  ],
+  "stages": {
+    "renders": {
+      "state": "skipped",
+      "detail": "skipped: a change plan with no covers has no acceptance criteria or Screens contract",
+      "started": "",
+      "ended": "2026-11-22T23:08:09.826Z"
+    },
+    "acceptance": {
+      "state": "skipped",
+      "detail": "skipped: a change plan with no covers has no acceptance criteria or Screens contract",
+      "started": "",
+      "ended": "2026-11-22T23:08:09.542Z"
+    },
+    "ux": {
+      "state": "skipped",
+      "detail": "skipped: a change plan with no covers has no acceptance criteria or Screens contract",
+      "started": "",
+      "ended": "2026-11-22T23:08:09.684Z"
+    },
+    "reconcile": {
+      "state": "skipped",
+      "detail": "skipped: no covers (no stamps) and no code unit (nothing to persist); no Reconcile commit",
+      "started": "",
+      "ended": "2026-11-22T23:08:10.031Z"
+    }
+  },
+  "gaps": [],
+  "overrides": [
+    {
+      "id": "O1",
+      "text": "shared worktree: all-2026-11-23-0136"
+    }
+  ],
+  "run": {
+    "worktree": ".worktrees/all-2026-11-23-0136",
+    "log": "~/Library/Caches/vwf/linter/2026-11-22-own-yml-rules.jsonl"
+  }
+}
