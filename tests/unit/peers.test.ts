@@ -16,11 +16,7 @@ const ROOT = resolve(__dirname, "../..");
 // The known peer mismatches, as "<parent>><peer>@<wanted range>", each with
 // its reason. The test fails on a mismatch that is not in this list, and also
 // on an entry that no longer matches, so that a fixed mismatch leaves the list.
-const ALLOWED = {
-  // ESLint 10 runs the plugin with no problem. The plugin has no release that
-  // declares eslint 10 yet.
-  "@poupe/eslint-plugin-tailwindcss>eslint@^9.30.0": "plugin peer is old",
-} as const;
+const ALLOWED = {} as const;
 
 interface PeerIssue {
   parents: Array<{ name: string }>;

@@ -185,8 +185,9 @@ the CLI to see code-block problems.
    to load user customizations.
 3. It builds the ESLint config by merging YAML overrides with the bundled base
    config.
-4. ESLint's programmatic API lints the current working directory. Plugins are
-   resolved from the package's own `node_modules`, not the target repo's.
+4. ESLint's programmatic API lints the current working directory. Third-party
+   plugins are resolved from the package's own `node_modules`, not the target
+   repo's. The Tailwind CSS rules are part of the package itself.
 5. A second ESLint run lints the fenced code blocks of the Markdown files. The
    CLI merges its results into the same report.
 
