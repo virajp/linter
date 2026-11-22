@@ -210,8 +210,8 @@
       "commit": "",
       "rounds": 1,
       "range": {
-        "from": "",
-        "to": ""
+        "from": "a6bae0d",
+        "to": "4263fd4"
       }
     },
     {
@@ -234,11 +234,11 @@
         "U5"
       ],
       "waits": "",
-      "status": "pending",
-      "started": "",
-      "ended": "",
+      "status": "green",
+      "started": "2026-11-22T22:12:39.657Z",
+      "ended": "2026-11-22T22:15:16.727Z",
       "commit": "",
-      "rounds": 0
+      "rounds": 2
     },
     {
       "id": "U7",
@@ -289,9 +289,9 @@
     },
     {
       "id": "W5",
-      "status": "pending",
-      "started": "",
-      "ended": ""
+      "status": "green",
+      "started": "2026-11-22T22:12:39.619Z",
+      "ended": "2026-11-22T22:17:42.510Z"
     },
     {
       "id": "W6",
@@ -584,28 +584,28 @@
   ],
   "stages": {
     "renders": {
-      "state": "pending",
-      "detail": "",
+      "state": "skipped",
+      "detail": "skipped: change plan with no covers — no acceptance criteria or Screens contract",
       "started": "",
-      "ended": ""
+      "ended": "2026-11-22T22:12:39.203Z"
     },
     "acceptance": {
-      "state": "pending",
-      "detail": "",
+      "state": "skipped",
+      "detail": "skipped: change plan with no covers — no acceptance criteria or Screens contract",
       "started": "",
-      "ended": ""
+      "ended": "2026-11-22T22:12:38.978Z"
     },
     "ux": {
-      "state": "pending",
-      "detail": "",
+      "state": "skipped",
+      "detail": "skipped: change plan with no covers — no acceptance criteria or Screens contract",
       "started": "",
-      "ended": ""
+      "ended": "2026-11-22T22:12:39.091Z"
     },
     "reconcile": {
-      "state": "pending",
-      "detail": "",
-      "started": "",
-      "ended": ""
+      "state": "skipped",
+      "detail": "skipped: no covers (no stamps) and no code unit (nothing to persist); no Reconcile commit",
+      "started": "2026-11-22T22:12:39.363Z",
+      "ended": "2026-11-22T22:12:39.400Z"
     }
   },
   "gaps": [

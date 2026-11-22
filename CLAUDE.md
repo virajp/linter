@@ -8,8 +8,9 @@ code in this repository.
 `@virajp.dev/linter` is a **self-contained ESLint CLI** published to npm. It
 bundles ESLint and all language plugins (JS/TS, Astro, JSON/JSONC, Markdown,
 CSS, YAML, TOML, HTML) so consuming repos never install ESLint or plugins
-themselves. At runtime, plugins resolve from this package's own `node_modules`,
-not the target repo's.
+themselves. At runtime, third-party plugins resolve from this package's own
+`node_modules`, not the target repo's. Our own plugins (see
+[Our own plugins](#our-own-plugins)) are compiled into `dist/` with the CLI.
 
 | Language   | Files                                                          |
 | ---------- | -------------------------------------------------------------- |
@@ -47,14 +48,12 @@ no CI runner can load it).
 ### Dependency policy
 
 - Every dependency and devDependency is pinned to an **exact** version.
-- `pnpm update --latest` excludes these packages. The exclusions are in
+- `pnpm update --latest` excludes this package. The exclusions are in
   `.config/mise/tasks/p/upgrade.py` (`p:upgrade`) and `deps-update.yml`. Keep
   the
   two
   lists the same.
   - `typescript`: hold at 6.x. `typescript-eslint` does not support 7.
-  - `@eslint/css`: hold at 1.x. `@poupe/eslint-plugin-tailwindcss` needs
-    `^1.1.0`. With 2.x, ESLint rejects every `css/*` rule.
 - Advisories with no in-range fix are ignored in three places:
   `.config/osv-scanner.toml` (CI), `.config/grype.yaml` (`code:sec`), and
   `auditConfig.ignoreGhsas` in `pnpm-workspace.yaml` (`pnpm audit`). The
@@ -143,11 +142,38 @@ content problems only.
 `src/config/ignores.ts` is part of the **published** config. Its patterns (for
 example `**/AGENTS.md` and `.claude/**/*.md`) apply to every consumer repo.
 
+### Our own plugins
+
+B08 moves the rules of third-party plugins into this package. Today only the
+Tailwind rules are moved. Each plugin is in
+`src/plugins/<name>/` and compiles into `dist/` with the rest of `src/`. Its
+rules keep the rule names of the plugin they replace, so consumer `overrides`
+do not change.
+
+- **`src/plugins/tailwindcss/`** — the `tailwindcss/` rules of the `css`
+  preset (`index.ts`, `syntax.ts`, `types.ts`, `utils/`, `rules/`). The
+  rules are ported from the third-party plugin that `THIRD_PARTY_NOTICES.md`
+  names, without the Vue-only rule `require-reference-in-vue`. The plugin
+  exports `meta` and `rules` only: the `css` preset sets the rule severities
+  and options. The preset uses the `css/css` language of `@eslint/css`, with
+  the Tailwind 4 syntax of `syntax.ts` as `customSyntax` and `tolerant: true`.
+- A ported file starts with a one-line header that names its source. Each
+  source has an entry with its license text and copyright in
+  `THIRD_PARTY_NOTICES.md`, which `files` of `package.json` ships in the
+  tarball.
+- Type-only imports come from the exact-pinned devDependencies `@eslint/core`
+  and `@eslint/css-tree` (`import type` only), so `tsc` does not depend on how
+  pnpm hoists a transitive package. They add nothing to the tarball.
+
 ### Adding a language or plugin
 
-1. Add the plugin to `dependencies` **and to `bundledDependencies`**. A
-   dependency that is not bundled does not reach consumers. If the plugin needs
-   a runtime peer (like `typescript`), add that peer to both lists too.
+1. Write the rules in `src/plugins/<name>/` (see
+   [Our own plugins](#our-own-plugins)). Do not add a new third-party plugin.
+   A file ported from another project gets a one-line source header and an
+   entry in `THIRD_PARTY_NOTICES.md`. If a runtime package is necessary (an
+   ESLint core package, or a peer like `typescript`), add it to
+   `dependencies` **and to `bundledDependencies`**. A dependency that is not
+   bundled does not reach consumers.
 2. Create a preset in `src/config/presets/` with a `name`, `files`, `plugins`
    and/or `extends`, and `language` / `languageOptions` as needed.
 3. Register the preset in `composeBaseConfig()` (`src/config/index.ts`).
@@ -341,6 +367,9 @@ If `main` is branch-protected, allow `github-actions[bot]` to push.
 
 - **Unit** (`tests/unit/`) — args parsing, preset shape, config factory, init
   scaffolding; helpers in `tests/helpers/run-unit.ts`.
+  `tests/unit/plugins/<name>/` has the tests of our own plugins: a RuleTester
+  test for each rule (`rules/<rule>.test.ts`), and tests of the syntax and the
+  helpers.
 - **Integration** (`tests/integration/`) — spawn `dist/index.js` against fixture
   files in a temp dir (`tests/helpers/{run-cli,temp-dir,fixture-manifest}.ts`),
   asserting on real lint output, flag behavior, and `--init` file creation.
