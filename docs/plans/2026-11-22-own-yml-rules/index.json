@@ -246,11 +246,11 @@
         "U5"
       ],
       "waits": "",
-      "status": "pending",
-      "started": "",
-      "ended": "",
+      "status": "green",
+      "started": "2026-11-22T23:03:25.767Z",
+      "ended": "2026-11-22T23:05:02.661Z",
       "commit": "",
-      "rounds": 0,
+      "rounds": 1,
       "range": {
         "from": "",
         "to": ""
@@ -325,9 +325,9 @@
     },
     {
       "id": "W4",
-      "status": "pending",
-      "started": "",
-      "ended": ""
+      "status": "green",
+      "started": "2026-11-22T23:03:25.583Z",
+      "ended": "2026-11-22T23:06:16.119Z"
     },
     {
       "id": "W5",
