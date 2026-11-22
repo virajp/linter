@@ -93,6 +93,25 @@
       "backlog_pieces": [
         "B08"
       ]
+    },
+    {
+      "id": "2026-11-22-own-typescript-rules",
+      "folder": "docs/plans/2026-11-22-own-typescript-rules",
+      "kind": "change",
+      "title": "Own the TypeScript rules",
+      "target_repo": null,
+      "priority": 60,
+      "status": "APPROVED",
+      "started": "",
+      "ended": "",
+      "gaps": null,
+      "requires": [
+        "2026-11-22-own-astro-rules"
+      ],
+      "backlog": [
+        "B08"
+      ],
+      "backlog_pieces": []
     }
   ]
 }

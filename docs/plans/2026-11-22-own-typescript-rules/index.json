@@ -1,0 +1,802 @@
+{
+  "format": 1,
+  "type": "vwf-change-plan",
+  "title": "Own the TypeScript rules",
+  "requires": [
+    "docs/plans/2026-11-22-own-astro-rules"
+  ],
+  "source": [
+    "B08"
+  ],
+  "backlog": [
+    "B08"
+  ],
+  "backlog_pieces": [],
+  "gaps_of": [],
+  "execution": "teams",
+  "status": {
+    "state": "APPROVED",
+    "detail": "APPROVED 2026-11-22 by the user"
+  },
+  "consent": {
+    "merge": true,
+    "end_all_run": false
+  },
+  "gates": {
+    "unit": [
+      "mise x -- mise run code:format"
+    ],
+    "wave": [
+      "mise x -- mise run code:lint",
+      "mise x -- mise run code:check"
+    ],
+    "plan": [
+      "mise x -- mise run code:precommit",
+      "mise x -- mise run p:preflight"
+    ],
+    "keeps": []
+  },
+  "after_landing": [],
+  "release_levels": [
+    {
+      "id": "linter",
+      "level": "MINOR",
+      "reason": "the 9 deprecated @typescript-eslint rules are removed, and no consumer config names them; the other rules, the parser and the behavior stay the same"
+    }
+  ],
+  "dependencies": [
+    {
+      "id": "N1",
+      "package": "@typescript-eslint/utils, type-utils, scope-manager, visitor-keys 8.73.0, ts-api-utils, @eslint-community/regexpp (dependencies, exact pin, bundled)",
+      "purpose": "the runtime imports of the ported rules; peers only eslint and typescript (the same as the kept parser); already in the tree under @typescript-eslint/eslint-plugin",
+      "preferred_over": "porting them",
+      "unit": "U10"
+    },
+    {
+      "id": "N2",
+      "package": "@typescript-eslint/rule-tester 8.73.0 (devDependency, exact pin)",
+      "purpose": "the harness of the ported rule tests; peers eslint and typescript <6.1, the same as the kept parser; not in the tarball",
+      "preferred_over": "converting about 170 test files to ESLint's RuleTester",
+      "unit": "U1"
+    },
+    {
+      "id": "N3",
+      "package": "ajv 6.15.0, @types/react 18.3.31 (devDependencies, exact pin)",
+      "purpose": "ajv for the ported areOptionsValid test helper (ESLint itself depends on ajv ^6.14.0); @types/react for the fixture tsconfigs that name it; not in the tarball",
+      "preferred_over": "dropping the cases",
+      "unit": "U1"
+    }
+  ],
+  "units": [
+    {
+      "kind": "edit",
+      "model": "opus",
+      "depends_on": [],
+      "waits": "",
+      "status": "pending",
+      "started": "",
+      "ended": "",
+      "commit": "",
+      "rounds": 0,
+      "id": "U1",
+      "title": "TypeScript plugin utils, shared rule helpers, fixtures and test harness",
+      "wave": 1,
+      "file": "01-utils-base.md",
+      "owns": [
+        "src/plugins/typescript/util/",
+        "src/plugins/typescript/rules/enum-utils/",
+        "src/plugins/typescript/rules/naming-convention-utils/",
+        "src/plugins/typescript/rules/prefer-optional-chain-utils/",
+        "src/plugins/typescript/typings/",
+        "src/plugins/typescript/rules-types.ts",
+        "src/plugins/typescript/meta.ts",
+        "THIRD_PARTY_NOTICES.md",
+        "tests/unit/plugins/typescript/fixtures/",
+        "tests/unit/plugins/typescript/helpers/",
+        "tests/unit/plugins/typescript/util.test.ts",
+        "package.json",
+        "pnpm-lock.yaml",
+        "tests/unit/plugins/typescript/util/"
+      ]
+    },
+    {
+      "kind": "edit",
+      "model": "opus",
+      "depends_on": [
+        "U1"
+      ],
+      "waits": "it imports the utils, shared rule helpers and test helper that U1 creates, and its tests need the rule-tester devDependency that U1 adds",
+      "status": "pending",
+      "started": "",
+      "ended": "",
+      "commit": "",
+      "rounds": 0,
+      "id": "U2",
+      "title": "TypeScript rules, group A (adjacent-overload-signatures to dot-notation)",
+      "wave": 2,
+      "file": "02-rules-group-a.md",
+      "owns": [
+        "src/plugins/typescript/rules/group-a.ts",
+        "src/plugins/typescript/rules/adjacent-overload-signatures.ts",
+        "src/plugins/typescript/rules/array-type.ts",
+        "src/plugins/typescript/rules/await-thenable.ts",
+        "src/plugins/typescript/rules/ban-ts-comment.ts",
+        "src/plugins/typescript/rules/ban-tslint-comment.ts",
+        "src/plugins/typescript/rules/class-literal-property-style.ts",
+        "src/plugins/typescript/rules/class-methods-use-this.ts",
+        "src/plugins/typescript/rules/consistent-generic-constructors.ts",
+        "src/plugins/typescript/rules/consistent-indexed-object-style.ts",
+        "src/plugins/typescript/rules/consistent-return.ts",
+        "src/plugins/typescript/rules/consistent-type-assertions.ts",
+        "src/plugins/typescript/rules/consistent-type-definitions.ts",
+        "src/plugins/typescript/rules/consistent-type-exports.ts",
+        "src/plugins/typescript/rules/consistent-type-imports.ts",
+        "src/plugins/typescript/rules/default-param-last.ts",
+        "src/plugins/typescript/rules/dot-notation.ts",
+        "tests/unit/plugins/typescript/rules/group-a/"
+      ]
+    },
+    {
+      "kind": "edit",
+      "model": "opus",
+      "depends_on": [
+        "U1"
+      ],
+      "waits": "it imports the utils, shared rule helpers and test helper that U1 creates, and its tests need the rule-tester devDependency that U1 adds",
+      "status": "pending",
+      "started": "",
+      "ended": "",
+      "commit": "",
+      "rounds": 0,
+      "id": "U3",
+      "title": "TypeScript rules, group B (explicit-function-return-type to no-duplicate-enum-values)",
+      "wave": 2,
+      "file": "03-rules-group-b.md",
+      "owns": [
+        "src/plugins/typescript/rules/group-b.ts",
+        "src/plugins/typescript/rules/explicit-function-return-type.ts",
+        "src/plugins/typescript/rules/explicit-member-accessibility.ts",
+        "src/plugins/typescript/rules/explicit-module-boundary-types.ts",
+        "src/plugins/typescript/rules/init-declarations.ts",
+        "src/plugins/typescript/rules/max-params.ts",
+        "src/plugins/typescript/rules/member-ordering.ts",
+        "src/plugins/typescript/rules/method-signature-style.ts",
+        "src/plugins/typescript/rules/naming-convention.ts",
+        "src/plugins/typescript/rules/no-array-constructor.ts",
+        "src/plugins/typescript/rules/no-array-delete.ts",
+        "src/plugins/typescript/rules/no-base-to-string.ts",
+        "src/plugins/typescript/rules/no-confusing-non-null-assertion.ts",
+        "src/plugins/typescript/rules/no-confusing-void-expression.ts",
+        "src/plugins/typescript/rules/no-deprecated.ts",
+        "src/plugins/typescript/rules/no-dupe-class-members.ts",
+        "src/plugins/typescript/rules/no-duplicate-enum-values.ts",
+        "tests/unit/plugins/typescript/rules/group-b/"
+      ]
+    },
+    {
+      "kind": "edit",
+      "model": "opus",
+      "depends_on": [
+        "U1"
+      ],
+      "waits": "it imports the utils, shared rule helpers and test helper that U1 creates, and its tests need the rule-tester devDependency that U1 adds",
+      "status": "pending",
+      "started": "",
+      "ended": "",
+      "commit": "",
+      "rounds": 0,
+      "id": "U4",
+      "title": "TypeScript rules, group C (no-duplicate-type-constituents to no-magic-numbers)",
+      "wave": 2,
+      "file": "04-rules-group-c.md",
+      "owns": [
+        "src/plugins/typescript/rules/group-c.ts",
+        "src/plugins/typescript/rules/no-duplicate-type-constituents.ts",
+        "src/plugins/typescript/rules/no-dynamic-delete.ts",
+        "src/plugins/typescript/rules/no-empty-function.ts",
+        "src/plugins/typescript/rules/no-empty-object-type.ts",
+        "src/plugins/typescript/rules/no-explicit-any.ts",
+        "src/plugins/typescript/rules/no-extra-non-null-assertion.ts",
+        "src/plugins/typescript/rules/no-extraneous-class.ts",
+        "src/plugins/typescript/rules/no-floating-promises.ts",
+        "src/plugins/typescript/rules/no-for-in-array.ts",
+        "src/plugins/typescript/rules/no-generated-empty-object-type.ts",
+        "src/plugins/typescript/rules/no-implied-eval.ts",
+        "src/plugins/typescript/rules/no-import-type-side-effects.ts",
+        "src/plugins/typescript/rules/no-inferrable-types.ts",
+        "src/plugins/typescript/rules/no-invalid-this.ts",
+        "src/plugins/typescript/rules/no-invalid-void-type.ts",
+        "src/plugins/typescript/rules/no-magic-numbers.ts",
+        "tests/unit/plugins/typescript/rules/group-c/"
+      ]
+    },
+    {
+      "kind": "edit",
+      "model": "opus",
+      "depends_on": [
+        "U1"
+      ],
+      "waits": "it imports the utils, shared rule helpers and test helper that U1 creates, and its tests need the rule-tester devDependency that U1 adds",
+      "status": "pending",
+      "started": "",
+      "ended": "",
+      "commit": "",
+      "rounds": 0,
+      "id": "U5",
+      "title": "TypeScript rules, group D (no-meaningless-void-operator to no-unnecessary-boolean-literal-compare)",
+      "wave": 2,
+      "file": "05-rules-group-d.md",
+      "owns": [
+        "src/plugins/typescript/rules/group-d.ts",
+        "src/plugins/typescript/rules/no-meaningless-void-operator.ts",
+        "src/plugins/typescript/rules/no-misused-new.ts",
+        "src/plugins/typescript/rules/no-misused-promises.ts",
+        "src/plugins/typescript/rules/no-misused-spread.ts",
+        "src/plugins/typescript/rules/no-mixed-enums.ts",
+        "src/plugins/typescript/rules/no-namespace.ts",
+        "src/plugins/typescript/rules/no-non-null-asserted-nullish-coalescing.ts",
+        "src/plugins/typescript/rules/no-non-null-asserted-optional-chain.ts",
+        "src/plugins/typescript/rules/no-non-null-assertion.ts",
+        "src/plugins/typescript/rules/no-redeclare.ts",
+        "src/plugins/typescript/rules/no-redundant-type-constituents.ts",
+        "src/plugins/typescript/rules/no-require-imports.ts",
+        "src/plugins/typescript/rules/no-restricted-types.ts",
+        "src/plugins/typescript/rules/no-shadow.ts",
+        "src/plugins/typescript/rules/no-this-alias.ts",
+        "src/plugins/typescript/rules/no-unnecessary-boolean-literal-compare.ts",
+        "tests/unit/plugins/typescript/rules/group-d/"
+      ]
+    },
+    {
+      "kind": "edit",
+      "model": "opus",
+      "depends_on": [
+        "U1"
+      ],
+      "waits": "it imports the utils, shared rule helpers and test helper that U1 creates, and its tests need the rule-tester devDependency that U1 adds",
+      "status": "pending",
+      "started": "",
+      "ended": "",
+      "commit": "",
+      "rounds": 0,
+      "id": "U6",
+      "title": "TypeScript rules, group E (no-unnecessary-condition to no-unsafe-enum-comparison)",
+      "wave": 2,
+      "file": "06-rules-group-e.md",
+      "owns": [
+        "src/plugins/typescript/rules/group-e.ts",
+        "src/plugins/typescript/rules/no-unnecessary-condition.ts",
+        "src/plugins/typescript/rules/no-unnecessary-parameter-property-assignment.ts",
+        "src/plugins/typescript/rules/no-unnecessary-qualifier.ts",
+        "src/plugins/typescript/rules/no-unnecessary-template-expression.ts",
+        "src/plugins/typescript/rules/no-unnecessary-type-arguments.ts",
+        "src/plugins/typescript/rules/no-unnecessary-type-assertion.ts",
+        "src/plugins/typescript/rules/no-unnecessary-type-constraint.ts",
+        "src/plugins/typescript/rules/no-unnecessary-type-conversion.ts",
+        "src/plugins/typescript/rules/no-unnecessary-type-parameters.ts",
+        "src/plugins/typescript/rules/no-unsafe-argument.ts",
+        "src/plugins/typescript/rules/no-unsafe-assignment.ts",
+        "src/plugins/typescript/rules/no-unsafe-call.ts",
+        "src/plugins/typescript/rules/no-unsafe-class-instance-assignment.ts",
+        "src/plugins/typescript/rules/no-unsafe-declaration-merging.ts",
+        "src/plugins/typescript/rules/no-unsafe-enum-assignment.ts",
+        "src/plugins/typescript/rules/no-unsafe-enum-comparison.ts",
+        "tests/unit/plugins/typescript/rules/group-e/"
+      ]
+    },
+    {
+      "kind": "edit",
+      "model": "opus",
+      "depends_on": [
+        "U1"
+      ],
+      "waits": "it imports the utils, shared rule helpers and test helper that U1 creates, and its tests need the rule-tester devDependency that U1 adds",
+      "status": "pending",
+      "started": "",
+      "ended": "",
+      "commit": "",
+      "rounds": 0,
+      "id": "U7",
+      "title": "TypeScript rules, group F (no-unsafe-function-type to parameter-properties)",
+      "wave": 2,
+      "file": "07-rules-group-f.md",
+      "owns": [
+        "src/plugins/typescript/rules/group-f.ts",
+        "src/plugins/typescript/rules/no-unsafe-function-type.ts",
+        "src/plugins/typescript/rules/no-unsafe-member-access.ts",
+        "src/plugins/typescript/rules/no-unsafe-return.ts",
+        "src/plugins/typescript/rules/no-unsafe-type-assertion.ts",
+        "src/plugins/typescript/rules/no-unsafe-unary-minus.ts",
+        "src/plugins/typescript/rules/no-unused-expressions.ts",
+        "src/plugins/typescript/rules/no-unused-private-class-members.ts",
+        "src/plugins/typescript/rules/no-unused-vars.ts",
+        "src/plugins/typescript/rules/no-use-before-define.ts",
+        "src/plugins/typescript/rules/no-useless-constructor.ts",
+        "src/plugins/typescript/rules/no-useless-default-assignment.ts",
+        "src/plugins/typescript/rules/no-useless-empty-export.ts",
+        "src/plugins/typescript/rules/no-wrapper-object-types.ts",
+        "src/plugins/typescript/rules/non-nullable-type-assertion-style.ts",
+        "src/plugins/typescript/rules/only-throw-error.ts",
+        "src/plugins/typescript/rules/parameter-properties.ts",
+        "tests/unit/plugins/typescript/rules/group-f/"
+      ]
+    },
+    {
+      "kind": "edit",
+      "model": "opus",
+      "depends_on": [
+        "U1"
+      ],
+      "waits": "it imports the utils, shared rule helpers and test helper that U1 creates, and its tests need the rule-tester devDependency that U1 adds",
+      "status": "pending",
+      "started": "",
+      "ended": "",
+      "commit": "",
+      "rounds": 0,
+      "id": "U8",
+      "title": "TypeScript rules, group G (prefer-as-const to prefer-regexp-exec)",
+      "wave": 2,
+      "file": "08-rules-group-g.md",
+      "owns": [
+        "src/plugins/typescript/rules/group-g.ts",
+        "src/plugins/typescript/rules/prefer-as-const.ts",
+        "src/plugins/typescript/rules/prefer-destructuring.ts",
+        "src/plugins/typescript/rules/prefer-enum-initializers.ts",
+        "src/plugins/typescript/rules/prefer-find.ts",
+        "src/plugins/typescript/rules/prefer-for-of.ts",
+        "src/plugins/typescript/rules/prefer-function-type.ts",
+        "src/plugins/typescript/rules/prefer-includes.ts",
+        "src/plugins/typescript/rules/prefer-literal-enum-member.ts",
+        "src/plugins/typescript/rules/prefer-namespace-keyword.ts",
+        "src/plugins/typescript/rules/prefer-nullish-coalescing.ts",
+        "src/plugins/typescript/rules/prefer-optional-chain.ts",
+        "src/plugins/typescript/rules/prefer-promise-reject-errors.ts",
+        "src/plugins/typescript/rules/prefer-readonly.ts",
+        "src/plugins/typescript/rules/prefer-readonly-parameter-types.ts",
+        "src/plugins/typescript/rules/prefer-reduce-type-parameter.ts",
+        "src/plugins/typescript/rules/prefer-regexp-exec.ts",
+        "tests/unit/plugins/typescript/rules/group-g/"
+      ]
+    },
+    {
+      "kind": "edit",
+      "model": "opus",
+      "depends_on": [
+        "U1"
+      ],
+      "waits": "it imports the utils, shared rule helpers and test helper that U1 creates, and its tests need the rule-tester devDependency that U1 adds",
+      "status": "pending",
+      "started": "",
+      "ended": "",
+      "commit": "",
+      "rounds": 0,
+      "id": "U9",
+      "title": "TypeScript rules, group H (prefer-return-this-type to use-unknown-in-catch-callback-variable)",
+      "wave": 2,
+      "file": "09-rules-group-h.md",
+      "owns": [
+        "src/plugins/typescript/rules/group-h.ts",
+        "src/plugins/typescript/rules/prefer-return-this-type.ts",
+        "src/plugins/typescript/rules/prefer-string-starts-ends-with.ts",
+        "src/plugins/typescript/rules/promise-function-async.ts",
+        "src/plugins/typescript/rules/related-getter-setter-pairs.ts",
+        "src/plugins/typescript/rules/require-array-sort-compare.ts",
+        "src/plugins/typescript/rules/require-await.ts",
+        "src/plugins/typescript/rules/restrict-plus-operands.ts",
+        "src/plugins/typescript/rules/restrict-template-expressions.ts",
+        "src/plugins/typescript/rules/return-await.ts",
+        "src/plugins/typescript/rules/strict-boolean-expressions.ts",
+        "src/plugins/typescript/rules/strict-void-return.ts",
+        "src/plugins/typescript/rules/switch-exhaustiveness-check.ts",
+        "src/plugins/typescript/rules/triple-slash-reference.ts",
+        "src/plugins/typescript/rules/unbound-method.ts",
+        "src/plugins/typescript/rules/unified-signatures.ts",
+        "src/plugins/typescript/rules/use-unknown-in-catch-callback-variable.ts",
+        "tests/unit/plugins/typescript/rules/group-h/"
+      ]
+    },
+    {
+      "kind": "edit",
+      "model": "opus",
+      "depends_on": [
+        "U2",
+        "U3",
+        "U4",
+        "U5",
+        "U6",
+        "U7",
+        "U8",
+        "U9"
+      ],
+      "waits": "the plugin index imports all 128 rules, and the plugins can leave the dependencies only once the preset no longer uses them",
+      "status": "pending",
+      "started": "",
+      "ended": "",
+      "commit": "",
+      "rounds": 0,
+      "id": "U10",
+      "title": "Create the typescript plugin index, switch the typescript preset to it, and change the dependencies",
+      "wave": 3,
+      "file": "10-switch-preset.md",
+      "owns": [
+        "src/plugins/typescript/index.ts",
+        "src/config/presets/typescript.ts",
+        "src/cli/commands/version.ts",
+        "package.json",
+        "pnpm-lock.yaml",
+        ".config/mise/tasks/p/upgrade.py",
+        ".github/workflows/deps-update.yml"
+      ]
+    },
+    {
+      "kind": "review",
+      "model": "opus",
+      "depends_on": [
+        "U1",
+        "U2",
+        "U3",
+        "U4",
+        "U5",
+        "U6",
+        "U7",
+        "U8",
+        "U9",
+        "U10"
+      ],
+      "waits": "",
+      "status": "pending",
+      "started": "",
+      "ended": "",
+      "commit": "",
+      "rounds": 0,
+      "id": "U11",
+      "title": "Review: the TypeScript utils, the 128 rules and the preset switch",
+      "wave": 4,
+      "file": "11-review.md",
+      "owns": [],
+      "range": {
+        "from": "",
+        "to": ""
+      }
+    },
+    {
+      "kind": "edit",
+      "model": "opus",
+      "depends_on": [
+        "U1",
+        "U2",
+        "U3",
+        "U4",
+        "U5",
+        "U6",
+        "U7",
+        "U8",
+        "U9",
+        "U10",
+        "U11"
+      ],
+      "waits": "",
+      "status": "pending",
+      "started": "",
+      "ended": "",
+      "commit": "",
+      "rounds": 0,
+      "id": "U12",
+      "title": "Docs",
+      "wave": 5,
+      "file": "12-docs.md",
+      "owns": [
+        "CLAUDE.md",
+        "readme.md",
+        "docs/memory/"
+      ]
+    },
+    {
+      "kind": "edit",
+      "model": "opus",
+      "depends_on": [
+        "U12"
+      ],
+      "waits": "",
+      "status": "pending",
+      "started": "",
+      "ended": "",
+      "commit": "",
+      "rounds": 0,
+      "id": "U13",
+      "title": "Gates",
+      "wave": 6,
+      "file": "13-gates.md",
+      "owns": [
+        "tests/golden/__snapshots__/"
+      ]
+    }
+  ],
+  "waves": [
+    {
+      "id": "W1",
+      "status": "pending",
+      "started": "",
+      "ended": ""
+    },
+    {
+      "id": "W2",
+      "status": "pending",
+      "started": "",
+      "ended": ""
+    },
+    {
+      "id": "W3",
+      "status": "pending",
+      "started": "",
+      "ended": ""
+    },
+    {
+      "id": "W4",
+      "status": "pending",
+      "started": "",
+      "ended": ""
+    },
+    {
+      "id": "W5",
+      "status": "pending",
+      "started": "",
+      "ended": ""
+    },
+    {
+      "id": "W6",
+      "status": "pending",
+      "started": "",
+      "ended": ""
+    }
+  ],
+  "shared_files": [
+    {
+      "id": "S1",
+      "file": "tests/golden/__snapshots__/",
+      "why": "generated by vitest --update; regenerating mid-wave races",
+      "owner": "U13"
+    },
+    {
+      "id": "S2",
+      "file": "CLAUDE.md, readme.md",
+      "why": "human-facing docs that several units falsify",
+      "owner": "U12"
+    },
+    {
+      "id": "S3",
+      "file": "package.json, pnpm-lock.yaml",
+      "why": "U1 adds the test harness in wave 1 and U10 changes the runtime dependencies in wave 3 (D7); never in the same wave",
+      "owner": "U10"
+    }
+  ],
+  "decisions": [
+    {
+      "id": "D1",
+      "decision": "Which rulings does this plan inherit from plans 1 to 5?",
+      "ruling": "Keep the @typescript-eslint/ rule namespace (11 consumer configs override @typescript-eslint/no-explicit-any). Credit the MIT code in THIRD_PARTY_NOTICES.md plus a one-line source header in each ported file, test files included. Put the code in src/plugins/typescript/, in strict TypeScript. Dependencies follow the user's criterion: a direct dependency is not a concern; port what brings peer ranges or conflicting transitive trees. Deprecated rules are not ported. Each edit unit runs mise x -- mise run code:format --fix before it returns. Test files import from src/. A ported upstream test case that fails only because ESLint 10's RuleTester or the vitest wiring is stricter than upstream's setup — not because the rule behaves differently — may have its test setup changed (for example, remove a duplicate case, or add a property that ESLint 10 requires). Never change the expected messages, message ids, locations, output or suggestions. List each change as DECIDED; the review unit checks them. A case whose expected result differs stops the run with a QUESTION.",
+      "rejected": "A new namespace; a separate package",
+      "units": [
+        "U1",
+        "U2",
+        "U3",
+        "U4",
+        "U5",
+        "U6",
+        "U7",
+        "U8",
+        "U9",
+        "U10",
+        "U12"
+      ]
+    },
+    {
+      "id": "D2",
+      "decision": "Which TypeScript parser does the preset use?",
+      "ruling": "Keep @typescript-eslint/parser (the user's ruling of 2026-11-22). Its tree (typescript-estree, scope-manager, types, visitor-keys) stays, and so does the peer typescript >=4.8.4 <6.1.0 and the typescript 6.x hold, until typescript-eslint supports TypeScript 7 (typescript-estree 8.73.0 already has an optional peer @typescript/native). TypeScript 7.0.2 ships only an unstable/* API, not the classic compiler API that typescript-estree needs.",
+      "rejected": "Switch to oxc-parser; port typescript-estree",
+      "units": [
+        "U10",
+        "U12"
+      ]
+    },
+    {
+      "id": "D3",
+      "decision": "Which @typescript-eslint rules do we port?",
+      "ruling": "128 rules of @typescript-eslint/eslint-plugin 8.73.0 (137 rules upstream; the local node_modules showed a stale 8.72.1 with 136): all except the 9 deprecated (no-empty-interface, no-loop-func, no-loss-of-precision, no-restricted-imports, no-type-alias, no-var-requires, prefer-ts-expect-error, sort-type-constituents, typedef). 64 of them need type information (with no-unsafe-class-instance-assignment, new in 8.73.0); they work when a consumer turns on parserOptions.projectService or project, which the preset never does.",
+      "rejected": "The 64 untyped; only the 20 recommended",
+      "units": [
+        "U2",
+        "U3",
+        "U4",
+        "U5",
+        "U6",
+        "U7",
+        "U8",
+        "U9",
+        "U12"
+      ]
+    },
+    {
+      "id": "D4",
+      "decision": "Which packages are kept and which are ported?",
+      "ruling": "Remove typescript-eslint (the only one of the two in package.json; @typescript-eslint/eslint-plugin is its transitive dependency and leaves with it). Keep @typescript-eslint/parser and typescript (both direct already). Add as direct, exact-pinned, bundled dependencies at the versions that pnpm-lock.yaml resolves: @typescript-eslint/utils, @typescript-eslint/type-utils, @typescript-eslint/scope-manager, @typescript-eslint/visitor-keys (all 8.73.0, the version of the parser), ts-api-utils, @eslint-community/regexpp. Their only peers are eslint and typescript <6.1 (the same as the kept parser) or typescript >=4.8.4 (ts-api-utils); ESLint itself depends on regexpp. natural-compare is already direct (plan 2). ignore is not needed: only the deprecated no-restricted-imports uses it. The ported code may import eslint/use-at-your-own-risk.",
+      "rejected": "Port utils, type-utils or ts-api-utils",
+      "units": [
+        "U1",
+        "U10"
+      ]
+    },
+    {
+      "id": "D5",
+      "decision": "Which upstream source files are ported, and by which unit?",
+      "ruling": "At tag v8.73.0 of typescript-eslint/typescript-eslint, under packages/eslint-plugin/: U1 ports src/util/ (all of it, with class-scope-analyzer/) and the shared rule helpers src/rules/enum-utils/, src/rules/naming-convention-utils/ and src/rules/prefer-optional-chain-utils/, so that no rule unit depends on another. Each rule unit ports src/rules/<rule>.ts for its rules. U10 writes the plugin index in place of src/index.ts and src/raw-plugin.ts. Not ported: src/configs/ (the preset reproduces the one config it needs), the deprecated rules.",
+      "rejected": "Shared helpers inside the rule units",
+      "units": [
+        "U1",
+        "U2",
+        "U3",
+        "U4",
+        "U5",
+        "U6",
+        "U7",
+        "U8",
+        "U9",
+        "U10"
+      ]
+    },
+    {
+      "id": "D6",
+      "decision": "Which upstream tests are ported, and with which harness?",
+      "ruling": "The rule tests use @typescript-eslint/rule-tester 8.73.0 as an exact-pinned devDependency: it is typescript-eslint's own harness, its peers are the same as the kept parser's, and it does not ship. Each test file connects it to vitest itself (RuleTester.afterAll, describe, it, itOnly from vitest, as its docs show). U1 copies tests/fixtures/ (40 files: tsconfig projects for the typed tests) byte for byte to tests/unit/plugins/typescript/fixtures/, ports tests/RuleTester.ts (getFixturesRootDir and friends) to tests/unit/plugins/typescript/helpers/, and ports tests/util.test.ts and the 8 files of tests/util/ (getConstraintInfo, getValueOfLiteralType, getWrappedCode, getWrappingFixer, isConditionalTest, isNodeEqual, lazyRules, misc) to tests/unit/plugins/typescript/util/. Each rule unit ports tests/rules/<rule>.test.ts and the folders tests/rules/<rule>/ of its rules. Not ported: tests/schemas.test.ts (it needs prettier, which the dprint-only rule forbids, and @typescript-eslint/rule-schema-to-typescript-types, and writes schema snapshots), tests/rules/index.test.ts (it checks upstream's own registry), tests/docs-eslint-output-snapshots/, docs.test.mts, configs.test.ts, index.test.ts, areOptionsValid.test.ts (the helper areOptionsValid.ts is ported; D12 d), eslint-rules/, worksWithStringlyTypedExtends.test.ts (they test docs, configs or ESLint core rules).",
+      "rejected": "Convert the tests to ESLint's RuleTester; port the docs tests",
+      "units": [
+        "U1",
+        "U2",
+        "U3",
+        "U4",
+        "U5",
+        "U6",
+        "U7",
+        "U8",
+        "U9",
+        "U10"
+      ]
+    },
+    {
+      "id": "D7",
+      "decision": "Who changes package.json?",
+      "ruling": "U1 adds the devDependency @typescript-eslint/rule-tester in wave 1, so that the rule tests can run in wave 2. U10 makes the runtime dependency changes in wave 3. The two never run in the same wave, and each runs pnpm, never a hand edit of the lock file. This is the one exception to the shared-file rule in this plan.",
+      "rejected": "Add the harness in U10 (the rule tests could not run in wave 2)",
+      "units": [
+        "U1",
+        "U10"
+      ]
+    },
+    {
+      "id": "D8",
+      "decision": "Where does the rule configuration live, and how is parity proved?",
+      "ruling": "In the typescript preset. The plugin index (U10) exports meta and rules (merged from rules/group-a.ts to group-h.ts); no configs. The preset reproduces tseslint.configs.recommended exactly: its base entry (the @typescript-eslint/parser and sourceType module), its eslint-recommended entry (the core rules it turns off for TypeScript files), and its recommended entry: the 20 @typescript-eslint/ rules with their severities plus the core rules no-array-constructor, no-unused-expressions and no-unused-vars turned off; plus the preset's own globals, js.configs.recommended, and its own rule overrides. The plugin is registered as @typescript-eslint; the old alias key tseslint is dropped. After U10, the golden snapshots do not change at all; any golden change stops the run with a QUESTION.",
+      "rejected": "configs in the plugin; keep the tseslint alias",
+      "units": [
+        "U10",
+        "U13"
+      ]
+    },
+    {
+      "id": "D9",
+      "decision": "What do --version and the hold comments show?",
+      "ruling": "Plan 5 (its D10 and D11 d) already narrows the /^@typescript-eslint\\// pattern of the --version plugin list so that it lists @typescript-eslint/parser and not @typescript-eslint/types; U10 keeps that, makes sure that the new direct @typescript-eslint/ packages (utils, type-utils, scope-manager, visitor-keys) are not listed either, and removes the /^typescript-eslint$/ pattern, which is dead once typescript-eslint leaves package.json. In .config/mise/tasks/p/upgrade.py and .github/workflows/deps-update.yml, the typescript hold stays; its comment names @typescript-eslint/parser (peer typescript <6.1) as the reason, in place of typescript-eslint. The two hold lists stay the same.",
+      "rejected": "List every @typescript-eslint package",
+      "units": [
+        "U10"
+      ]
+    },
+    {
+      "id": "D10",
+      "decision": "Review unit and execution mode",
+      "ruling": "One review unit after U10, because the change ships runnable code. Execution mode teams, because wave 2 has eight edit units; if a team cannot start, the run uses solo.",
+      "rejected": "Wave review only; solo",
+      "units": [
+        "U2",
+        "U3",
+        "U4",
+        "U5",
+        "U6",
+        "U7",
+        "U8",
+        "U9",
+        "U11"
+      ]
+    },
+    {
+      "id": "D11",
+      "decision": "Release level",
+      "ruling": "MINOR: the 9 deprecated rules are removed; the consumer configs in ~/Projects override only @typescript-eslint/no-explicit-any (scan of 2026-11-22).",
+      "rejected": "PATCH; MAJOR",
+      "units": []
+    },
+    {
+      "id": "D12",
+      "decision": "Round 2 rulings review: typings, the rules.d.ts types, the naming-convention types, areOptionsValid, @types/react, the test folder layout",
+      "ruling": "(a) U1 ports upstream packages/eslint-plugin/typings/typescript.d.ts and typings/eslint-rules.d.ts to src/plugins/typescript/typings/ (type declarations only; the ESLint 10 export map does not matter for them). (b) U1 ports the types of the package-root rules.d.ts (ESLintPluginDocs, ESLintPluginRuleModule and the types they need) to src/plugins/typescript/rules-types.ts and points the imports of util/createRule.ts and util/lazyRules.ts at it. (c) U1 moves the MessageIds and Options types of naming-convention into src/plugins/typescript/rules/naming-convention-utils/types.ts; U3's naming-convention.ts imports them from there; behavior is unchanged. (d) U1 ports tests/areOptionsValid.ts to tests/unit/plugins/typescript/helpers/areOptionsValid.ts and adds ajv 6.15.0 (the version that pnpm-lock.yaml resolves for ESLint's ajv ^6.14.0) as an exact-pinned devDependency; array-type keeps its 2 cases. (e) U1 adds @types/react 18.3.31 (the latest 18.x; upstream's catalog has ^18.3.21) as an exact-pinned devDependency, because the copied fixture tsconfigs name it. (f) The upstream test folders keep their shape under tests/unit/plugins/typescript/rules/group-X/<rule>/ (with cases/ where upstream has it); each test file uses the import depth of its own location.",
+      "rejected": "Leave the typings out; stub the types; drop the areOptionsValid cases; skip the JSX cases; flatten the test folders",
+      "units": [
+        "U1",
+        "U2",
+        "U3",
+        "U4",
+        "U5",
+        "U6",
+        "U7",
+        "U8",
+        "U9"
+      ]
+    },
+    {
+      "id": "D13",
+      "decision": "Round 3 rulings review: eslint-disable comments for unknown rules, and test timeouts",
+      "ruling": "(a) A ported file may drop an eslint-disable or eslint-enable comment that names a rule this repo does not define (for example @typescript-eslint/internal/*, eslint-plugin/*, unicorn/*), or rewrite it to the rule of this repo that it means; ESLint 10 reports an unknown rule in such a comment as an error, so code:lint would fail. Comments do not change behavior. List each change as DECIDED. (b) A typed RuleTester case that times out under the vitest default of 5000 ms may get a longer timeout in its own test file (upstream uses 10000 ms); this is a setup change under D1, listed as DECIDED.",
+      "rejected": "Define the unknown rules; a repo-wide vitest config",
+      "units": [
+        "U1",
+        "U2",
+        "U3",
+        "U4",
+        "U5",
+        "U6",
+        "U7",
+        "U8",
+        "U9"
+      ]
+    },
+    {
+      "id": "D14",
+      "decision": "Round 4 rulings review (accepted by the user on 2026-11-22): strict-TypeScript fixes, the U10 check, the new devDependency holds, the naming-convention test types",
+      "ruling": "(a) Upstream is built without noUncheckedIndexedAccess, noPropertyAccessFromIndexSignature and verbatimModuleSyntax, with extensionless or directory relative imports. A unit fixes the resulting type errors only with changes that have no runtime effect: non-null assertions, casts, type annotations, import type, and bracket access where the compiler asks for it. No runtime guard is added. Each relative import gets the .js extension, or /index.js for a directory. List the kinds of change in DECIDED. (b) The U10 check asserts that typescript-eslint is not in package.json (dependencies or bundledDependencies) and that no file in src/ imports from \"typescript-eslint\". (c) ajv (devDependency 6.15.0, the ajv-6 API that ESLint also uses) and @types/react (devDependency 18.3.31) are held at their majors: U10 adds \"!ajv\" and \"!@types/react\" to the pnpm update lines of .config/mise/tasks/p/upgrade.py and .github/workflows/deps-update.yml, with a comment each, and the two lists stay the same; U12 adds both holds to the Dependency policy of CLAUDE.md. (d) The ported naming-convention test (cases/createTestCases.ts) imports MessageIds and Options from rules/naming-convention-utils/types.ts; naming-convention.ts does not re-export them.",
+      "rejected": "Runtime guards; a grep on the plugin key; let pnpm update bump ajv and @types/react; a re-export",
+      "units": [
+        "U1",
+        "U2",
+        "U3",
+        "U4",
+        "U5",
+        "U6",
+        "U7",
+        "U8",
+        "U9",
+        "U10",
+        "U12"
+      ]
+    }
+  ],
+  "stages": {
+    "renders": {
+      "state": "pending",
+      "detail": "",
+      "started": "",
+      "ended": ""
+    },
+    "acceptance": {
+      "state": "pending",
+      "detail": "",
+      "started": "",
+      "ended": ""
+    },
+    "ux": {
+      "state": "pending",
+      "detail": "",
+      "started": "",
+      "ended": ""
+    },
+    "reconcile": {
+      "state": "pending",
+      "detail": "",
+      "started": "",
+      "ended": ""
+    }
+  },
+  "gaps": [],
+  "overrides": [],
+  "run": {}
+}
