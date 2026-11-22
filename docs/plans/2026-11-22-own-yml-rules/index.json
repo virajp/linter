@@ -106,9 +106,9 @@
       "waits": "",
       "status": "green",
       "started": "2026-11-22T22:27:40.074Z",
-      "ended": "2026-11-22T22:32:42.687Z",
-      "commit": "25368af",
-      "rounds": 1
+      "ended": "2026-11-22T22:49:19.661Z",
+      "commit": "5c29f3a",
+      "rounds": 2
     },
     {
       "id": "U2",
@@ -136,11 +136,11 @@
         "U1"
       ],
       "waits": "it imports the language, utils and test helpers that U1 creates",
-      "status": "pending",
-      "started": "",
-      "ended": "",
-      "commit": "",
-      "rounds": 0
+      "status": "green",
+      "started": "2026-11-22T22:38:38.644Z",
+      "ended": "2026-11-22T22:53:12.324Z",
+      "commit": "77c27cf",
+      "rounds": 3
     },
     {
       "id": "U3",
@@ -167,11 +167,11 @@
         "U1"
       ],
       "waits": "it imports the language, utils and test helpers that U1 creates",
-      "status": "pending",
-      "started": "",
-      "ended": "",
-      "commit": "",
-      "rounds": 0
+      "status": "green",
+      "started": "2026-11-22T22:38:38.716Z",
+      "ended": "2026-11-22T22:53:12.470Z",
+      "commit": "dd93e4a",
+      "rounds": 2
     },
     {
       "id": "U4",
@@ -197,11 +197,11 @@
         "U1"
       ],
       "waits": "it imports the language, utils and test helpers that U1 creates",
-      "status": "pending",
-      "started": "",
-      "ended": "",
-      "commit": "",
-      "rounds": 0
+      "status": "green",
+      "started": "2026-11-22T22:38:38.788Z",
+      "ended": "2026-11-22T22:53:12.608Z",
+      "commit": "08ea728",
+      "rounds": 2
     },
     {
       "id": "U5",
@@ -313,9 +313,9 @@
     },
     {
       "id": "W2",
-      "status": "pending",
-      "started": "",
-      "ended": ""
+      "status": "green",
+      "started": "2026-11-22T22:38:38.568Z",
+      "ended": "2026-11-22T22:57:29.457Z"
     },
     {
       "id": "W3",
@@ -579,6 +579,42 @@
       "rejected": "Keep D19 (b) closed — the port needs a tsconfig change or another ruling",
       "units": [
         "U1"
+      ]
+    },
+    {
+      "id": "D21",
+      "decision": "Q2: How is the self-lint error no-useless-assignment at src/plugins/yml/rules/flow-sequence-bracket-newline.ts:82 (ported upstream `let minItems = 0;`) cleared?",
+      "ruling": "Add `// eslint-disable-next-line no-useless-assignment -- ported upstream code` above the line — the code stays identical to upstream.",
+      "rejected": "Change it to `let minItems: number;`; Leave it and keep code:lint red",
+      "units": [
+        "U2"
+      ]
+    },
+    {
+      "id": "D22",
+      "decision": "Q3: How is the max-len fixture test fixed when tests/unit/plugins/yml/fixtures/rules/max-len/invalid/ does not exist (its only upstream fixture was .vue)?",
+      "ruling": "Change the U1 loader to treat a missing valid/ or invalid/ directory as empty — a setup-only fix in a U1-owned file, made by a re-dispatched U1.",
+      "rejected": "Change max-len.test.ts under D18 to run only valid/; Add a placeholder .gitkeep",
+      "units": [
+        "U3"
+      ]
+    },
+    {
+      "id": "D23",
+      "decision": "Q4: How are the 3 sort-keys 2XXW output-test failures fixed, caused by the U1 loader filtering skipOutputTest inside a describe callback that vitest defers past the delete?",
+      "ruling": "Fix the U1 loader so the filtered list is computed before the describe — a setup-only fix in a U1-owned file, made by a re-dispatched U1.",
+      "rejected": "Pass { skipOutputTest: true } in sort-keys.test.ts; Leave the 3 failures",
+      "units": [
+        "U4"
+      ]
+    },
+    {
+      "id": "D24",
+      "decision": "Q5: Should ported yml rule tests keep upstream `new RuleTester({})` where upstream has it, or always pass { plugins: { yml: plugin }, language: \"yml/yaml\" }?",
+      "ruling": "Keep upstream `new RuleTester({})` where upstream has it, and U2 reverts its 9 constructors — the port stays a line-for-line copy of upstream, and the three groups match.",
+      "rejected": "Always pass plugins and language; U3 and U4 change their 6 constructors",
+      "units": [
+        "U2"
       ]
     }
   ],
