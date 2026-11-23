@@ -259,7 +259,7 @@
       "status": "green",
       "started": "2026-11-23T11:06:47.110Z",
       "ended": "2026-11-23T11:15:59.481Z",
-      "commit": "",
+      "commit": "4864702",
       "rounds": 1,
       "id": "U6",
       "title": "TypeScript rules, group E (no-unnecessary-condition to no-unsafe-enum-comparison)",
