@@ -296,7 +296,7 @@
       "status": "green",
       "started": "2026-11-23T11:06:47.192Z",
       "ended": "2026-11-23T12:11:43.799Z",
-      "commit": "",
+      "commit": "e4ea0f0",
       "rounds": 2,
       "id": "U7",
       "title": "TypeScript rules, group F (no-unsafe-function-type to parameter-properties)",
