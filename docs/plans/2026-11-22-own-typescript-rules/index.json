@@ -333,7 +333,7 @@
       "status": "green",
       "started": "2026-11-23T11:06:47.274Z",
       "ended": "2026-11-23T12:11:43.919Z",
-      "commit": "",
+      "commit": "fdea19f",
       "rounds": 2,
       "id": "U8",
       "title": "TypeScript rules, group G (prefer-as-const to prefer-regexp-exec)",
