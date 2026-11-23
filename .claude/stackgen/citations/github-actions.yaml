@@ -1,0 +1,5 @@
+component: ci-system/github-actions
+source: pack/ci-system/github-actions@1.0.0
+provenance: shipped stackgen pack — no external research performed at landing
+landed: 2026-11-23
+sources: []
