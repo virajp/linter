@@ -1,0 +1,215 @@
+// Ported from @typescript-eslint/eslint-plugin v8.73.0 (MIT), tests/rules/no-non-null-asserted-optional-chain.test.ts.
+import { afterAll, describe, it } from 'vitest';
+import { noFormat, RuleTester } from '@typescript-eslint/rule-tester';
+
+import rule from '../../../../../../src/plugins/typescript/rules/no-non-null-asserted-optional-chain.js';
+
+RuleTester.afterAll = afterAll;
+RuleTester.describe = describe;
+RuleTester.it = it;
+RuleTester.itOnly = it.only;
+
+const ruleTester = new RuleTester();
+
+ruleTester.run('no-non-null-asserted-optional-chain', rule, {
+  assertionOptions: {
+    requireData: true,
+  },
+  valid: [
+    'foo.bar!;',
+    'foo.bar!.baz;',
+    'foo.bar!.baz();',
+    'foo.bar()!;',
+    'foo.bar()!();',
+    'foo.bar()!.baz;',
+    'foo?.bar;',
+    'foo?.bar();',
+    '(foo?.bar).baz!;',
+    '(foo?.bar()).baz!;',
+    'foo?.bar!.baz;',
+    'foo?.bar!();',
+    "foo?.['bar']!.baz;",
+  ],
+  invalid: [
+    {
+      code: 'foo?.bar!;',
+      errors: [
+        {
+          column: 1,
+          endColumn: 10,
+          endLine: 1,
+          line: 1,
+          messageId: 'noNonNullOptionalChain',
+          suggestions: [
+            {
+              messageId: 'suggestRemovingNonNull',
+              output: 'foo?.bar;',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      code: "foo?.['bar']!;",
+      errors: [
+        {
+          column: 1,
+          endColumn: 14,
+          endLine: 1,
+          line: 1,
+          messageId: 'noNonNullOptionalChain',
+          suggestions: [
+            {
+              messageId: 'suggestRemovingNonNull',
+              output: "foo?.['bar'];",
+            },
+          ],
+        },
+      ],
+    },
+    {
+      code: 'foo?.bar()!;',
+      errors: [
+        {
+          column: 1,
+          endColumn: 12,
+          endLine: 1,
+          line: 1,
+          messageId: 'noNonNullOptionalChain',
+          suggestions: [
+            {
+              messageId: 'suggestRemovingNonNull',
+              output: 'foo?.bar();',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      code: 'foo.bar?.()!;',
+      errors: [
+        {
+          column: 1,
+          endColumn: 13,
+          endLine: 1,
+          line: 1,
+          messageId: 'noNonNullOptionalChain',
+          suggestions: [
+            {
+              messageId: 'suggestRemovingNonNull',
+              output: 'foo.bar?.();',
+            },
+          ],
+        },
+      ],
+    },
+    {
+      code: noFormat`(foo?.bar)!.baz`,
+      errors: [
+        {
+          column: 2,
+          endColumn: 10,
+          endLine: 1,
+          line: 1,
+          messageId: 'noNonNullOptionalChain',
+          suggestions: [
+            {
+              messageId: 'suggestRemovingNonNull',
+              output: `(foo?.bar).baz`,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      code: noFormat`(foo?.bar)!().baz`,
+      errors: [
+        {
+          column: 2,
+          endColumn: 10,
+          endLine: 1,
+          line: 1,
+          messageId: 'noNonNullOptionalChain',
+          suggestions: [
+            {
+              messageId: 'suggestRemovingNonNull',
+              output: `(foo?.bar)().baz`,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      code: noFormat`(foo?.bar)!`,
+      errors: [
+        {
+          column: 2,
+          endColumn: 10,
+          endLine: 1,
+          line: 1,
+          messageId: 'noNonNullOptionalChain',
+          suggestions: [
+            {
+              messageId: 'suggestRemovingNonNull',
+              output: `(foo?.bar)`,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      code: noFormat`(foo?.bar)!()`,
+      errors: [
+        {
+          column: 2,
+          endColumn: 10,
+          endLine: 1,
+          line: 1,
+          messageId: 'noNonNullOptionalChain',
+          suggestions: [
+            {
+              messageId: 'suggestRemovingNonNull',
+              output: `(foo?.bar)()`,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      code: noFormat`(foo?.bar!)`,
+      errors: [
+        {
+          column: 2,
+          endColumn: 11,
+          endLine: 1,
+          line: 1,
+          messageId: 'noNonNullOptionalChain',
+          suggestions: [
+            {
+              messageId: 'suggestRemovingNonNull',
+              output: `(foo?.bar)`,
+            },
+          ],
+        },
+      ],
+    },
+    {
+      code: noFormat`(foo?.bar!)()`,
+      errors: [
+        {
+          column: 2,
+          endColumn: 11,
+          endLine: 1,
+          line: 1,
+          messageId: 'noNonNullOptionalChain',
+          suggestions: [
+            {
+              messageId: 'suggestRemovingNonNull',
+              output: `(foo?.bar)()`,
+            },
+          ],
+        },
+      ],
+    },
+  ],
+});

@@ -185,7 +185,7 @@
       "status": "green",
       "started": "2026-11-23T11:06:46.943Z",
       "ended": "2026-11-23T12:11:43.681Z",
-      "commit": "",
+      "commit": "ba9be66",
       "rounds": 2,
       "id": "U4",
       "title": "TypeScript rules, group C (no-duplicate-type-constituents to no-magic-numbers)",
