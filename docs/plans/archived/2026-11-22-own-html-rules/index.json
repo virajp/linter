@@ -15,8 +15,8 @@
   "gaps_of": [],
   "execution": "teams",
   "status": {
-    "state": "RUNNING",
-    "detail": "RUNNING in .worktrees/all-2026-11-23-0136 — Q2 answered (D16), U2-U4 restoring test whitespace"
+    "state": "COMPLETE",
+    "detail": "COMPLETE 2026-11-23 — 2670861..ee63fe9 (U1 2670861, U2 86083f0 3385e60, U3 a5c9623 9718f1c, U4 1004e72 ae13d82, U5 3e91600 6593f5a, U6 8ab67cf, U8 ee63fe9)"
   },
   "consent": {
     "merge": true,
