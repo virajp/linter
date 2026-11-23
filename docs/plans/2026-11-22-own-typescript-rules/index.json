@@ -500,11 +500,11 @@
         "U12"
       ],
       "waits": "",
-      "status": "pending",
-      "started": "",
-      "ended": "",
+      "status": "green",
+      "started": "2026-11-23T12:41:11.476Z",
+      "ended": "2026-11-23T12:43:04.978Z",
       "commit": "",
-      "rounds": 0,
+      "rounds": 1,
       "id": "U13",
       "title": "Gates",
       "wave": 6,
@@ -547,9 +547,9 @@
     },
     {
       "id": "W6",
-      "status": "pending",
-      "started": "",
-      "ended": ""
+      "status": "green",
+      "started": "2026-11-23T12:41:11.399Z",
+      "ended": "2026-11-23T12:43:21.738Z"
     }
   ],
   "shared_files": [
