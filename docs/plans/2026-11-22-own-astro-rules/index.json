@@ -161,7 +161,7 @@
       "status": "green",
       "started": "2026-11-23T10:26:13.798Z",
       "ended": "2026-11-23T10:32:03.167Z",
-      "commit": "",
+      "commit": "54bee97",
       "rounds": 1,
       "id": "U4",
       "title": "Create the astro plugin index, switch the astro preset to it, fix TypeScript in client scripts, and change the dependencies",
@@ -269,9 +269,9 @@
     },
     {
       "id": "W3",
-      "status": "running",
+      "status": "green",
       "started": "2026-11-23T10:26:13.758Z",
-      "ended": ""
+      "ended": "2026-11-23T10:34:16.726Z"
     },
     {
       "id": "W4",
