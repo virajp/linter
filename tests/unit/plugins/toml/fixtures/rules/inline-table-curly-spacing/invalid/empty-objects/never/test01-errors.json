@@ -1,0 +1,7 @@
+[
+  {
+    "message": "There should be no space in empty inline table.",
+    "line": 4,
+    "column": 6
+  }
+]

@@ -15,8 +15,8 @@
   "gaps_of": [],
   "execution": "teams",
   "status": {
-    "state": "APPROVED",
-    "detail": "APPROVED 2026-11-22 by the user"
+    "state": "RUNNING",
+    "detail": "RUNNING since 2026-11-23T04:52 in .worktrees/all-2026-11-23-0136"
   },
   "consent": {
     "merge": true,
@@ -73,11 +73,11 @@
       ],
       "depends_on": [],
       "waits": "",
-      "status": "pending",
-      "started": "",
-      "ended": "",
+      "status": "green",
+      "started": "2026-11-22T23:22:51.121Z",
+      "ended": "2026-11-23T05:56:34.618Z",
       "commit": "",
-      "rounds": 0
+      "rounds": 1
     },
     {
       "id": "U2",
@@ -244,8 +244,8 @@
   "waves": [
     {
       "id": "W1",
-      "status": "pending",
-      "started": "",
+      "status": "running",
+      "started": "2026-11-22T23:22:51.084Z",
       "ended": ""
     },
     {
@@ -403,6 +403,15 @@
         "U3",
         "U4"
       ]
+    },
+    {
+      "id": "D11",
+      "decision": "Q1: The self-lint reports an Unused eslint-disable directive warning for the ported upstream comment disabling @typescript-eslint/no-unsafe-function-type in src/plugins/toml/utils/ast-utils.ts:84 (a rule this repo defines). Keep the comment or drop it?",
+      "ruling": "Keep it as ported — a faithful port; the warning stays, and code:lint does not fail because there is no --max-warnings.",
+      "rejected": "Drop the comment — a clean self-lint, but a deviation from upstream that D10(a) does not cover",
+      "units": [
+        "U1"
+      ]
     }
   ],
   "stages": {
@@ -432,7 +441,12 @@
     }
   },
   "gaps": [],
-  "overrides": [],
+  "overrides": [
+    {
+      "id": "O1",
+      "text": "shared worktree: all-2026-11-23-0136"
+    }
+  ],
   "run": {
     "worktree": ".worktrees/all-2026-11-23-0136",
     "log": "~/Library/Caches/vwf/linter/2026-11-22-own-toml-rules.jsonl"
