@@ -1,0 +1,44 @@
+// Ported from eslint-plugin-astro v3.2.1 (MIT), src/utils/style/index.ts.
+import type {
+  CSSToken,
+  CSSTokenizeOption,
+} from "./tokenizer.js";
+import {
+  CSSTokenizer,
+  CSSTokenType,
+} from "./tokenizer.js";
+
+class CSSTokenScanner {
+  private readonly reconsuming: CSSToken[] = [];
+
+  private readonly tokenizer: CSSTokenizer;
+
+  public constructor(text: string, options: CSSTokenizeOption) {
+    this.tokenizer = new CSSTokenizer(text, 0, options);
+  }
+
+  public nextToken(): CSSToken | null {
+    return this.reconsuming.shift() || this.tokenizer.nextToken();
+  }
+
+  public reconsume(...tokens: CSSToken[]) {
+    this.reconsuming.push(...tokens);
+  }
+}
+
+/**
+ * Iterate the CSS variables.
+ */
+export function* iterateCSSVars(
+  code: string,
+  cssOptions: CSSTokenizeOption,
+): IterableIterator<string> {
+  const tokenizer = new CSSTokenScanner(code, cssOptions);
+
+  let token;
+  while ((token = tokenizer.nextToken())) {
+    if (token.type === CSSTokenType.word || token.value.startsWith("--")) {
+      yield token.value;
+    }
+  }
+}

@@ -1,0 +1,37 @@
+// Ported from eslint-plugin-astro v3.2.1 (MIT), src/shared/client-script/parse-expression.ts.
+import type { TSESTree } from "@typescript-eslint/types";
+import { traverseNodes } from "astro-eslint-parser";
+import { resolveParser } from "../../utils/resolve-parser/index.js";
+
+/**
+ * Parse expression
+ */
+export function parseExpression(code: string): TSESTree.Expression {
+  const result = resolveParser().parseForESLint(
+    `(
+${code}
+)`,
+    { range: true, loc: true },
+  );
+  const statement = result.ast.body[0] as TSESTree.ExpressionStatement;
+  const expression = statement.expression;
+  traverseNodes(expression, {
+    visitorKeys: result.visitorKeys,
+    enterNode(node) {
+      node.loc.start = {
+        ...node.loc.start,
+        line: node.loc.start.line - 1,
+      };
+      node.loc.end = {
+        ...node.loc.end,
+        line: node.loc.end.line - 1,
+      };
+      node.range = [node.range[0] - 2, node.range[1] - 2];
+    },
+    leaveNode() {
+      /* noop */
+    },
+  });
+
+  return expression;
+}

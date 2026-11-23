@@ -15,8 +15,8 @@
   "gaps_of": [],
   "execution": "teams",
   "status": {
-    "state": "APPROVED",
-    "detail": "APPROVED 2026-11-22 by the user"
+    "state": "RUNNING",
+    "detail": "RUNNING since 2026-11-23T08:40:59Z in .worktrees/all-2026-11-23-0136"
   },
   "consent": {
     "merge": true,
@@ -66,11 +66,11 @@
       "model": "opus",
       "depends_on": [],
       "waits": "",
-      "status": "pending",
-      "started": "",
-      "ended": "",
+      "status": "green",
+      "started": "2026-11-23T08:41:26.239Z",
+      "ended": "2026-11-23T10:12:17.005Z",
       "commit": "",
-      "rounds": 0,
+      "rounds": 2,
       "id": "U1",
       "title": "Astro processor, shared code, utils and test fixtures",
       "wave": 1,
@@ -86,7 +86,8 @@
         "tests/unit/plugins/astro/fixtures/",
         "tests/unit/plugins/astro/helpers/",
         "tests/unit/plugins/astro/utils/",
-        "src/plugins/astro/shims.d.ts"
+        "src/plugins/astro/shims.d.ts",
+        "src/plugins/astro/types-for-node.ts"
       ]
     },
     {
@@ -256,8 +257,8 @@
   "waves": [
     {
       "id": "W1",
-      "status": "pending",
-      "started": "",
+      "status": "running",
+      "started": "2026-11-23T08:41:26.201Z",
       "ended": ""
     },
     {
@@ -459,6 +460,15 @@
         "U3",
         "U4"
       ]
+    },
+    {
+      "id": "D15",
+      "decision": "Q1: upstream src/types.ts imports ASTNode, ASTNodeWithParent and ASTNodeListener from src/types-for-node.ts, which D4 lists as not ported; how does src/plugins/astro/types.ts get these types?",
+      "ruling": "Port src/types-for-node.ts (the generated, type-only file) as src/plugins/astro/types-for-node.ts and add it to U1 owns — the U2/U3 rules keep upstream exact typing, with no runtime effect.",
+      "rejected": "Inline the three types into types.ts with ASTNodeListener reduced to a generic handler map; Paste the generated file content into types.ts",
+      "units": [
+        "U1"
+      ]
     }
   ],
   "stages": {
@@ -487,8 +497,21 @@
       "ended": ""
     }
   },
-  "gaps": [],
-  "overrides": [],
+  "gaps": [
+    {
+      "id": "G1",
+      "unit": "U1",
+      "stage": "",
+      "text": "U1 owns lacked src/plugins/astro/types-for-node.ts, which src/types.ts imports (Q1) · owns widened per D15",
+      "state": "closed"
+    }
+  ],
+  "overrides": [
+    {
+      "id": "O1",
+      "text": "shared worktree: all-2026-11-23-0136"
+    }
+  ],
   "run": {
     "worktree": ".worktrees/all-2026-11-23-0136",
     "log": "~/Library/Caches/vwf/linter/2026-11-22-own-astro-rules.jsonl"

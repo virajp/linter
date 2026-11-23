@@ -1,0 +1,8 @@
+---
+import SomeSvelteComponent from "../SomeSvelteComponent.svelte"
+let string = "svelte"
+---
+
+<SomeSvelteComponent client:only="svelte" />
+<SomeSvelteComponent client:only={string} />
+<SomeSvelteComponent client:idle />
