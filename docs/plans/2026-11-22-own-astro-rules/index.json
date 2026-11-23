@@ -130,7 +130,7 @@
       "status": "green",
       "started": "2026-11-23T10:17:14.200Z",
       "ended": "2026-11-23T10:20:56.862Z",
-      "commit": "",
+      "commit": "703e68a",
       "rounds": 1,
       "id": "U3",
       "title": "Astro rules, group B (no-set-text-directive to sort-attributes)",
