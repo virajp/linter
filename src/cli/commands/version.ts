@@ -83,7 +83,6 @@ export function runVersion(): void {
     /^eslint$/,
     /^@eslint\//,
     /^@typescript-eslint\/parser$/,
-    /^typescript-eslint$/,
     /^eslint-plugin-/,
   ];
 

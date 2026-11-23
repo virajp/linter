@@ -35,9 +35,9 @@ def main():
   #   1. Seed the lockfile. `pnpm update --latest` resolves the `latest`
   #      dist-tag even for packages excluded with `!`, ignoring their
   #      package.json range -- on a clean slate (cleanup deletes the lockfile)
-  #      that pulls typescript 7, which eslint/typescript-eslint do not
-  #      support. Given a lockfile that already pins 6.x, the `!typescript`
-  #      exclusion leaves that resolution alone.
+  #      that pulls typescript 7, which @typescript-eslint/parser (peer
+  #      typescript <6.1) does not support. Given a lockfile that already
+  #      pins 6.x, the `!typescript` exclusion leaves that resolution alone.
   #   2. A `pnpm update` that downloads leaks handles on the store index
   #      (~/Library/pnpm/store/v11/index.db) and never exits -- pnpm 11.18.0,
   #      only reproducible against a cold store, which `store prune` in cleanup
@@ -47,7 +47,20 @@ def main():
   run("pnpm", "install", "--lockfile-only")
 
   helpers.print_subheader("Updating the dependencies to latest ...")
-  run("pnpm", "--recursive", "update", "--latest", "!typescript", "--lockfile-only")
+  # Held at their majors, like typescript:
+  #   - ajv: 6.x, the ajv-6 API that ESLint also uses (areOptionsValid test
+  #     helper).
+  #   - @types/react: 18.x, the version the typescript rule test fixtures name.
+  run(
+    "pnpm",
+    "--recursive",
+    "update",
+    "--latest",
+    "!typescript",
+    "!ajv",
+    "!@types/react",
+    "--lockfile-only",
+  )
 
   helpers.print_subheader("Installing the node modules ...")
   run("pnpm", "install", "--network-concurrency", "10", "--recursive")
