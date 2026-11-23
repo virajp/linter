@@ -1,5 +1,9 @@
 import { defineConfig } from "eslint/config";
 import { ignores } from "./ignores.js";
+import {
+  astroClientJsConfig,
+  astroClientTsConfig,
+} from "./presets/astro-client.js";
 import { astroConfig } from "./presets/astro.js";
 import { cssConfig } from "./presets/css.js";
 import { htmlConfig } from "./presets/html.js";
@@ -18,6 +22,8 @@ export function composeBaseConfig() {
     javascriptConfig,
     typescriptConfig,
     astroConfig,
+    astroClientJsConfig,
+    astroClientTsConfig,
     jsonConfig,
     jsoncConfig,
     markdownConfig,

@@ -82,7 +82,7 @@ export function runVersion(): void {
   const patterns = [
     /^eslint$/,
     /^@eslint\//,
-    /^@typescript-eslint\//,
+    /^@typescript-eslint\/parser$/,
     /^typescript-eslint$/,
     /^eslint-plugin-/,
   ];

@@ -158,11 +158,11 @@
         "U3"
       ],
       "waits": "the plugin index imports all 18 rules, and the plugin can leave the dependencies only once the preset no longer uses it",
-      "status": "pending",
-      "started": "",
-      "ended": "",
+      "status": "green",
+      "started": "2026-11-23T10:26:13.798Z",
+      "ended": "2026-11-23T10:32:03.167Z",
       "commit": "",
-      "rounds": 0,
+      "rounds": 1,
       "id": "U4",
       "title": "Create the astro plugin index, switch the astro preset to it, fix TypeScript in client scripts, and change the dependencies",
       "wave": 3,
@@ -269,8 +269,8 @@
     },
     {
       "id": "W3",
-      "status": "pending",
-      "started": "",
+      "status": "running",
+      "started": "2026-11-23T10:26:13.758Z",
       "ended": ""
     },
     {

@@ -21,5 +21,10 @@ const items = ["one", "two"];
       });
     </script>
     <button type="button">Click</button>
+    <script>
+      const heading = document.querySelector("h1") as HTMLHeadingElement;
+      const greeting: string = heading.textContent ?? "";
+      heading.title = greeting;
+    </script>
   </body>
 </html>
