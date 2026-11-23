@@ -76,7 +76,7 @@
       "status": "green",
       "started": "2026-11-23T10:52:44.902Z",
       "ended": "2026-11-23T11:02:23.616Z",
-      "commit": "",
+      "commit": "b0a6823",
       "rounds": 1,
       "id": "U1",
       "title": "TypeScript plugin utils, shared rule helpers, fixtures and test harness",
@@ -515,9 +515,9 @@
   "waves": [
     {
       "id": "W1",
-      "status": "running",
+      "status": "green",
       "started": "2026-11-23T10:52:44.827Z",
-      "ended": ""
+      "ended": "2026-11-23T11:06:26.847Z"
     },
     {
       "id": "W2",
@@ -814,7 +814,15 @@
       "ended": ""
     }
   },
-  "gaps": [],
+  "gaps": [
+    {
+      "id": "G1",
+      "unit": "U1",
+      "stage": "",
+      "text": "the pre-commit lint hook (eslint --fix) removed the unused eslint-disable directives U1 had left in its ported files, and trailing-whitespace/format hooks tidied the result · accepted as the repo hook output on U1 commit b0a6823; code:lint and code:check green",
+      "state": "closed"
+    }
+  ],
   "overrides": [
     {
       "id": "O1",
