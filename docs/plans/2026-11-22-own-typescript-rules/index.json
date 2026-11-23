@@ -370,7 +370,7 @@
       "status": "green",
       "started": "2026-11-23T11:06:47.360Z",
       "ended": "2026-11-23T11:15:59.815Z",
-      "commit": "",
+      "commit": "508c204",
       "rounds": 1,
       "id": "U9",
       "title": "TypeScript rules, group H (prefer-return-this-type to use-unknown-in-catch-callback-variable)",
@@ -523,9 +523,9 @@
     },
     {
       "id": "W2",
-      "status": "running",
+      "status": "green",
       "started": "2026-11-23T11:06:46.702Z",
-      "ended": ""
+      "ended": "2026-11-23T12:20:12.891Z"
     },
     {
       "id": "W3",
