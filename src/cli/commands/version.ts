@@ -84,7 +84,6 @@ export function runVersion(): void {
     /^@eslint\//,
     /^@typescript-eslint\//,
     /^typescript-eslint$/,
-    /^@html-eslint\//,
     /^eslint-plugin-/,
   ];
 
