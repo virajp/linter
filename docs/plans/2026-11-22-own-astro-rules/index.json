@@ -243,7 +243,7 @@
       "status": "green",
       "started": "2026-11-23T10:42:44.188Z",
       "ended": "2026-11-23T10:44:05.021Z",
-      "commit": "",
+      "commit": "772de08",
       "rounds": 1,
       "id": "U7",
       "title": "Gates",
@@ -287,9 +287,9 @@
     },
     {
       "id": "W6",
-      "status": "running",
+      "status": "green",
       "started": "2026-11-23T10:42:44.150Z",
-      "ended": ""
+      "ended": "2026-11-23T10:45:27.854Z"
     }
   ],
   "shared_files": [
