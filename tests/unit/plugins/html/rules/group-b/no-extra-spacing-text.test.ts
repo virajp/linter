@@ -145,7 +145,7 @@ ruleTester.run("no-extra-spacing-text", rule, {
     {
       code: `
 <div>
-  foo     bar
+  foo     bar    ${" "}
 </div>
 `,
       output: `
@@ -208,9 +208,9 @@ html\`<div>
     {
       code: `
 html\`<div>
-      \${items => {
-        var foo;    var bar;
-
+      \${items => {${" "}
+        var foo;    var bar;  ${" "}
+       ${" "}
         }}
 </div>\`
       `,
