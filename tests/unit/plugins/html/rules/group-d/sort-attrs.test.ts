@@ -341,7 +341,7 @@ ruleTester.run("sort-attrs", rule, {
     },
     {
       code: `
-<button
+<button${" "}
   style="color:black"
   id="nice"
   <% if current_user.admin? %>
@@ -352,7 +352,7 @@ ruleTester.run("sort-attrs", rule, {
 </button>
       `,
       output: `
-<button
+<button${" "}
   id="nice"
   style="color:black"
   <% if current_user.admin? %>
