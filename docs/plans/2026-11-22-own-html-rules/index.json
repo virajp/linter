@@ -16,7 +16,7 @@
   "execution": "teams",
   "status": {
     "state": "RUNNING",
-    "detail": "RUNNING since resume in .worktrees/all-2026-11-23-0136 — Q1 answered (D15)"
+    "detail": "RUNNING in .worktrees/all-2026-11-23-0136 — Q2 answered (D16), U2-U4 restoring test whitespace"
   },
   "consent": {
     "merge": true,
@@ -133,9 +133,9 @@
       "waits": "it imports the language, adapters, utils, types and test helper that U1 creates",
       "status": "green",
       "started": "2026-11-23T06:49:05.407Z",
-      "ended": "2026-11-23T06:57:05.605Z",
-      "commit": "86083f0",
-      "rounds": 3,
+      "ended": "2026-11-23T08:19:34.474Z",
+      "commit": "3385e60",
+      "rounds": 4,
       "id": "U2",
       "title": "HTML rules, group A (attrs-newline to no-duplicate-id)",
       "wave": 2,
@@ -170,9 +170,9 @@
       "waits": "it imports the language, adapters, utils, types and test helper that U1 creates",
       "status": "green",
       "started": "2026-11-23T06:49:05.474Z",
-      "ended": "2026-11-23T06:57:05.708Z",
-      "commit": "a5c9623",
-      "rounds": 2,
+      "ended": "2026-11-23T08:19:34.617Z",
+      "commit": "9718f1c",
+      "rounds": 3,
       "id": "U3",
       "title": "HTML rules, group B (no-duplicate-in-head to no-obsolete-tags)",
       "wave": 2,
@@ -207,9 +207,9 @@
       "waits": "it imports the language, adapters, utils, types and test helper that U1 creates",
       "status": "green",
       "started": "2026-11-23T06:49:05.543Z",
-      "ended": "2026-11-23T06:57:05.808Z",
-      "commit": "1004e72",
-      "rounds": 1,
+      "ended": "2026-11-23T08:19:34.770Z",
+      "commit": "ae13d82",
+      "rounds": 2,
       "id": "U4",
       "title": "HTML rules, group C (no-positive-tabindex to require-content)",
       "wave": 2,
@@ -244,9 +244,9 @@
       "waits": "it imports the language, adapters, utils, types and test helper that U1 creates",
       "status": "green",
       "started": "2026-11-23T06:49:05.611Z",
-      "ended": "2026-11-23T06:57:05.911Z",
-      "commit": "3e91600",
-      "rounds": 2,
+      "ended": "2026-11-23T08:19:34.916Z",
+      "commit": "6593f5a",
+      "rounds": 3,
       "id": "U5",
       "title": "HTML rules, group D (require-details-summary to use-baseline)",
       "wave": 2,
@@ -283,11 +283,11 @@
         "U5"
       ],
       "waits": "the plugin index imports all 65 rules, and the plugin can leave the dependencies only once the preset no longer uses it",
-      "status": "pending",
-      "started": "",
-      "ended": "",
-      "commit": "",
-      "rounds": 0,
+      "status": "green",
+      "started": "2026-11-23T07:51:25.585Z",
+      "ended": "2026-11-23T08:19:34.995Z",
+      "commit": "8ab67cf",
+      "rounds": 1,
       "id": "U6",
       "title": "Create the html plugin index, switch the html preset to it, and change the dependencies",
       "wave": 3,
@@ -393,9 +393,9 @@
     },
     {
       "id": "W3",
-      "status": "pending",
-      "started": "",
-      "ended": ""
+      "status": "green",
+      "started": "2026-11-23T07:51:25.550Z",
+      "ended": "2026-11-23T08:25:33.117Z"
     },
     {
       "id": "W4",
@@ -611,6 +611,17 @@
       "units": [
         "U2"
       ]
+    },
+    {
+      "id": "D16",
+      "decision": "Q2: The pre-commit trailing-whitespace hook stripped trailing spaces inside ported test literals (8 failing cases in element-newline, no-duplicate-attrs [U2], no-extra-spacing-text [U3], no-trailing-spaces [U4]). How are they restored so a commit cannot strip them again?",
+      "ruling": "Write each stripped trailing space as an escape inside the literal (`\\x20`, or `${\" \"}` in a template literal), re-dispatching U2, U3 and U4 for their files — the tested strings are byte-identical to upstream and no tooling changes.",
+      "rejected": "Restore the raw trailing spaces and exclude tests/unit/plugins/html/rules/ from the trailing-whitespace hook; Stop the plan here",
+      "units": [
+        "U2",
+        "U3",
+        "U4"
+      ]
     }
   ],
   "stages": {
@@ -645,6 +656,13 @@
       "unit": "U1",
       "stage": "",
       "text": "R1: U1 wrapped the bare describe(\"getParent()\") assertions of html-source-code.test.ts in an it(), a test-setup change D13 lists for U2-U5 only · settled: D13 was ruled by the user for every ported upstream test of all B08 plans, expected values unchanged, and U1 listed it as DECIDED for U7 to check",
+      "state": "closed"
+    },
+    {
+      "id": "G2",
+      "unit": "U5",
+      "stage": "",
+      "text": "D16 named U2, U3 and U4, but a scan of upstream v0.68.0 found the hook had also stripped trailing whitespace from indent.test.ts (U2, 6 lines) and sort-attrs.test.ts (U5, 2 lines), whose tests still passed · settled: restored as ${\"<spaces>\"} escapes under D16, U2 and U5 re-dispatched; tested strings byte-identical to upstream",
       "state": "closed"
     }
   ],
