@@ -153,10 +153,10 @@ example `**/AGENTS.md` and `.claude/**/*.md`) apply to every consumer repo.
 ### Our own plugins
 
 B08 moves the rules of third-party plugins into this package. Today the
-Tailwind rules and the YAML rules and language are moved. Each plugin is in
-`src/plugins/<name>/` and compiles into `dist/` with the rest of `src/`. Its
-rules keep the rule names of the plugin they replace, so consumer `overrides`
-do not change.
+Tailwind rules, the YAML rules and language, and the TOML rules and language
+are moved. Each plugin is in `src/plugins/<name>/` and compiles into `dist/`
+with the rest of `src/`. Its rules keep the rule names of the plugin they
+replace, so consumer `overrides` do not change.
 
 - **`src/plugins/tailwindcss/`** — the `tailwindcss/` rules of the `css`
   preset (`index.ts`, `syntax.ts`, `types.ts`, `utils/`, `rules/`). The
@@ -173,6 +173,14 @@ do not change.
   `meta`, `rules` and `languages` (`yaml`): the `yaml` preset sets the
   language and the rule severities. The language parses with
   `yaml-eslint-parser`.
+- **`src/plugins/toml/`** — the `toml/` rules and the `toml/toml` language of
+  the `toml` preset (`index.ts`, `meta.ts`, `types.ts`, `language/`, `utils/`,
+  `rules/`). The 22 rules and the language are ported from
+  `eslint-plugin-toml`, which is not a dependency now. The Vue-only rule
+  `vue-custom-block/no-parsing-error` and the deprecated rule `space-eq-sign`
+  are not ported. The plugin exports `meta`, `rules` and `languages` (`toml`):
+  the `toml` preset sets the language and the rule severities. The language
+  parses with `toml-eslint-parser`.
 - A ported file starts with a one-line header that names its source. Each
   source has an entry with its license text and copyright in
   `THIRD_PARTY_NOTICES.md`, which `files` of `package.json` ships in the
@@ -186,6 +194,9 @@ do not change.
   dependency in `bundledDependencies` (see the dependency criterion in
   [Dependency policy](#dependency-policy)). `natural-compare` has no types,
   so `src/plugins/yml/natural-compare.d.ts` declares its module.
+- The `toml` plugin has the runtime dependencies `toml-eslint-parser`,
+  `@eslint/plugin-kit` and `@ota-meshi/ast-token-store`. Each one is an
+  exact-pinned dependency in `bundledDependencies`.
 
 ### Adding a language or plugin
 
@@ -392,13 +403,13 @@ If `main` is branch-protected, allow `github-actions[bot]` to push.
   scaffolding; helpers in `tests/helpers/run-unit.ts`.
   `tests/unit/plugins/<name>/` has the tests of our own plugins: a RuleTester
   test for each rule (`rules/<rule>.test.ts`, or `rules/<group>/<rule>.test.ts`
-  for `yml`), and tests of the language, the syntax and the helpers. A plugin
-  can keep the upstream fixtures of its ported tests in
+  for `yml` and `toml`), and tests of the language, the syntax and the helpers.
+  A plugin can keep the upstream fixtures of its ported tests in
   `tests/unit/plugins/<name>/fixtures/`, with the upstream fixture loader in
   `helpers/` (for `yml`, `fixtures/rules/` and the copy
-  `fixtures/upstream-package.json`). The global `exclude` of
-  `.config/pre-commit-config.yaml` is `^tests/(.*/)?fixtures/`, so the hooks
-  do not change these fixtures or `tests/fixtures/`. Change it in
+  `fixtures/upstream-package.json`; for `toml`, `fixtures/rules/`). The global
+  `exclude` of `.config/pre-commit-config.yaml` is `^tests/(.*/)?fixtures/`, so
+  the hooks do not change these fixtures or `tests/fixtures/`. Change it in
   `.config/bootstrap/tools.toml` too, so that a bootstrap sync keeps it.
 - **Integration** (`tests/integration/`) — spawn `dist/index.js` against fixture
   files in a temp dir (`tests/helpers/{run-cli,temp-dir,fixture-manifest}.ts`),
