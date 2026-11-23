@@ -446,19 +446,19 @@
         "U10"
       ],
       "waits": "",
-      "status": "pending",
-      "started": "",
-      "ended": "",
+      "status": "green",
+      "started": "2026-11-23T12:32:17.161Z",
+      "ended": "2026-11-23T12:34:05.236Z",
       "commit": "",
-      "rounds": 0,
+      "rounds": 1,
       "id": "U11",
       "title": "Review: the TypeScript utils, the 128 rules and the preset switch",
       "wave": 4,
       "file": "11-review.md",
       "owns": [],
       "range": {
-        "from": "",
-        "to": ""
+        "from": "a8f4763",
+        "to": "c461760"
       }
     },
     {
@@ -535,9 +535,9 @@
     },
     {
       "id": "W4",
-      "status": "pending",
-      "started": "",
-      "ended": ""
+      "status": "green",
+      "started": "2026-11-23T12:32:17.086Z",
+      "ended": "2026-11-23T12:34:45.241Z"
     },
     {
       "id": "W5",
