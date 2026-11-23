@@ -192,19 +192,19 @@
         "U4"
       ],
       "waits": "",
-      "status": "pending",
-      "started": "",
-      "ended": "",
+      "status": "green",
+      "started": "2026-11-23T10:34:44.233Z",
+      "ended": "2026-11-23T10:37:00.134Z",
       "commit": "",
-      "rounds": 0,
+      "rounds": 1,
       "id": "U5",
       "title": "Review: the Astro processor, its 18 rules, the preset switch and the client-script fix",
       "wave": 4,
       "file": "05-review.md",
       "owns": [],
       "range": {
-        "from": "",
-        "to": ""
+        "from": "6fefcb1",
+        "to": "df2d6cd"
       }
     },
     {
@@ -275,9 +275,9 @@
     },
     {
       "id": "W4",
-      "status": "pending",
-      "started": "",
-      "ended": ""
+      "status": "green",
+      "started": "2026-11-23T10:34:44.193Z",
+      "ended": "2026-11-23T10:37:11.877Z"
     },
     {
       "id": "W5",
