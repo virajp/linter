@@ -364,11 +364,11 @@
         "U8"
       ],
       "waits": "",
-      "status": "pending",
-      "started": "",
-      "ended": "",
+      "status": "green",
+      "started": "2026-11-23T08:32:50.103Z",
+      "ended": "2026-11-23T08:33:56.027Z",
       "commit": "",
-      "rounds": 0,
+      "rounds": 1,
       "id": "U9",
       "title": "Gates",
       "wave": 6,
@@ -411,9 +411,9 @@
     },
     {
       "id": "W6",
-      "status": "pending",
-      "started": "",
-      "ended": ""
+      "status": "green",
+      "started": "2026-11-23T08:32:50.064Z",
+      "ended": "2026-11-23T08:34:08.367Z"
     }
   ],
   "shared_files": [
