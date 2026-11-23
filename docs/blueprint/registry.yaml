@@ -1,0 +1,26 @@
+# Project Registry — docs/blueprint/registry.yaml
+#
+# The machine-readable description of the system. Downstream commands parse
+# THIS file; none of them reads architecture.md, the prose view of the same
+# facts. Stacks, members and enforcement opt-outs live in `.config/vwf.yaml`.
+
+vwf_registry: 2 # registry schema version — 2 since blueprint format 22
+
+projects:
+  - name: linter
+    role: frontend
+    platforms: [ cli ]
+    path: "."
+    capabilities: []
+    depends_on: []
+    doc_unit: module
+
+cross_cutting:
+  errors: exit-code-stderr
+  observability: local-debug-output
+  config: yaml-walk-up
+  testing: unit-integration-golden-smoke
+  users: no-accounts
+  reliability: release-gates
+  dr: immutable-registry-vcs
+  incidents: solo-owner

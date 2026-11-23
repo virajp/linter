@@ -12,6 +12,8 @@ integrations: false
 
 stacks: [ stackgen ]
 
+addons: []
+
 repo:
   stack:
     template: unresolved
@@ -22,11 +24,12 @@ projects:
   linter:
     stack:
       template: unresolved
-      backing_template: unresolved
-      deploy_template: unresolved
+      backing_template: []
+      deploy_template: [ npm-package ]
       languages: []
       frameworks: []
       dependencies: []
+    cicd: github-actions
 
 harness:
   dev: n/a
