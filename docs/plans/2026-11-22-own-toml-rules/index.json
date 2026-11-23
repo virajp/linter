@@ -105,11 +105,11 @@
         "U1"
       ],
       "waits": "it imports the language, utils and test helpers that U1 creates",
-      "status": "pending",
-      "started": "",
-      "ended": "",
+      "status": "green",
+      "started": "2026-11-23T06:00:53.875Z",
+      "ended": "2026-11-23T06:12:23.230Z",
       "commit": "",
-      "rounds": 0
+      "rounds": 1
     },
     {
       "id": "U3",
@@ -137,11 +137,11 @@
         "U1"
       ],
       "waits": "it imports the language, utils and test helpers that U1 creates",
-      "status": "pending",
-      "started": "",
-      "ended": "",
+      "status": "green",
+      "started": "2026-11-23T06:00:53.956Z",
+      "ended": "2026-11-23T06:04:15.303Z",
       "commit": "",
-      "rounds": 0
+      "rounds": 1
     },
     {
       "id": "U4",
@@ -250,8 +250,8 @@
     },
     {
       "id": "W2",
-      "status": "pending",
-      "started": "",
+      "status": "running",
+      "started": "2026-11-23T06:00:53.833Z",
       "ended": ""
     },
     {
@@ -411,6 +411,24 @@
       "rejected": "Drop the comment — a clean self-lint, but a deviation from upstream that D10(a) does not cover",
       "units": [
         "U1"
+      ]
+    },
+    {
+      "id": "D12",
+      "decision": "Q2: The self-lint reports no-useless-assignment at src/plugins/toml/rules/array-bracket-newline.ts:68 (minItems = 0, upstream code). How should it be handled?",
+      "ruling": "Add // eslint-disable-next-line no-useless-assignment -- ported upstream code above the line, as plan 2 did — lint passes and the code stays as upstream wrote it.",
+      "rejected": "Remove the useless assignment; Leave it as ported (code:lint fails)",
+      "units": [
+        "U2"
+      ]
+    },
+    {
+      "id": "D13",
+      "decision": "Q3: The self-lint warns Unused eslint-disable directive for the ported upstream comment disabling @typescript-eslint/no-explicit-any at src/plugins/toml/rules/array-element-newline.ts:124. Keep it or drop it?",
+      "ruling": "Keep it as ported, as D11 ruled for U1 — faithful to upstream; the warning does not fail code:lint.",
+      "rejected": "Drop the comment",
+      "units": [
+        "U2"
       ]
     }
   ],
