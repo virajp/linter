@@ -15,8 +15,8 @@
   "gaps_of": [],
   "execution": "teams",
   "status": {
-    "state": "APPROVED",
-    "detail": "APPROVED 2026-11-22 by the user"
+    "state": "RUNNING",
+    "detail": "RUNNING since 2026-11-23 16:21 in .worktrees/all-2026-11-23-0136"
   },
   "consent": {
     "merge": true,
@@ -73,11 +73,11 @@
       "model": "opus",
       "depends_on": [],
       "waits": "",
-      "status": "pending",
-      "started": "",
-      "ended": "",
+      "status": "green",
+      "started": "2026-11-23T10:52:44.902Z",
+      "ended": "2026-11-23T11:02:23.616Z",
       "commit": "",
-      "rounds": 0,
+      "rounds": 1,
       "id": "U1",
       "title": "TypeScript plugin utils, shared rule helpers, fixtures and test harness",
       "wave": 1,
@@ -515,8 +515,8 @@
   "waves": [
     {
       "id": "W1",
-      "status": "pending",
-      "started": "",
+      "status": "running",
+      "started": "2026-11-23T10:52:44.827Z",
       "ended": ""
     },
     {
@@ -768,6 +768,24 @@
         "U10",
         "U12"
       ]
+    },
+    {
+      "id": "D15",
+      "decision": "Q1: How should the intentional switch fallthrough in class-scope-analyzer/classScopeAnalyzer.ts (TS7029 under noFallthroughCasesInSwitch) be fixed?",
+      "ruling": "add \"// @ts-expect-error -- falls through\" above the case, as src/plugins/astro/utils/string-literal-parser/tokenizer.ts:122 already does — compile-time only, behavior unchanged",
+      "rejected": "rewrite the switch without the fallthrough; turn off noFallthroughCasesInSwitch in tsconfig.json",
+      "units": [
+        "U1"
+      ]
+    },
+    {
+      "id": "D16",
+      "decision": "Q2: How should src/plugins/typescript/typings/eslint-rules.d.ts, which dprint cannot format, pass the format gate?",
+      "ruling": "add a \"// dprint-ignore-file\" comment as the second line of eslint-rules.d.ts — the file stays as upstream wrote it, with no effect on types",
+      "rejected": "change the quoted method signatures to property signatures; exclude the file in dprint.jsonc",
+      "units": [
+        "U1"
+      ]
     }
   ],
   "stages": {
@@ -797,7 +815,12 @@
     }
   },
   "gaps": [],
-  "overrides": [],
+  "overrides": [
+    {
+      "id": "O1",
+      "text": "shared worktree: all-2026-11-23-0136"
+    }
+  ],
   "run": {
     "worktree": ".worktrees/all-2026-11-23-0136",
     "log": "~/Library/Caches/vwf/linter/2026-11-22-own-typescript-rules.jsonl"
