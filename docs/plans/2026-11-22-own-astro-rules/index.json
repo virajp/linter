@@ -97,11 +97,11 @@
         "U1"
       ],
       "waits": "it imports the processor, shared code, utils and test helpers that U1 creates",
-      "status": "pending",
-      "started": "",
-      "ended": "",
+      "status": "green",
+      "started": "2026-11-23T10:17:14.115Z",
+      "ended": "2026-11-23T10:20:56.739Z",
       "commit": "",
-      "rounds": 0,
+      "rounds": 1,
       "id": "U2",
       "title": "Astro rules, group A (missing-client-only-directive-value to no-set-html-directive)",
       "wave": 2,
@@ -127,11 +127,11 @@
         "U1"
       ],
       "waits": "it imports the processor, shared code, utils and test helpers that U1 creates",
-      "status": "pending",
-      "started": "",
-      "ended": "",
+      "status": "green",
+      "started": "2026-11-23T10:17:14.200Z",
+      "ended": "2026-11-23T10:20:56.862Z",
       "commit": "",
-      "rounds": 0,
+      "rounds": 1,
       "id": "U3",
       "title": "Astro rules, group B (no-set-text-directive to sort-attributes)",
       "wave": 2,
@@ -263,8 +263,8 @@
     },
     {
       "id": "W2",
-      "status": "pending",
-      "started": "",
+      "status": "running",
+      "started": "2026-11-23T10:17:14.073Z",
       "ended": ""
     },
     {
