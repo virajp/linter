@@ -4,13 +4,12 @@
 # THIS file; none of them reads architecture.md, the prose view of the same
 # facts. Stacks, members and enforcement opt-outs live in `.config/vwf.yaml`.
 
-vwf_registry: 2 # registry schema version — 2 since blueprint format 22
+vwf_registry: 3 # registry schema version — 3 since blueprint format 26
 
 projects:
   - name: linter
     role: frontend
     platforms: [ cli ]
-    path: "."
     capabilities: []
     depends_on: []
     doc_unit: module

@@ -4,8 +4,11 @@ core_branches = [ "main" ]
 environments = [ "dev", "ci" ]
 # The values of bootstrap for this repository. See docs/sync/index.md of bootstrap.
 format = 3
+product_name = "linter"
 repo_name = "linter"
 repo_url = "https://github.com/virajp/linter"
+topology = "monorepo"
+topology_reason = "The repo will hold more projects, such as the planned site; today it has one project at the root."
 
 [commits]
 scopes = [ "cli", "config", "deps", "fixtures", "integration", "tests", "unit" ]
