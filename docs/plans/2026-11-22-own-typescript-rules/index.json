@@ -75,9 +75,9 @@
       "waits": "",
       "status": "green",
       "started": "2026-11-23T10:52:44.902Z",
-      "ended": "2026-11-23T11:02:23.616Z",
+      "ended": "2026-11-23T12:30:52.654Z",
       "commit": "b0a6823",
-      "rounds": 1,
+      "rounds": 3,
       "id": "U1",
       "title": "TypeScript plugin utils, shared rule helpers, fixtures and test harness",
       "wave": 1,
@@ -411,11 +411,11 @@
         "U9"
       ],
       "waits": "the plugin index imports all 128 rules, and the plugins can leave the dependencies only once the preset no longer uses them",
-      "status": "pending",
-      "started": "",
-      "ended": "",
+      "status": "green",
+      "started": "2026-11-23T12:20:27.611Z",
+      "ended": "2026-11-23T12:25:25.633Z",
       "commit": "",
-      "rounds": 0,
+      "rounds": 2,
       "id": "U10",
       "title": "Create the typescript plugin index, switch the typescript preset to it, and change the dependencies",
       "wave": 3,
@@ -529,8 +529,8 @@
     },
     {
       "id": "W3",
-      "status": "pending",
-      "started": "",
+      "status": "running",
+      "started": "2026-11-23T12:20:27.532Z",
       "ended": ""
     },
     {
@@ -846,6 +846,15 @@
       "units": [
         "U3",
         "U4"
+      ]
+    },
+    {
+      "id": "D23",
+      "decision": "Q9: The self-lint (jiti) throws Cannot redefine property: module.exports at util/index.ts:43 because two CommonJS modules are star-re-exported. Which fix is allowed?",
+      "ruling": "in util/astUtils.ts, replace upstream export * from \"@typescript-eslint/utils/ast-utils\" with export type * plus an explicit named export of its 62 runtime names — the exported names stay the same and util/index.ts does not change; the list must be checked again on each @typescript-eslint/utils upgrade",
+      "rejected": "the same in util/index.ts for @typescript-eslint/type-utils; change the self-lint to lint dist/",
+      "units": [
+        "U1"
       ]
     }
   ],
