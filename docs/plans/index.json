@@ -2,38 +2,19 @@
   "format": 1,
   "plans": [
     {
-      "id": "2026-11-22-own-toml-rules",
-      "folder": "docs/plans/archived/2026-11-22-own-toml-rules",
-      "kind": "change",
-      "title": "Own the TOML rules and language",
-      "target_repo": null,
-      "priority": 30,
-      "status": "COMPLETE",
-      "started": "2026-11-22T23:21:13.497Z",
-      "ended": "2026-11-23T06:33:31.202Z",
-      "gaps": {
-        "open": 0,
-        "moved_to": []
-      },
-      "requires": [
-        "2026-11-22-own-yml-rules"
-      ],
-      "backlog": [],
-      "backlog_pieces": [
-        "B08"
-      ]
-    },
-    {
       "id": "2026-11-22-own-html-rules",
-      "folder": "docs/plans/2026-11-22-own-html-rules",
+      "folder": "docs/plans/archived/2026-11-22-own-html-rules",
       "kind": "change",
       "title": "Own the HTML rules and language",
       "target_repo": null,
       "priority": 40,
-      "status": "RUNNING",
+      "status": "COMPLETE",
       "started": "2026-11-23T06:35:51.426Z",
-      "ended": "",
-      "gaps": null,
+      "ended": "2026-11-23T08:37:34.576Z",
+      "gaps": {
+        "open": 0,
+        "moved_to": []
+      },
       "requires": [
         "2026-11-22-own-toml-rules"
       ],
