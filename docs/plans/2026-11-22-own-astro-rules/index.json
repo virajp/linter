@@ -221,7 +221,7 @@
       "status": "green",
       "started": "2026-11-23T10:37:39.041Z",
       "ended": "2026-11-23T10:39:57.503Z",
-      "commit": "",
+      "commit": "30fab2a",
       "rounds": 2,
       "id": "U6",
       "title": "Docs",
@@ -281,9 +281,9 @@
     },
     {
       "id": "W5",
-      "status": "running",
+      "status": "green",
       "started": "2026-11-23T10:37:39.002Z",
-      "ended": ""
+      "ended": "2026-11-23T10:42:25.920Z"
     },
     {
       "id": "W6",
