@@ -414,7 +414,7 @@
       "status": "green",
       "started": "2026-11-23T12:20:27.611Z",
       "ended": "2026-11-23T12:25:25.633Z",
-      "commit": "",
+      "commit": "31da9b8",
       "rounds": 2,
       "id": "U10",
       "title": "Create the typescript plugin index, switch the typescript preset to it, and change the dependencies",
@@ -529,9 +529,9 @@
     },
     {
       "id": "W3",
-      "status": "running",
+      "status": "green",
       "started": "2026-11-23T12:20:27.532Z",
-      "ended": ""
+      "ended": "2026-11-23T12:32:01.307Z"
     },
     {
       "id": "W4",
