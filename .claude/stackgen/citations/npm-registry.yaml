@@ -1,0 +1,169 @@
+component: deploy-target/npm-registry
+source: generated
+kind: deploy-target
+fetched: 2026-11-23
+primary_source: context7 # reachable for the whole run; no mid-run switch
+detected_stack:
+  project: linter (registry platforms [cli])
+  package: "@virajp.dev/linter 2.1.0, scoped public, bin + exports (. and ./auto), files [dist/, THIRD_PARTY_NOTICES.md]"
+  bundling: "37 dependencies, all in bundledDependencies; pnpm nodeLinker hoisted; supportedArchitectures forces every native binding"
+  release: "bootstrap release.linter.prod: tag v{version}, version from package.json, preflight p:preflight, workflow release.yml"
+  pipeline: "release.yml: pack -> verify-tarball (8 platforms) -> publish (npm 11.17.0, OIDC, npm publish <tgz> --access public) -> smoke-published"
+  tasks: [
+    "release:linter:prod (bootstrap)",
+    "p:preflight",
+    "p:publish (local fallback)",
+  ]
+topics:
+  pick-and-trade:
+    artifact: .claude/skills/npm-registry/references/pick-and-trade.md
+    sources:
+      - {
+          claim: "unpublish window 72h, criteria, number never reused, deprecate as remedy",
+          url: "https://docs.npmjs.com/policies/unpublish/",
+          via: context7 /websites/npmjs,
+        }
+      - {
+          claim: "scoped packages default private; --access public on first publish",
+          url: "https://docs.npmjs.com/cli/v12/using-npm/scope/",
+          via: context7 /websites/npmjs,
+        }
+      - {
+          claim: "repo bundling, binding check and smoke matrix",
+          url: "repo: CLAUDE.md, .github/scripts/check-bindings.sh, release.yml",
+          via: detection,
+        }
+    catalog: [ yagni ]
+  artifact:
+    artifact: .claude/skills/npm-package-manifest/references/artifact.md
+    sources:
+      - {
+          claim: "bundleDependencies packed into tarball",
+          url: "https://docs.npmjs.com/cli/v12/configuring-npm/package-json/",
+          via: context7 /websites/npmjs,
+        }
+      - {
+          claim: "hoisted linker required to publish bundledDependencies",
+          url: "https://pnpm.io/settings/node-modules",
+          via: context7 /websites/pnpm_io,
+        }
+      - {
+          claim: "version from package.json, tag check",
+          url: "repo: .config/bootstrap/repo.toml, release.yml",
+          via: detection,
+        }
+      - {
+          claim: "subpaths not in exports are encapsulated (ERR_PACKAGE_PATH_NOT_EXPORTED)",
+          url: "https://nodejs.org/api/packages.html#subpath-exports",
+          via: context7 /nodejs/node,
+          note: "added after review round 4; not re-reviewed",
+        }
+      - {
+          claim: "supportedArchitectures forces every native binding; check-bindings.sh refuses a tarball missing one",
+          url: "repo: pnpm-workspace.yaml, .github/scripts/check-bindings.sh, CLAUDE.md",
+          via: detection,
+          note: "added after review round 4; not re-reviewed",
+        }
+    catalog: [ information-hiding, kiss ]
+  artifact-hygiene:
+    artifact: .claude/skills/npm-package-manifest/references/hygiene.md
+    sources:
+      - {
+          claim: "files allowlist semantics and always-included files",
+          url: "https://docs.npmjs.com/cli/v12/configuring-npm/package-json/",
+          via: context7 /websites/npmjs,
+        }
+      - {
+          claim: "npm pack --dry-run / npm publish --dry-run report npm's own pack",
+          url: "https://docs.npmjs.com/cli/v12/commands/npm-publish",
+          via: context7 /websites/npmjs,
+        }
+      - {
+          claim: "the release uploads the pnpm-packed tarball; npm does not pack the bundled tree here",
+          url: "repo: release.yml pack step comment, CLAUDE.md",
+          via: detection,
+        }
+      - {
+          claim: "version never reusable, so a leaked credential is permanent",
+          url: "https://docs.npmjs.com/policies/unpublish/",
+          via: context7 /websites/npmjs,
+        }
+    catalog: [ information-hiding, least-privilege ]
+  promotion-and-release:
+    artifact: .claude/skills/npm-registry/references/promotion.md
+    sources:
+      - {
+          claim: "trusted publishing OIDC, npm >= 11.5.1, Node >= 22.14.0, cloud runners only, up to 10 trusted publishers, workflow filename binding, stage-only option",
+          url: "https://docs.npmjs.com/trusted-publishers/",
+          via: "context7 /websites/npmjs + WebFetch (confirm count and filename rule)",
+        }
+      - {
+          claim: "automatic provenance for public repo + public package via OIDC",
+          url: "https://docs.npmjs.com/trusted-publishers/",
+          via: context7 /websites/npmjs,
+        }
+      - {
+          claim: "publish accepts a tarball path",
+          url: "https://docs.npmjs.com/cli/v12/commands/npm-publish",
+          via: context7 /websites/npmjs,
+        }
+      - {
+          claim: "publish sets latest unless --tag; npm 11 requires version above latest non-prerelease",
+          url: "https://docs.npmjs.com/cli/v12/commands/npm-dist-tag",
+          via: context7 /websites/npmjs,
+        }
+      - {
+          claim: "registry stores sha512 integrity per published version",
+          url: "https://docs.npmjs.com/cli/v12/commands/npm-publish",
+          via: context7 /websites/npmjs,
+        }
+      - {
+          claim: "npm view <pkg>@<ver> <field> reads a nested field such as dist.integrity",
+          url: "https://docs.npmjs.com/cli/v12/commands/npm-view/",
+          via: context7 /websites/npmjs,
+        }
+      - {
+          claim: "provenance only from supported cloud CI/CD with a cloud-hosted runner",
+          url: "https://docs.npmjs.com/generating-provenance-statements/",
+          via: context7 /websites/npmjs,
+        }
+      - {
+          claim: "a version number is never reusable; deprecate then next patch",
+          url: "https://docs.npmjs.com/policies/unpublish/",
+          via: context7 /websites/npmjs,
+        }
+      - {
+          claim: "pipeline rules tag-triggered-deploys (prefixed tag is the recommended default), tested-before-release, rollback-path",
+          url: "vwf/assets/delivery-pipeline.md (rules 2, 5, 7)",
+          via: "vwf contract (cited, not restated)",
+        }
+    catalog: [ least-privilege, idempotency, yagni ]
+    thin: "Context7 coverage was thin on two trusted-publisher details: the per-package publisher limit, and that the workflow filename binding needs the extension. Context7 returned the limit sentence without the page context. Both were confirmed against the official page with WebFetch, as a disclosed supplement."
+    supplements: [
+      "WebFetch https://docs.npmjs.com/trusted-publishers/ (2026-11-23): the publisher limit of 10 and the workflow filename rule. Supplement for the thin coverage above.",
+    ]
+  config-and-secrets:
+    artifact: .claude/skills/npm-registry/references/config-and-secrets.md
+    sources:
+      - {
+          claim: "unpublish limits make a leak unrecallable",
+          url: "https://docs.npmjs.com/policies/unpublish/",
+          via: context7 /websites/npmjs,
+        }
+      - {
+          claim: "CLI config walk-up",
+          url: "repo: CLAUDE.md (src/config-loader.ts)",
+          via: detection,
+        }
+    catalog: [ least-privilege ]
+  reachability-and-health:
+    n/a: "A registry runs nothing. There is no readiness endpoint and no harness.health entry. The install smoke test in the pipeline stands in for it, and the router says so."
+reputation:
+  checked_at: 2026-11-23T14:43:16Z
+  rows:
+    - {
+        name: npm@12.2.3,
+        verdict: warn,
+        signals: [ "provenance, attestation: both empty (depsdev) — warn" ],
+      }
+    - { name: pnpm@12.23.0, verdict: pass }
