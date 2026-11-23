@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@eslint-community/eslint-utils':
+        specifier: 4.10.1
+        version: 4.10.1(eslint@10.15.0(jiti@2.7.0))
       '@eslint/css':
         specifier: 2.0.1
         version: 2.0.1
@@ -32,6 +35,9 @@ importers:
       '@html-eslint/template-parser':
         specifier: 0.68.0
         version: 0.68.0
+      '@jridgewell/sourcemap-codec':
+        specifier: 1.6.0
+        version: 1.6.0
       '@ota-meshi/ast-token-store':
         specifier: 0.3.0
         version: 0.3.0
@@ -41,6 +47,9 @@ importers:
       '@typescript-eslint/parser':
         specifier: 8.73.0
         version: 8.73.0(eslint@10.15.0(jiti@2.7.0))(typescript@6.0.3)
+      '@typescript-eslint/types':
+        specifier: 8.73.0
+        version: 8.73.0
       astro-eslint-parser:
         specifier: 3.2.0
         version: 3.2.0
@@ -56,9 +65,9 @@ importers:
       eslint:
         specifier: 10.15.0
         version: 10.15.0(jiti@2.7.0)
-      eslint-plugin-astro:
-        specifier: 3.2.1
-        version: 3.2.1(@typescript-eslint/parser@8.73.0(eslint@10.15.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.15.0(jiti@2.7.0))(typescript-eslint@8.73.0(eslint@10.15.0(jiti@2.7.0))(typescript@6.0.3))
+      espree:
+        specifier: 11.2.0
+        version: 11.2.0
       globals:
         specifier: 17.14.0
         version: 17.14.0
@@ -71,6 +80,15 @@ importers:
       natural-compare:
         specifier: 1.4.0
         version: 1.4.0
+      postcss:
+        specifier: 8.5.33
+        version: 8.5.33
+      postcss-selector-parser:
+        specifier: 7.2.1
+        version: 7.2.1
+      synckit:
+        specifier: 0.11.13
+        version: 0.11.13
       toml-eslint-parser:
         specifier: 1.0.3
         version: 1.0.3
@@ -105,9 +123,6 @@ importers:
       es-html-parser:
         specifier: 0.3.2
         version: 0.3.2
-      espree:
-        specifier: 11.2.0
-        version: 11.2.0
       jiti:
         specifier: 2.7.0
         version: 2.7.0
@@ -834,25 +849,6 @@ packages:
   escape-string-regexp@5.0.0:
     resolution: {integrity: sha512-/veY75JbMK4j1yjvuUxuVsiS/hr/4iHs9FTT6cgTexxdE0Ly/glccBAkloH/DofkjRbZU3bnoj38mOmhkZ0lHw==}
     engines: {node: '>=12'}
-
-  eslint-plugin-astro@3.2.1:
-    resolution: {integrity: sha512-IgU7LIkpEg0r6bQGwc3Ck5jHgkUk3rOrEfRhUxDtMx/M0GD3SG/turMtvwj989KRR12Wt1l89faZ5ynjvVL7hg==}
-    engines: {node: ^22.22.3 || ^24.16.0 || >=26.3.0}
-    peerDependencies:
-      '@typescript-eslint/parser': '>=8.61.0'
-      eslint: '>=10.0.0'
-      eslint-plugin-jsx-a11y: '>=6.10.2'
-      eslint-plugin-jsx-a11y-x: '>=0.2.0'
-      typescript-eslint: '>=8.61.0'
-    peerDependenciesMeta:
-      '@typescript-eslint/parser':
-        optional: true
-      eslint-plugin-jsx-a11y:
-        optional: true
-      eslint-plugin-jsx-a11y-x:
-        optional: true
-      typescript-eslint:
-        optional: true
 
   eslint-scope@9.1.2:
     resolution: {integrity: sha512-xS90H51cKw0jltxmvmHy2Iai1LIqrfbw57b79w/J7MfvDfkIkFZ+kj6zC3BjtUwh150HsSSdxXZcsuv72miDFQ==}
@@ -2173,24 +2169,6 @@ snapshots:
   escape-string-regexp@4.0.0: {}
 
   escape-string-regexp@5.0.0: {}
-
-  eslint-plugin-astro@3.2.1(@typescript-eslint/parser@8.73.0(eslint@10.15.0(jiti@2.7.0))(typescript@6.0.3))(eslint@10.15.0(jiti@2.7.0))(typescript-eslint@8.73.0(eslint@10.15.0(jiti@2.7.0))(typescript@6.0.3)):
-    dependencies:
-      '@eslint-community/eslint-utils': 4.10.1(eslint@10.15.0(jiti@2.7.0))
-      '@jridgewell/sourcemap-codec': 1.6.0
-      '@typescript-eslint/types': 8.73.0
-      astro-eslint-parser: 3.2.0
-      eslint: 10.15.0(jiti@2.7.0)
-      espree: 11.2.0
-      globals: 17.14.0
-      postcss: 8.5.33
-      postcss-selector-parser: 7.2.1
-      synckit: 0.11.13
-    optionalDependencies:
-      '@typescript-eslint/parser': 8.73.0(eslint@10.15.0(jiti@2.7.0))(typescript@6.0.3)
-      typescript-eslint: 8.73.0(eslint@10.15.0(jiti@2.7.0))(typescript@6.0.3)
-    transitivePeerDependencies:
-      - supports-color
 
   eslint-scope@9.1.2:
     dependencies:

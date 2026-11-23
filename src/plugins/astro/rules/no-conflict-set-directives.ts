@@ -1,0 +1,104 @@
+// Ported from eslint-plugin-astro v3.2.1 (MIT), src/rules/no-conflict-set-directives.ts.
+import type { AST } from "astro-eslint-parser";
+import type { RuleModule } from "../types.js";
+import { getAttributeName } from "../utils/ast-utils.js";
+import { createRule } from "../utils/index.js";
+
+export default createRule("no-conflict-set-directives", {
+  meta: {
+    docs: {
+      description: "disallow conflicting set directives and child contents",
+      category: "Possible Errors",
+      recommended: true,
+    },
+    schema: [],
+    messages: {
+      conflict: "{{name}} conflicts with {{conflictTargets}}.",
+    },
+    type: "problem",
+  },
+  create(context) {
+    const sourceCode = context.sourceCode;
+    if (!sourceCode.parserServices?.isAstro) {
+      return {};
+    }
+
+    return {
+      JSXElement(node) {
+        const reportData: {
+          loc: AST.SourceLocation;
+          name: string;
+        }[] = [];
+        for (const attr of node.openingElement.attributes) {
+          const directiveName = getAttributeName(attr);
+          if (directiveName === "set:text" || directiveName === "set:html") {
+            reportData.push({
+              loc: attr.loc,
+              name: `'${directiveName}'`,
+            });
+          }
+        }
+        if (reportData.length) {
+          const targetChildren = node
+            .children
+            .filter((child) => {
+              if (child.type === "AstroHTMLComment") {
+                return false;
+              }
+              if (child.type === "JSXText" || child.type === "AstroRawText") {
+                return Boolean(child.value.trim());
+              }
+              return true;
+            })
+            .map((child) => {
+              if (child.type === "JSXText" || child.type === "AstroRawText") {
+                const leadingSpaces = /^\s*/.exec(child.value)![0];
+                const trailingSpaces = /\s*$/.exec(child.value)![0];
+                return {
+                  loc: {
+                    start: sourceCode.getLocFromIndex(
+                      child.range[0] + leadingSpaces.length,
+                    ),
+                    end: sourceCode.getLocFromIndex(
+                      child.range[1] - trailingSpaces.length,
+                    ),
+                  },
+                };
+              }
+              return child;
+            });
+          if (targetChildren.length) {
+            reportData.push({
+              loc: {
+                start: targetChildren[0]!.loc.start,
+                end: targetChildren[targetChildren.length - 1]!.loc.end,
+              },
+              name: "child contents",
+            });
+          }
+        }
+
+        if (reportData.length >= 2) {
+          for (const data of reportData) {
+            const conflictTargets = reportData
+              .filter((d) => d !== data)
+              .map((d) => d.name);
+            context.report({
+              loc: data.loc,
+              messageId: "conflict",
+              data: {
+                name: data.name,
+                conflictTargets: [
+                  conflictTargets.slice(0, -1).join(", "),
+                  conflictTargets.slice(-1)[0],
+                ]
+                  .filter(Boolean)
+                  .join(", and "),
+              },
+            });
+          }
+        }
+      },
+    };
+  },
+}) as RuleModule;

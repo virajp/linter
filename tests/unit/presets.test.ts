@@ -3,6 +3,10 @@ import {
   expect,
   test,
 } from "vitest";
+import {
+  astroClientJsConfig,
+  astroClientTsConfig,
+} from "../../src/config/presets/astro-client.js";
 import { astroConfig } from "../../src/config/presets/astro.js";
 import { cssConfig } from "../../src/config/presets/css.js";
 import { htmlConfig } from "../../src/config/presets/html.js";
@@ -17,6 +21,16 @@ import { yamlConfig } from "../../src/config/presets/yaml.js";
 
 const presets = [
   { name: "astro", config: astroConfig, files: ["**/*.astro"] },
+  {
+    name: "astro-client-js",
+    config: astroClientJsConfig,
+    files: ["**/*.astro/*.js"],
+  },
+  {
+    name: "astro-client-ts",
+    config: astroClientTsConfig,
+    files: ["**/*.astro/*.ts"],
+  },
   { name: "css", config: cssConfig, files: ["**/*.css"] },
   { name: "html", config: htmlConfig, files: ["**/*.html"] },
   {

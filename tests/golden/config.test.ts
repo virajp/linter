@@ -24,6 +24,7 @@ const PATHS = [
   "file.cts",
   "file.tsx",
   "file.astro",
+  "file.astro/1.ts",
   "file.json",
   "file.jsonc",
   "tsconfig.json",

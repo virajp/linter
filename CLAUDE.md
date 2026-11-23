@@ -153,10 +153,11 @@ example `**/AGENTS.md` and `.claude/**/*.md`) apply to every consumer repo.
 ### Our own plugins
 
 B08 moves the rules of third-party plugins into this package. Today the
-Tailwind rules, the YAML rules and language, the TOML rules and language, and
-the HTML rules and language are moved. Each plugin is in `src/plugins/<name>/`
-and compiles into `dist/` with the rest of `src/`. Its rules keep the rule names
-of the plugin they replace, so consumer `overrides` do not change.
+Tailwind rules, the YAML rules and language, the TOML rules and language, the
+HTML rules and language, and the Astro rules and processor are moved. Each
+plugin is in `src/plugins/<name>/` and compiles into `dist/` with the rest of
+`src/`. Its rules keep the rule names of the plugin they replace, so consumer
+`overrides` do not change.
 
 - **`src/plugins/tailwindcss/`** — the `tailwindcss/` rules of the `css`
   preset (`index.ts`, `syntax.ts`, `types.ts`, `utils/`, `rules/`). The
@@ -190,6 +191,21 @@ of the plugin they replace, so consumer `overrides` do not change.
   `meta`, `rules` and `languages` (`html`): the `html` preset sets the
   language and the rule severities. The language parses with
   `@html-eslint/parser`.
+- **`src/plugins/astro/`** — the `astro/` rules and the `astro/client-side-ts`
+  processor of the `astro` preset (`index.ts`, `meta.ts`, `types.ts`,
+  `types-for-node.ts`, `environments/`, `processor/`, `shared/`, `utils/`,
+  `rules/`). The 18 rules and the processors are ported from
+  `eslint-plugin-astro`, which is not a dependency now. The deprecated rules
+  `no-omitted-end-tags` and `valid-compile` and the `jsx-a11y/*` wrappers are
+  not ported. The plugin exports `meta`, `rules`, `processors` (`.astro`,
+  `astro` and `client-side-ts`) and `environments`, and no configs: the
+  `astro` preset sets the parser `astro-eslint-parser`, the processor and the
+  rule severities. The processor extracts each client `<script>` of an
+  `.astro` file as a virtual file (for example `file.astro/1.ts`), and the
+  presets `astro-client-js` and `astro-client-ts`
+  (`src/config/presets/astro-client.ts`) lint these files. TypeScript in a
+  client `<script>` is linted: the plugin loads `@typescript-eslint/parser`
+  and `espree` from this package, not from the consumer repo.
 - A ported file starts with a one-line header that names its source. Each
   source has an entry with its license text and copyright in
   `THIRD_PARTY_NOTICES.md`, which `files` of `package.json` ships in the
@@ -212,6 +228,16 @@ of the plugin they replace, so consumer `overrides` do not change.
   dependency in `bundledDependencies`. Its type-only imports come from the
   exact-pinned devDependencies `@html-eslint/types`, `es-html-parser` and
   `@types/estree`.
+- The `astro` plugin has the runtime dependencies `astro-eslint-parser`,
+  `postcss`, `postcss-selector-parser`, `synckit`,
+  `@jridgewell/sourcemap-codec`, `@typescript-eslint/types`,
+  `@eslint-community/eslint-utils` and `espree`. Each one is an exact-pinned
+  dependency in `bundledDependencies`. The PostCSS worker
+  (`utils/transform/postcss-worker.mts`) is a separate module that `synckit`
+  loads from `dist/`. The style transforms load `less`, `sass`, `stylus` and
+  `postcss-load-config` from the consumer repo, because they are the
+  consumer's own style tools. These packages are not bundled, and
+  `src/plugins/astro/shims.d.ts` declares their modules and `source-map-js`.
 
 ### Adding a language or plugin
 
@@ -303,8 +329,9 @@ configs:
 | `overrides` | `Record<string, { rules }>` | Rule overrides keyed by preset name.                                              |
 | `configs`   | `unknown[]`                 | Raw ESLint config objects appended after the base config.                         |
 
-Preset names for `overrides`: `javascript`, `typescript`, `astro`, `json`,
-`jsonc`, `markdown`, `markdown-code-blocks`, `yaml`, `toml`, `html`, `css`.
+Preset names for `overrides`: `javascript`, `typescript`, `astro`,
+`astro-client-js`, `astro-client-ts`, `json`, `jsonc`, `markdown`,
+`markdown-code-blocks`, `yaml`, `toml`, `html`, `css`.
 
 ## Conventions
 
@@ -418,16 +445,17 @@ If `main` is branch-protected, allow `github-actions[bot]` to push.
   scaffolding; helpers in `tests/helpers/run-unit.ts`.
   `tests/unit/plugins/<name>/` has the tests of our own plugins: a RuleTester
   test for each rule (`rules/<rule>.test.ts`, or `rules/<group>/<rule>.test.ts`
-  for `yml`, `toml` and `html`), and tests of the language, the syntax and the
-  helpers. The `html` tests connect RuleTester to vitest through
+  for `yml`, `toml`, `html` and `astro`), and tests of the language, the
+  syntax and the helpers. The `html` tests connect RuleTester to vitest through
   `helpers/rule-tester.ts`. The pre-commit hooks remove trailing spaces, so a
   trailing space in a ported test string is an escape (`\x20`, or `${" "}` in
   a template literal).
   A plugin can keep the upstream fixtures of its ported tests in
   `tests/unit/plugins/<name>/fixtures/`, with the upstream fixture loader in
   `helpers/` (for `yml`, `fixtures/rules/` and the copy
-  `fixtures/upstream-package.json`; for `toml`, `fixtures/rules/`). The global
-  `exclude` of `.config/pre-commit-config.yaml` is `^tests/(.*/)?fixtures/`, so
+  `fixtures/upstream-package.json`; for `toml` and `astro`,
+  `fixtures/rules/`). The global `exclude` of `.config/pre-commit-config.yaml`
+  is `^tests/(.*/)?fixtures/`, so
   the hooks do not change these fixtures or `tests/fixtures/`. Change it in
   `.config/bootstrap/tools.toml` too, so that a bootstrap sync keeps it.
 - **Integration** (`tests/integration/`) — spawn `dist/index.js` against fixture

@@ -138,6 +138,8 @@ Use these names in the `overrides` section:
 - `javascript`
 - `typescript`
 - `astro`
+- `astro-client-js` — JavaScript in the client `<script>` of an `.astro` file
+- `astro-client-ts` — TypeScript in the client `<script>` of an `.astro` file
 - `json`
 - `jsonc`
 - `markdown`
@@ -188,8 +190,8 @@ the CLI to see code-block problems.
 4. ESLint's programmatic API lints the current working directory. Third-party
    plugins are resolved from the package's own `node_modules`, not the target
    repo's. The Tailwind CSS rules, the YAML rules and language, the TOML rules
-   and language, and the HTML rules and language are part of the package
-   itself.
+   and language, the HTML rules and language, and the Astro rules and
+   processor are part of the package itself.
 5. A second ESLint run lints the fenced code blocks of the Markdown files. The
    CLI merges its results into the same report.
 
