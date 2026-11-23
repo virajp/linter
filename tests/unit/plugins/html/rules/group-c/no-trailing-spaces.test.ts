@@ -98,27 +98,27 @@ templateRuleTester.run("[template] no-tailing-spaces", rule, {
     {
       code: `html\`<div>
       \${(() => {
-
+${"    "}
       })()      }
 </div>\``,
     },
     {
-      code: `
+      code: `${"  "}
 html\`<div>
 </div>\``,
     },
     {
-      code: `
+      code: `${"  "}
 /* html */\`<div>
 </div>\``,
     },
   ],
   invalid: [
     {
-      code: `
-html\`<div>
+      code: `${"  "}
+html\`<div>${"  "}
 </div>\``,
-      output: `
+      output: `${"  "}
 html\`<div>
 </div>\``,
       errors: [
@@ -152,7 +152,7 @@ html\`<div>
       ],
     },
     {
-      code: `html\`<div id=\${foo}
+      code: `html\`<div id=\${foo}${"   "}
 >
 text
 </div>\``,
@@ -171,7 +171,7 @@ text
     },
     {
       code: `
-html\`<div id=\${foo}
+html\`<div id=\${foo}${"   "}
 >
 text
 </div>\``,
@@ -191,7 +191,7 @@ text
     },
     {
       code: `
-/* html */\`<div id=\${foo}
+/* html */\`<div id=\${foo}${"   "}
 >
 text
 </div>\``,
