@@ -69,7 +69,7 @@
       "status": "green",
       "started": "2026-11-23T08:41:26.239Z",
       "ended": "2026-11-23T10:12:17.005Z",
-      "commit": "",
+      "commit": "0d5a8e8",
       "rounds": 2,
       "id": "U1",
       "title": "Astro processor, shared code, utils and test fixtures",
@@ -257,9 +257,9 @@
   "waves": [
     {
       "id": "W1",
-      "status": "running",
+      "status": "green",
       "started": "2026-11-23T08:41:26.201Z",
-      "ended": ""
+      "ended": "2026-11-23T10:16:55.014Z"
     },
     {
       "id": "W2",
