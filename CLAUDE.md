@@ -153,10 +153,10 @@ example `**/AGENTS.md` and `.claude/**/*.md`) apply to every consumer repo.
 ### Our own plugins
 
 B08 moves the rules of third-party plugins into this package. Today the
-Tailwind rules, the YAML rules and language, and the TOML rules and language
-are moved. Each plugin is in `src/plugins/<name>/` and compiles into `dist/`
-with the rest of `src/`. Its rules keep the rule names of the plugin they
-replace, so consumer `overrides` do not change.
+Tailwind rules, the YAML rules and language, the TOML rules and language, and
+the HTML rules and language are moved. Each plugin is in `src/plugins/<name>/`
+and compiles into `dist/` with the rest of `src/`. Its rules keep the rule names
+of the plugin they replace, so consumer `overrides` do not change.
 
 - **`src/plugins/tailwindcss/`** — the `tailwindcss/` rules of the `css`
   preset (`index.ts`, `syntax.ts`, `types.ts`, `utils/`, `rules/`). The
@@ -181,6 +181,15 @@ replace, so consumer `overrides` do not change.
   are not ported. The plugin exports `meta`, `rules` and `languages` (`toml`):
   the `toml` preset sets the language and the rule severities. The language
   parses with `toml-eslint-parser`.
+- **`src/plugins/html/`** — the `html/` rules and the `html/html` language of
+  the `html` preset (`index.ts`, `meta.ts`, `types/`, `language/`,
+  `adapters/`, `constants/`, `data/`, `utils/`, `rules/`). The 65 rules and
+  the language, with the support for HTML in JS template literals, are ported
+  from `@html-eslint/eslint-plugin`, which is not a dependency now. The
+  deprecated rule `no-extra-spacing-attrs` is not ported. The plugin exports
+  `meta`, `rules` and `languages` (`html`): the `html` preset sets the
+  language and the rule severities. The language parses with
+  `@html-eslint/parser`.
 - A ported file starts with a one-line header that names its source. Each
   source has an entry with its license text and copyright in
   `THIRD_PARTY_NOTICES.md`, which `files` of `package.json` ships in the
@@ -197,6 +206,12 @@ replace, so consumer `overrides` do not change.
 - The `toml` plugin has the runtime dependencies `toml-eslint-parser`,
   `@eslint/plugin-kit` and `@ota-meshi/ast-token-store`. Each one is an
   exact-pinned dependency in `bundledDependencies`.
+- The `html` plugin has the runtime dependencies `@html-eslint/parser`,
+  `@html-eslint/core`, `@html-eslint/template-parser`, `@rviscomi/capo.js`,
+  `html-standard` and `@eslint/plugin-kit`. Each one is an exact-pinned
+  dependency in `bundledDependencies`. Its type-only imports come from the
+  exact-pinned devDependencies `@html-eslint/types`, `es-html-parser` and
+  `@types/estree`.
 
 ### Adding a language or plugin
 
@@ -403,7 +418,11 @@ If `main` is branch-protected, allow `github-actions[bot]` to push.
   scaffolding; helpers in `tests/helpers/run-unit.ts`.
   `tests/unit/plugins/<name>/` has the tests of our own plugins: a RuleTester
   test for each rule (`rules/<rule>.test.ts`, or `rules/<group>/<rule>.test.ts`
-  for `yml` and `toml`), and tests of the language, the syntax and the helpers.
+  for `yml`, `toml` and `html`), and tests of the language, the syntax and the
+  helpers. The `html` tests connect RuleTester to vitest through
+  `helpers/rule-tester.ts`. The pre-commit hooks remove trailing spaces, so a
+  trailing space in a ported test string is an escape (`\x20`, or `${" "}` in
+  a template literal).
   A plugin can keep the upstream fixtures of its ported tests in
   `tests/unit/plugins/<name>/fixtures/`, with the upstream fixture loader in
   `helpers/` (for `yml`, `fixtures/rules/` and the copy

@@ -1,0 +1,226 @@
+// Ported from @html-eslint/eslint-plugin v0.68.0 (MIT), tests/rules/no-extra-spacing-text.test.js.
+import type { ESLint } from "eslint";
+import { HTMLLanguage } from "../../../../../../src/plugins/html/language/html-language.js";
+import { groupBRules } from "../../../../../../src/plugins/html/rules/group-b.js";
+import rule from "../../../../../../src/plugins/html/rules/no-extra-spacing-text.js";
+import { createRuleTester } from "../../helpers/rule-tester.js";
+
+const plugin = {
+  rules: groupBRules,
+  languages: { html: new HTMLLanguage() },
+} as unknown as ESLint.Plugin;
+
+/**
+ * @param {...number[]} positions
+ * @returns
+ */
+function errorsAt(...positions) {
+  return positions.map((input) => {
+    const [line, column, length] = input;
+    if (input.length === 3) {
+      return {
+        messageId: `unexpected`,
+        line,
+        column,
+        endLine: line,
+        endColumn: column + length,
+      };
+    } else {
+      const [line, column, endLine, endColumn] = input;
+      return {
+        messageId: `unexpected`,
+        line,
+        column,
+        endLine,
+        endColumn,
+      };
+    }
+  });
+}
+
+const ruleTester = createRuleTester(plugin);
+const templateRuleTester = createRuleTester(plugin, "espree");
+
+ruleTester.run("no-extra-spacing-text", rule, {
+  valid: [
+    {
+      code: `<div> foo </div>`,
+    },
+    {
+      code: `<div> foo bar </div>`,
+    },
+
+    {
+      code: `
+\t  <div>
+    \t  <div>
+      foo
+          bar
+    \t\t  </div>
+\t  </div>
+`,
+    },
+
+    {
+      code: `<pre>   foo\t\t\tbar   </pre><script>   const   foo   =   'bar'   </script><style>   .foo   {   bar   }   </style>`,
+      options: [
+        {
+          skip: [`pre`],
+        },
+      ],
+    },
+
+    {
+      code: `
+<div   foo   =   "bar">
+  Only short whitespace here.
+
+  <pre>    Any    kind    of   whitespace    here!    </pre>
+</div>
+`,
+      options: [
+        {
+          skip: [`pre`],
+        },
+      ],
+    },
+
+    {
+      code: `<!--=================\n=\t\tTitle\t\t=\n==================-->`,
+      options: [
+        {
+          skipComments: true,
+        },
+      ],
+    },
+  ],
+
+  invalid: [
+    {
+      code: `foo   bar   `,
+      output: `foo bar `,
+      errors: errorsAt([1, 4, 3], [1, 10, 3]),
+    },
+
+    {
+      code: `<div>\tfoo	\t</div>`,
+      output: `<div> foo </div>`,
+      errors: errorsAt([1, 6, 1], [1, 10, 2]),
+    },
+
+    {
+      code: `<div>  foo   </div>`,
+      output: `<div> foo </div>`,
+      errors: errorsAt([1, 6, 2], [1, 11, 3]),
+    },
+
+    {
+      code: `<div>foo \n</div>`,
+      output: `<div>foo\n</div>`,
+      errors: errorsAt([1, 9, 2, 1]),
+    },
+
+    {
+      code: `<div>foo\t\n</div>`,
+      output: `<div>foo\n</div>`,
+      errors: errorsAt([1, 9, 2, 1]),
+    },
+
+    {
+      code: `<div>\n\tfoo \n</div> \n<div>\n\tbar\t\n</div>`,
+      output: `<div>\n\tfoo\n</div>\n<div>\n\tbar\n</div>`,
+      errors: errorsAt([2, 5, 3, 1], [3, 7, 4, 1], [5, 5, 6, 1]),
+    },
+
+    {
+      code: `
+    <div>	\t\tfoo	\t\t</div>
+`,
+      output: `
+    <div> foo </div>
+`,
+      errors: errorsAt([2, 10, 3], [2, 16, 3]),
+    },
+
+    {
+      code: `
+<div>
+  foo     bar    ${" "}
+</div>
+`,
+      output: `
+<div>
+  foo bar
+</div>
+`,
+      errors: errorsAt([3, 6, 5], [3, 14, 4, 1]),
+    },
+
+    {
+      code: `\n\n    <div>   <a>   <!--   foo   bar   -->   </a>   </div>\n\n`,
+      output: `\n\n    <div> <a> <!-- foo bar --> </a> </div>\n\n`,
+      errors: errorsAt(
+        [3, 10, 3],
+        [3, 16, 3],
+        [3, 23, 3],
+        [3, 29, 3],
+        [3, 35, 3],
+        [3, 41, 3],
+        [3, 48, 3]
+      ),
+    },
+
+    {
+      code: `<!--   foo   bar   -->`,
+      output: `<!-- foo bar -->`,
+      options: [
+        {
+          skipComments: false,
+        },
+      ],
+      errors: errorsAt([1, 5, 3], [1, 11, 3], [1, 17, 3]),
+    },
+  ],
+});
+
+templateRuleTester.run("[template] no-extra-spacing-text", rule, {
+  valid: [
+    {
+      code: "html`<div> foo </div>`",
+    },
+    {
+      code: `html\`
+\t  <div>
+    \t  <div>
+      foo
+          bar
+    \t\t  </div>
+\t  </div>\`
+`,
+    },
+    {
+      code: `
+html\`<div>
+      \${items => {    }}
+</div>\`
+      `,
+    },
+    {
+      code: `
+html\`<div>
+      \${items => {${" "}
+        var foo;    var bar;  ${" "}
+       ${" "}
+        }}
+</div>\`
+      `,
+    },
+  ],
+  invalid: [
+    {
+      code: "html`<div>foo\t\n</div>`",
+      output: "html`<div>foo\n</div>`",
+      errors: errorsAt([1, 14, 2, 1]),
+    },
+  ],
+});
