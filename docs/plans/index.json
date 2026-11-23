@@ -30,8 +30,8 @@
       "title": "Own the Astro rules and processor, and fix TypeScript in client scripts",
       "target_repo": null,
       "priority": 50,
-      "status": "APPROVED",
-      "started": "",
+      "status": "RUNNING",
+      "started": "2026-11-23T08:39:49.977Z",
       "ended": "",
       "gaps": null,
       "requires": [
