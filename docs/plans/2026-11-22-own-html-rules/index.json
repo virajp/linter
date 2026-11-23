@@ -314,19 +314,19 @@
         "U6"
       ],
       "waits": "",
-      "status": "pending",
-      "started": "",
-      "ended": "",
+      "status": "green",
+      "started": "2026-11-23T08:26:13.839Z",
+      "ended": "2026-11-23T08:27:33.428Z",
       "commit": "",
-      "rounds": 0,
+      "rounds": 1,
       "id": "U7",
       "title": "Review: the HTML language, its 65 rules and the preset switch",
       "wave": 4,
       "file": "07-review.md",
       "owns": [],
       "range": {
-        "from": "",
-        "to": ""
+        "from": "93486bc",
+        "to": "0f508f0"
       }
     },
     {
@@ -399,9 +399,9 @@
     },
     {
       "id": "W4",
-      "status": "pending",
-      "started": "",
-      "ended": ""
+      "status": "green",
+      "started": "2026-11-23T08:26:13.801Z",
+      "ended": "2026-11-23T08:28:02.347Z"
     },
     {
       "id": "W5",
