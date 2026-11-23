@@ -1,0 +1,135 @@
+// Ported from @html-eslint/eslint-plugin v0.68.0 (MIT), tests/languages/html-language.test.js.
+import type { File } from "@eslint/core";
+import { describe, expect, it } from "vitest";
+import { HTMLLanguage } from "../../../../../src/plugins/html/language/html-language.js";
+
+const createFile = (text: string): File => {
+  return {
+    body: text,
+    path: "test.html",
+    physicalPath: "test.html",
+    bom: false,
+  };
+};
+
+describe("HTMLLanguage", () => {
+  describe("visitorKeys", () => {
+    it("should have visitorKeys property", () => {
+      const language = new HTMLLanguage();
+      expect(language.visitorKeys["Tag"]).toMatchObject([
+        "openStart",
+        "openEnd",
+        "close",
+        "children",
+        "attributes",
+      ]);
+    });
+  });
+
+  describe("parse()", () => {
+    it("should parse HTML", () => {
+      const language = new HTMLLanguage();
+      const file = createFile(`<div></div>`);
+      const result = language.parse(file, {
+        languageOptions: {},
+      });
+      expect(result.ok).toBe(true);
+      // @ts-ignore
+      expect(result.ast.type).toBe("Program");
+      // @ts-ignore
+      expect(result.ast.body[0].children[0].type).toBe("Tag");
+    });
+
+    it("should skip frontmatter", () => {
+      const language = new HTMLLanguage();
+      const file = createFile(`---
+name: value
+---
+<div>
+</div>
+      `);
+      const result = language.parse(file, {
+        languageOptions: { frontmatter: true },
+      });
+      expect(result.ok).toBe(true);
+      // @ts-ignore
+      expect(result.ast.body[0].children[0].type).toBe("Tag");
+    });
+
+    it("should parse template syntax", () => {
+      const language = new HTMLLanguage();
+      const file = createFile(`<div>{{text}}</div>`);
+      const result = language.parse(file, {
+        languageOptions: {
+          templateEngineSyntax: {
+            "{{": "}}",
+          },
+        },
+      });
+      expect(result.ok).toBe(true);
+      // @ts-ignore
+      const part = result.ast.body[0].children[0].children[0].parts[0];
+      expect(part.open.type).toBe("OpenTemplate");
+      expect(part.close.type).toBe("CloseTemplate");
+    });
+  });
+
+  describe("validateLanguageOptions()", () => {
+    it("should pass", () => {
+      const language = new HTMLLanguage();
+      // @ts-ignore
+      expect(() => language.validateLanguageOptions()).not.toThrow();
+      // @ts-ignore
+      expect(() => language.validateLanguageOptions({})).not.toThrow();
+      expect(() => language.validateLanguageOptions({ frontmatter: true }))
+        .not.toThrow();
+      expect(() =>
+        language.validateLanguageOptions({
+          templateEngineSyntax: {
+            "{{": "}}",
+          },
+        })
+      ).not.toThrow();
+      expect(() =>
+        language.validateLanguageOptions({ rawContentTags: ["markdown"] })
+      ).not.toThrow();
+    });
+
+    it("should throw error when invalid option provided", () => {
+      const language = new HTMLLanguage();
+      expect(() =>
+        language.validateLanguageOptions({
+          // @ts-ignore
+          frontmatter: "true",
+        })
+      ).toThrow();
+
+      expect(() =>
+        language.validateLanguageOptions({
+          // @ts-ignore
+          templateEngineSyntax: "",
+        })
+      ).toThrow();
+
+      expect(() =>
+        language.validateLanguageOptions({
+          // @ts-ignore
+          rawContentTags: "",
+        })
+      ).toThrow();
+    });
+  });
+  describe("createSourceCode()", () => {
+    it("should create a HTMLSourceCode instance", () => {
+      const file = createFile("<div></div>");
+      const language = new HTMLLanguage();
+      const parsed = language.parse(file, { languageOptions: {} });
+      expect(parsed.ok).toBe(true);
+      if (parsed.ok) {
+        const sourceCode = language.createSourceCode(file, parsed);
+        expect(sourceCode.constructor.name).toBe("HTMLSourceCode");
+        expect(sourceCode.ast.type).toBe("Program");
+      }
+    });
+  });
+});
