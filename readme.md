@@ -187,8 +187,8 @@ the CLI to see code-block problems.
    config.
 4. ESLint's programmatic API lints the current working directory. Third-party
    plugins are resolved from the package's own `node_modules`, not the target
-   repo's. The Tailwind CSS rules and the YAML rules and language are part of
-   the package itself.
+   repo's. The Tailwind CSS rules, the YAML rules and language, and the TOML
+   rules and language are part of the package itself.
 5. A second ESLint run lints the fenced code blocks of the Markdown files. The
    CLI merges its results into the same report.
 

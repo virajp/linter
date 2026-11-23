@@ -24,9 +24,6 @@
     ],
     "toml/precision-of-integer": [
       "error"
-    ],
-    "toml/vue-custom-block/no-parsing-error": [
-      "error"
     ]
   }
 }
