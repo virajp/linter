@@ -1,11 +1,17 @@
 import type { Linter } from "eslint";
-import eslintPluginToml from "eslint-plugin-toml";
+
+import toml from "../../plugins/toml/index.js";
 
 export const tomlConfig = {
-  extends: [eslintPluginToml.configs.recommended],
   files: ["**/*.toml"],
   language: "toml/toml",
   name: "toml",
-  plugins: { toml: eslintPluginToml },
-  rules: {},
-} satisfies Linter.Config & { extends?: unknown };
+  plugins: { toml },
+  rules: {
+    "no-irregular-whitespace": "off",
+    "spaced-comment": "off",
+    "toml/no-unreadable-number-separator": "error",
+    "toml/precision-of-fractional-seconds": "error",
+    "toml/precision-of-integer": "error",
+  },
+} satisfies Linter.Config;
