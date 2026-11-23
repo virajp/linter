@@ -16,7 +16,7 @@
   "execution": "teams",
   "status": {
     "state": "RUNNING",
-    "detail": "RUNNING since 2026-11-23T06:36:48Z in .worktrees/all-2026-11-23-0136"
+    "detail": "RUNNING since resume in .worktrees/all-2026-11-23-0136 — Q1 answered (D15)"
   },
   "consent": {
     "merge": true,
@@ -131,11 +131,11 @@
         "U1"
       ],
       "waits": "it imports the language, adapters, utils, types and test helper that U1 creates",
-      "status": "pending",
-      "started": "",
-      "ended": "",
-      "commit": "",
-      "rounds": 0,
+      "status": "green",
+      "started": "2026-11-23T06:49:05.407Z",
+      "ended": "2026-11-23T06:57:05.605Z",
+      "commit": "86083f0",
+      "rounds": 3,
       "id": "U2",
       "title": "HTML rules, group A (attrs-newline to no-duplicate-id)",
       "wave": 2,
@@ -168,11 +168,11 @@
         "U1"
       ],
       "waits": "it imports the language, adapters, utils, types and test helper that U1 creates",
-      "status": "pending",
-      "started": "",
-      "ended": "",
-      "commit": "",
-      "rounds": 0,
+      "status": "green",
+      "started": "2026-11-23T06:49:05.474Z",
+      "ended": "2026-11-23T06:57:05.708Z",
+      "commit": "a5c9623",
+      "rounds": 2,
       "id": "U3",
       "title": "HTML rules, group B (no-duplicate-in-head to no-obsolete-tags)",
       "wave": 2,
@@ -205,11 +205,11 @@
         "U1"
       ],
       "waits": "it imports the language, adapters, utils, types and test helper that U1 creates",
-      "status": "pending",
-      "started": "",
-      "ended": "",
-      "commit": "",
-      "rounds": 0,
+      "status": "green",
+      "started": "2026-11-23T06:49:05.543Z",
+      "ended": "2026-11-23T06:57:05.808Z",
+      "commit": "1004e72",
+      "rounds": 1,
       "id": "U4",
       "title": "HTML rules, group C (no-positive-tabindex to require-content)",
       "wave": 2,
@@ -242,11 +242,11 @@
         "U1"
       ],
       "waits": "it imports the language, adapters, utils, types and test helper that U1 creates",
-      "status": "pending",
-      "started": "",
-      "ended": "",
-      "commit": "",
-      "rounds": 0,
+      "status": "green",
+      "started": "2026-11-23T06:49:05.611Z",
+      "ended": "2026-11-23T06:57:05.911Z",
+      "commit": "3e91600",
+      "rounds": 2,
       "id": "U5",
       "title": "HTML rules, group D (require-details-summary to use-baseline)",
       "wave": 2,
@@ -387,9 +387,9 @@
     },
     {
       "id": "W2",
-      "status": "pending",
-      "started": "",
-      "ended": ""
+      "status": "green",
+      "started": "2026-11-23T06:49:05.373Z",
+      "ended": "2026-11-23T07:51:11.695Z"
     },
     {
       "id": "W3",
@@ -601,6 +601,15 @@
         "U4",
         "U5",
         "U6"
+      ]
+    },
+    {
+      "id": "D15",
+      "decision": "Q1: When ported upstream code trips one of this repo's own self-lint rules (no-useless-assignment on indent.ts `let base = \"\"`), may a unit change the code with no runtime effect, or must it keep the upstream code and add an eslint-disable comment?",
+      "ruling": "Keep upstream code byte-faithful plus an `eslint-disable-next-line no-useless-assignment` comment — U2 restores `= \"\"` and adds the comment (same choice as in plans 2 and 3: `-- ported upstream code`).",
+      "rejected": "Allow code edits with no runtime effect, listed as DECIDED (accept U2's indent.ts change as it is)",
+      "units": [
+        "U2"
       ]
     }
   ],
