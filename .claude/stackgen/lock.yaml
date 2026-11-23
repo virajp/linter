@@ -1,0 +1,175 @@
+entries:
+  - path: .claude/hooks/npm-normalize.sh
+    slug: npm-package
+    component: tool/pnpm
+    source: tool/pnpm@1.0.0
+    hash: sha256:a83cfcb0f143255b01f0b60bc54533f769a85fe598b7364db391a924c2cb5bdc
+  - path: .claude/skills/eslint/SKILL.md
+    slug: npm-package
+    component: tool/eslint
+    source: tool/eslint@1.0.0
+    hash: sha256:8fac6112794516523199f60c7392db2db05983c80cb79608b4a6e6d9441b4a25
+  - path: .claude/skills/npm-package-manifest/SKILL.md
+    slug: npm-package
+    component: deploy-target/npm-registry
+    source: generated
+    hash: sha256:5949c3cf7793ee7789971b8d848a25a5123c46567ed073d9cb40f1351f3b98b6
+  - path: .claude/skills/npm-package-manifest/references/artifact.md
+    slug: npm-package
+    component: deploy-target/npm-registry
+    source: generated
+    hash: sha256:2e3febac0a0a06a39c4cd5ae4c4295e890e91ad3d1467ccbac4b5d580b1fd184
+  - path: .claude/skills/npm-package-manifest/references/hygiene.md
+    slug: npm-package
+    component: deploy-target/npm-registry
+    source: generated
+    hash: sha256:e1bc0490886b33131292a009d083f14d4f258dba7b9fd83c5d31bfefe485adfe
+  - path: .claude/skills/npm-registry/SKILL.md
+    slug: npm-package
+    component: deploy-target/npm-registry
+    source: generated
+    hash: sha256:dcc8cc97becde307c3cd49c7e94704bd23fb56727b08792ecb29ada35b211cc8
+  - path: .claude/skills/npm-registry/references/config-and-secrets.md
+    slug: npm-package
+    component: deploy-target/npm-registry
+    source: generated
+    hash: sha256:21e0586d795633cec63d24b5b6170bc2af53c7bae58ba2cc8c622e65a2b9ed34
+  - path: .claude/skills/npm-registry/references/pick-and-trade.md
+    slug: npm-package
+    component: deploy-target/npm-registry
+    source: generated
+    hash: sha256:72f3b55f93de24c0901b1f8b7be4e3682edb0b788376d6ebbe943acd761d9957
+  - path: .claude/skills/npm-registry/references/promotion.md
+    slug: npm-package
+    component: deploy-target/npm-registry
+    source: generated
+    hash: sha256:638f7eb87f9ac31aa711f97625d8cb76ff8f0652a3e0959bc904d0c12861cd97
+  - path: .claude/skills/pnpm/SKILL.md
+    slug: npm-package
+    component: tool/pnpm
+    source: tool/pnpm@1.0.0
+    hash: sha256:35c4f456526422a8ef57e98c78069708f0214013afdae60178aff331d50b64d3
+  - path: .claude/skills/pnpm/references/manifest-discipline.md
+    slug: npm-package
+    component: tool/pnpm
+    source: tool/pnpm@1.0.0
+    hash: sha256:b65081853bce6501c6c45f68e8a8802654df3b0b1408507481292abbfaf9e9b9
+  - path: .claude/skills/pnpm/references/supply-chain.md
+    slug: npm-package
+    component: tool/pnpm
+    source: tool/pnpm@1.0.0
+    hash: sha256:772f56c2343344843598eb412c0d75b002ab1b89fb2bdc127b6ef9aa6adae56d
+  - path: .claude/skills/pnpm/references/workspace.md
+    slug: npm-package
+    component: tool/pnpm
+    source: tool/pnpm@1.0.0
+    hash: sha256:7309ba369dade362e86210d659163531e0a6d6592301d257b112b9fb40ab961f
+  - path: .claude/skills/tsconfig/SKILL.md
+    slug: npm-package
+    component: tool/tsconfig
+    source: tool/tsconfig@1.0.0
+    hash: sha256:be4d75a883d802876d3035d7f49ac1a05ade5acba27a536fcfafacda06703de4
+  - path: .claude/skills/typescript/SKILL.md
+    slug: npm-package
+    component: tool/typescript
+    source: tool/typescript@1.0.1
+    hash: sha256:8c3c6678c21f13b3431b2a540aa6b96c39ba3c4dc8b29127f805a3f7f07039c8
+  - path: .claude/skills/typescript/references/async-model.md
+    slug: npm-package
+    component: tool/typescript
+    source: tool/typescript@1.0.1
+    hash: sha256:190a72ba06bb5158505e23389b5db8369097b9d5f912031801bdd0d9e9d48460
+  - path: .claude/skills/typescript/references/build-and-run.md
+    slug: npm-package
+    component: tool/typescript
+    source: tool/typescript@1.0.1
+    hash: sha256:f4601559f6ac9753c16d3ad5317ae57ff923dbbaa9ab9cbf6b656d8594b2217b
+  - path: .claude/skills/typescript/references/config-and-env.md
+    slug: npm-package
+    component: tool/typescript
+    source: tool/typescript@1.0.1
+    hash: sha256:4b6f00964fdee9b808a5a8ba66b73a692ed520315b95d6f368176986bdac7fdb
+  - path: .claude/skills/typescript/references/error-handling.md
+    slug: npm-package
+    component: tool/typescript
+    source: tool/typescript@1.0.1
+    hash: sha256:d3e89613689266769faa704ffc41e0f80ea0b578480ce06267411f5538947d76
+  - path: .claude/skills/typescript/references/observability-wiring.md
+    slug: npm-package
+    component: tool/typescript
+    source: tool/typescript@1.0.1
+    hash: sha256:5e57a1368bc1adb54a938426a2d7888e64e8520f2d055c8f890917365ce1a54c
+  - path: .claude/skills/typescript/references/standards.md
+    slug: npm-package
+    component: tool/typescript
+    source: tool/typescript@1.0.1
+    hash: sha256:89fa55c0eaf21dceb730ab562bbafd531c4c513c99cd2bfccc6155a597fb21b2
+  - path: .claude/skills/typescript/references/testing.md
+    slug: npm-package
+    component: tool/typescript
+    source: tool/typescript@1.0.1
+    hash: sha256:604444c456588032950bea3438e0500e6f5c920a0b69468c01911848dd37132c
+  - path: .claude/skills/ux-gate/SKILL.md
+    slug: npm-package
+    component: tool/typescript
+    source: tool/typescript@1.0.1
+    hash: sha256:f4c74a6e5373e905544b645f3dc4e9cf8c7b548c2177215d332cf8613a5ad040
+  - path: .claude/stackgen/citations/npm-registry.yaml
+    slug: npm-package
+    component: deploy-target/npm-registry
+    source: generated
+    hash: sha256:fdeb1de011a61ba2c8c0cf385fa42790faca16557d4bee45882b6d2ae1d3e583
+  - path: .claude/stackgen/templates/npm-package.md
+    slug: npm-package
+    component: bundle/npm-package
+    source: generated
+    hash: sha256:7b27850a2cc3cbeba0a9cf1ce87d1d7cf4bad36deb550a19a724e01022d763c0
+  - path: .claude/skills/github-actions/SKILL.md
+    slug: github-actions
+    component: ci-system/github-actions
+    source: pack/ci-system/github-actions@1.0.0
+    hash: sha256:abeba23f48417919fcebd523ebe4eea7112162f29fa1490944837609ea8371d8
+  - path: .claude/skills/github-actions/references/credentials.md
+    slug: github-actions
+    component: ci-system/github-actions
+    source: pack/ci-system/github-actions@1.0.0
+    hash: sha256:580970e89b318466f7c4db03b160b794453d714337d557093e5b76adf64ea108
+  - path: .claude/skills/github-actions/references/gates.md
+    slug: github-actions
+    component: ci-system/github-actions
+    source: pack/ci-system/github-actions@1.0.0
+    hash: sha256:e8ef3d52d59465c0da64f01c47ba548ba50d8497b3c7f86560c94e5de9d532db
+  - path: .claude/skills/github-actions/references/layout.md
+    slug: github-actions
+    component: ci-system/github-actions
+    source: pack/ci-system/github-actions@1.0.0
+    hash: sha256:c3b541f6800d5e09a9b2b07f36166ed3b424e050f6503bf92e95331e819fed76
+  - path: .claude/skills/github-actions/references/pinning-caching.md
+    slug: github-actions
+    component: ci-system/github-actions
+    source: pack/ci-system/github-actions@1.0.0
+    hash: sha256:691fcc267fa20ac547d78b2b9db99b81bc30cc6fe3c780ed5dc951c64cad4e8a
+  - path: .claude/skills/github-actions/references/release.md
+    slug: github-actions
+    component: ci-system/github-actions
+    source: pack/ci-system/github-actions@1.0.0
+    hash: sha256:c2ccfa9f3de50adc9c16c74f6e04b2d2ef5523c75dc357127d9d79f61f433942
+  - path: .claude/skills/github-actions/references/toolchain.md
+    slug: github-actions
+    component: ci-system/github-actions
+    source: pack/ci-system/github-actions@1.0.0
+    hash: sha256:2edad186daf1b460eb6539f52bd74e1e0586c0b53736f0c18307548a692b869b
+  - path: .claude/stackgen/citations/github-actions.yaml
+    slug: github-actions
+    component: ci-system/github-actions
+    source: pack/ci-system/github-actions@1.0.0
+    hash: sha256:3c063cce058b8e1246c9d010afe92030a4650926f7395766c63f2dab6900babf
+  - path: .claude/stackgen/templates/github-actions.md
+    slug: github-actions
+    component: ci-system/github-actions
+    source: pack/ci-system/github-actions@1.0.0
+    hash: sha256:b58e6b61a1c2f34337ddb6dc9bf6a3c4a88a387bc7160aa4bd26731c4835f1c4
+settings_keys: [] # tier-2 hook wiring declined: .claude/hooks/npm-normalize.sh landed inert
+required_mcp_servers: []
+# bootstrap: absent (the bundle names no tools)
+# local_plugin: absent (typescript-lsp conflicts; nothing written to vwf-tools)
