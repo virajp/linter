@@ -222,7 +222,7 @@
       "status": "green",
       "started": "2026-11-23T11:06:47.025Z",
       "ended": "2026-11-23T11:15:59.366Z",
-      "commit": "",
+      "commit": "85b20e0",
       "rounds": 1,
       "id": "U5",
       "title": "TypeScript rules, group D (no-meaningless-void-operator to no-unnecessary-boolean-literal-compare)",
