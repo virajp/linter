@@ -100,7 +100,7 @@
       "status": "green",
       "started": "2026-11-23T10:17:14.115Z",
       "ended": "2026-11-23T10:20:56.739Z",
-      "commit": "",
+      "commit": "f475200",
       "rounds": 1,
       "id": "U2",
       "title": "Astro rules, group A (missing-client-only-directive-value to no-set-html-directive)",
@@ -263,9 +263,9 @@
     },
     {
       "id": "W2",
-      "status": "running",
+      "status": "green",
       "started": "2026-11-23T10:17:14.073Z",
-      "ended": ""
+      "ended": "2026-11-23T10:25:53.793Z"
     },
     {
       "id": "W3",
