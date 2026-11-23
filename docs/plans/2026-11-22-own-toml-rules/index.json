@@ -217,7 +217,7 @@
       "status": "green",
       "started": "2026-11-23T06:23:20.032Z",
       "ended": "2026-11-23T06:25:04.633Z",
-      "commit": "",
+      "commit": "4eadcdb",
       "rounds": 1
     },
     {
@@ -268,9 +268,9 @@
     },
     {
       "id": "W5",
-      "status": "running",
+      "status": "green",
       "started": "2026-11-23T06:23:19.993Z",
-      "ended": ""
+      "ended": "2026-11-23T06:27:42.416Z"
     },
     {
       "id": "W6",
