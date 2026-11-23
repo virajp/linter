@@ -109,7 +109,7 @@
       "status": "green",
       "started": "2026-11-23T11:06:46.782Z",
       "ended": "2026-11-23T12:11:43.439Z",
-      "commit": "",
+      "commit": "bf9a7ea",
       "rounds": 2,
       "id": "U2",
       "title": "TypeScript rules, group A (adjacent-overload-signatures to dot-notation)",
