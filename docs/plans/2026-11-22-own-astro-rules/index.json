@@ -240,11 +240,11 @@
         "U6"
       ],
       "waits": "",
-      "status": "pending",
-      "started": "",
-      "ended": "",
+      "status": "green",
+      "started": "2026-11-23T10:42:44.188Z",
+      "ended": "2026-11-23T10:44:05.021Z",
       "commit": "",
-      "rounds": 0,
+      "rounds": 1,
       "id": "U7",
       "title": "Gates",
       "wave": 6,
@@ -287,8 +287,8 @@
     },
     {
       "id": "W6",
-      "status": "pending",
-      "started": "",
+      "status": "running",
+      "started": "2026-11-23T10:42:44.150Z",
       "ended": ""
     }
   ],
