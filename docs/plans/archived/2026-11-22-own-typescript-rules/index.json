@@ -15,8 +15,8 @@
   "gaps_of": [],
   "execution": "teams",
   "status": {
-    "state": "APPROVED",
-    "detail": "APPROVED 2026-11-22 by the user"
+    "state": "COMPLETE",
+    "detail": "COMPLETE 2026-11-23 — 905a6ae bf9a7ea c530d41 ba9be66 85b20e0 4864702 e4ea0f0 fdea19f 508c204 31da9b8 9e899e7"
   },
   "consent": {
     "merge": true,
@@ -73,11 +73,11 @@
       "model": "opus",
       "depends_on": [],
       "waits": "",
-      "status": "pending",
-      "started": "",
-      "ended": "",
-      "commit": "",
-      "rounds": 0,
+      "status": "green",
+      "started": "2026-11-23T10:52:44.902Z",
+      "ended": "2026-11-23T12:30:52.654Z",
+      "commit": "905a6ae",
+      "rounds": 3,
       "id": "U1",
       "title": "TypeScript plugin utils, shared rule helpers, fixtures and test harness",
       "wave": 1,
@@ -106,11 +106,11 @@
         "U1"
       ],
       "waits": "it imports the utils, shared rule helpers and test helper that U1 creates, and its tests need the rule-tester devDependency that U1 adds",
-      "status": "pending",
-      "started": "",
-      "ended": "",
-      "commit": "",
-      "rounds": 0,
+      "status": "green",
+      "started": "2026-11-23T11:06:46.782Z",
+      "ended": "2026-11-23T12:11:43.439Z",
+      "commit": "bf9a7ea",
+      "rounds": 2,
       "id": "U2",
       "title": "TypeScript rules, group A (adjacent-overload-signatures to dot-notation)",
       "wave": 2,
@@ -143,11 +143,11 @@
         "U1"
       ],
       "waits": "it imports the utils, shared rule helpers and test helper that U1 creates, and its tests need the rule-tester devDependency that U1 adds",
-      "status": "pending",
-      "started": "",
-      "ended": "",
-      "commit": "",
-      "rounds": 0,
+      "status": "green",
+      "started": "2026-11-23T11:06:46.863Z",
+      "ended": "2026-11-23T12:11:43.559Z",
+      "commit": "c530d41",
+      "rounds": 4,
       "id": "U3",
       "title": "TypeScript rules, group B (explicit-function-return-type to no-duplicate-enum-values)",
       "wave": 2,
@@ -170,7 +170,9 @@
         "src/plugins/typescript/rules/no-deprecated.ts",
         "src/plugins/typescript/rules/no-dupe-class-members.ts",
         "src/plugins/typescript/rules/no-duplicate-enum-values.ts",
-        "tests/unit/plugins/typescript/rules/group-b/"
+        "tests/unit/plugins/typescript/rules/group-b/",
+        "tests/unit/plugins/typescript/fixtures/moduleResolution-node16/package.json",
+        "tests/unit/plugins/typescript/fixtures/package.json"
       ]
     },
     {
@@ -180,11 +182,11 @@
         "U1"
       ],
       "waits": "it imports the utils, shared rule helpers and test helper that U1 creates, and its tests need the rule-tester devDependency that U1 adds",
-      "status": "pending",
-      "started": "",
-      "ended": "",
-      "commit": "",
-      "rounds": 0,
+      "status": "green",
+      "started": "2026-11-23T11:06:46.943Z",
+      "ended": "2026-11-23T12:11:43.681Z",
+      "commit": "ba9be66",
+      "rounds": 2,
       "id": "U4",
       "title": "TypeScript rules, group C (no-duplicate-type-constituents to no-magic-numbers)",
       "wave": 2,
@@ -217,11 +219,11 @@
         "U1"
       ],
       "waits": "it imports the utils, shared rule helpers and test helper that U1 creates, and its tests need the rule-tester devDependency that U1 adds",
-      "status": "pending",
-      "started": "",
-      "ended": "",
-      "commit": "",
-      "rounds": 0,
+      "status": "green",
+      "started": "2026-11-23T11:06:47.025Z",
+      "ended": "2026-11-23T11:15:59.366Z",
+      "commit": "85b20e0",
+      "rounds": 1,
       "id": "U5",
       "title": "TypeScript rules, group D (no-meaningless-void-operator to no-unnecessary-boolean-literal-compare)",
       "wave": 2,
@@ -254,11 +256,11 @@
         "U1"
       ],
       "waits": "it imports the utils, shared rule helpers and test helper that U1 creates, and its tests need the rule-tester devDependency that U1 adds",
-      "status": "pending",
-      "started": "",
-      "ended": "",
-      "commit": "",
-      "rounds": 0,
+      "status": "green",
+      "started": "2026-11-23T11:06:47.110Z",
+      "ended": "2026-11-23T11:15:59.481Z",
+      "commit": "4864702",
+      "rounds": 1,
       "id": "U6",
       "title": "TypeScript rules, group E (no-unnecessary-condition to no-unsafe-enum-comparison)",
       "wave": 2,
@@ -291,11 +293,11 @@
         "U1"
       ],
       "waits": "it imports the utils, shared rule helpers and test helper that U1 creates, and its tests need the rule-tester devDependency that U1 adds",
-      "status": "pending",
-      "started": "",
-      "ended": "",
-      "commit": "",
-      "rounds": 0,
+      "status": "green",
+      "started": "2026-11-23T11:06:47.192Z",
+      "ended": "2026-11-23T12:11:43.799Z",
+      "commit": "e4ea0f0",
+      "rounds": 2,
       "id": "U7",
       "title": "TypeScript rules, group F (no-unsafe-function-type to parameter-properties)",
       "wave": 2,
@@ -328,11 +330,11 @@
         "U1"
       ],
       "waits": "it imports the utils, shared rule helpers and test helper that U1 creates, and its tests need the rule-tester devDependency that U1 adds",
-      "status": "pending",
-      "started": "",
-      "ended": "",
-      "commit": "",
-      "rounds": 0,
+      "status": "green",
+      "started": "2026-11-23T11:06:47.274Z",
+      "ended": "2026-11-23T12:11:43.919Z",
+      "commit": "fdea19f",
+      "rounds": 2,
       "id": "U8",
       "title": "TypeScript rules, group G (prefer-as-const to prefer-regexp-exec)",
       "wave": 2,
@@ -365,11 +367,11 @@
         "U1"
       ],
       "waits": "it imports the utils, shared rule helpers and test helper that U1 creates, and its tests need the rule-tester devDependency that U1 adds",
-      "status": "pending",
-      "started": "",
-      "ended": "",
-      "commit": "",
-      "rounds": 0,
+      "status": "green",
+      "started": "2026-11-23T11:06:47.360Z",
+      "ended": "2026-11-23T11:15:59.815Z",
+      "commit": "508c204",
+      "rounds": 1,
       "id": "U9",
       "title": "TypeScript rules, group H (prefer-return-this-type to use-unknown-in-catch-callback-variable)",
       "wave": 2,
@@ -409,11 +411,11 @@
         "U9"
       ],
       "waits": "the plugin index imports all 128 rules, and the plugins can leave the dependencies only once the preset no longer uses them",
-      "status": "pending",
-      "started": "",
-      "ended": "",
-      "commit": "",
-      "rounds": 0,
+      "status": "green",
+      "started": "2026-11-23T12:20:27.611Z",
+      "ended": "2026-11-23T12:25:25.633Z",
+      "commit": "31da9b8",
+      "rounds": 2,
       "id": "U10",
       "title": "Create the typescript plugin index, switch the typescript preset to it, and change the dependencies",
       "wave": 3,
@@ -444,19 +446,19 @@
         "U10"
       ],
       "waits": "",
-      "status": "pending",
-      "started": "",
-      "ended": "",
+      "status": "green",
+      "started": "2026-11-23T12:32:17.161Z",
+      "ended": "2026-11-23T12:34:05.236Z",
       "commit": "",
-      "rounds": 0,
+      "rounds": 1,
       "id": "U11",
       "title": "Review: the TypeScript utils, the 128 rules and the preset switch",
       "wave": 4,
       "file": "11-review.md",
       "owns": [],
       "range": {
-        "from": "",
-        "to": ""
+        "from": "a8f4763",
+        "to": "c461760"
       }
     },
     {
@@ -476,11 +478,11 @@
         "U11"
       ],
       "waits": "",
-      "status": "pending",
-      "started": "",
-      "ended": "",
-      "commit": "",
-      "rounds": 0,
+      "status": "green",
+      "started": "2026-11-23T12:35:27.663Z",
+      "ended": "2026-11-23T12:40:12.930Z",
+      "commit": "9e899e7",
+      "rounds": 2,
       "id": "U12",
       "title": "Docs",
       "wave": 5,
@@ -498,11 +500,11 @@
         "U12"
       ],
       "waits": "",
-      "status": "pending",
-      "started": "",
-      "ended": "",
+      "status": "green",
+      "started": "2026-11-23T12:41:11.476Z",
+      "ended": "2026-11-23T12:43:04.978Z",
       "commit": "",
-      "rounds": 0,
+      "rounds": 1,
       "id": "U13",
       "title": "Gates",
       "wave": 6,
@@ -515,39 +517,39 @@
   "waves": [
     {
       "id": "W1",
-      "status": "pending",
-      "started": "",
-      "ended": ""
+      "status": "green",
+      "started": "2026-11-23T10:52:44.827Z",
+      "ended": "2026-11-23T11:06:26.847Z"
     },
     {
       "id": "W2",
-      "status": "pending",
-      "started": "",
-      "ended": ""
+      "status": "green",
+      "started": "2026-11-23T11:06:46.702Z",
+      "ended": "2026-11-23T12:20:12.891Z"
     },
     {
       "id": "W3",
-      "status": "pending",
-      "started": "",
-      "ended": ""
+      "status": "green",
+      "started": "2026-11-23T12:20:27.532Z",
+      "ended": "2026-11-23T12:32:01.307Z"
     },
     {
       "id": "W4",
-      "status": "pending",
-      "started": "",
-      "ended": ""
+      "status": "green",
+      "started": "2026-11-23T12:32:17.086Z",
+      "ended": "2026-11-23T12:34:45.241Z"
     },
     {
       "id": "W5",
-      "status": "pending",
-      "started": "",
-      "ended": ""
+      "status": "green",
+      "started": "2026-11-23T12:35:27.585Z",
+      "ended": "2026-11-23T12:40:45.397Z"
     },
     {
       "id": "W6",
-      "status": "pending",
-      "started": "",
-      "ended": ""
+      "status": "green",
+      "started": "2026-11-23T12:41:11.399Z",
+      "ended": "2026-11-23T12:43:21.738Z"
     }
   ],
   "shared_files": [
@@ -768,36 +770,156 @@
         "U10",
         "U12"
       ]
+    },
+    {
+      "id": "D15",
+      "decision": "Q1: How should the intentional switch fallthrough in class-scope-analyzer/classScopeAnalyzer.ts (TS7029 under noFallthroughCasesInSwitch) be fixed?",
+      "ruling": "add \"// @ts-expect-error -- falls through\" above the case, as src/plugins/astro/utils/string-literal-parser/tokenizer.ts:122 already does — compile-time only, behavior unchanged",
+      "rejected": "rewrite the switch without the fallthrough; turn off noFallthroughCasesInSwitch in tsconfig.json",
+      "units": [
+        "U1"
+      ]
+    },
+    {
+      "id": "D16",
+      "decision": "Q2: How should src/plugins/typescript/typings/eslint-rules.d.ts, which dprint cannot format, pass the format gate?",
+      "ruling": "add a \"// dprint-ignore-file\" comment as the second line of eslint-rules.d.ts — the file stays as upstream wrote it, with no effect on types",
+      "rejected": "change the quoted method signatures to property signatures; exclude the file in dprint.jsonc",
+      "units": [
+        "U1"
+      ]
+    },
+    {
+      "id": "D17",
+      "decision": "Q3: How should the two no-deprecated cases that fail because the repo package.json is type module (fixture moduleResolution-node16 read as ESM) be handled?",
+      "ruling": "add tests/unit/plugins/typescript/fixtures/moduleResolution-node16/package.json with {\"type\":\"commonjs\"}, widening U3 Owns to that one U1 fixture path — both cases pass unchanged, as upstream runs them",
+      "rejected": "mark the two cases skip: true with a comment; leave them failing",
+      "units": [
+        "U3"
+      ]
+    },
+    {
+      "id": "D18",
+      "decision": "Q4: How should the no-deprecated assert.fail({}, {}) case that reports no error under @types/node 26 be handled?",
+      "ruling": "mark the case skip: true with a comment naming the @types/node 26 removal — the expected result is unchanged, and the other cases still cover the rule",
+      "rejected": "remove the case; pin @types/node to 24.x",
+      "units": [
+        "U3"
+      ]
+    },
+    {
+      "id": "D19",
+      "decision": "Q5: D17 did not fix the two no-deprecated cases, since fixtures/deprecated.ts takes its module format from the repo root package.json. How should they pass?",
+      "ruling": "add tests/unit/plugins/typescript/fixtures/package.json with {\"type\":\"commonjs\"}, widening U3 Owns to that U1 fixture path (upstream eslint-plugin package.json is commonjs); keep or remove the D17 moduleResolution-node16/package.json as the run rules say for a file the run created that is no longer needed",
+      "rejected": "keep only the D17 file and skip the two cases via dependencyConstraints; leave them failing",
+      "units": [
+        "U3"
+      ]
+    },
+    {
+      "id": "D20",
+      "decision": "Q6: D18 skip: true has no effect because rule-tester 8.73.0 overwrites skip in a file with dependencyConstraints cases. How should the assert.fail({}, {}) case be skipped?",
+      "ruling": "replace skip: true with dependencyConstraints: { \"@types/node\": \"<26\" } and keep the comment — the expected result is unchanged",
+      "rejected": "remove the case; leave skip: true",
+      "units": [
+        "U3"
+      ]
+    },
+    {
+      "id": "D21",
+      "decision": "Q7: Which type must the eight group registries (group-a.ts to group-h.ts) have?",
+      "ruling": "unify all eight on RuleModule<string, readonly unknown[], ESLintPluginDocs> (the U5/U6/U9 shape) — five registry files change by one line each",
+      "rejected": "leave the two shapes",
+      "units": [
+        "U2",
+        "U3",
+        "U4",
+        "U7",
+        "U8"
+      ]
+    },
+    {
+      "id": "D22",
+      "decision": "Q8: Do the D15 (@ts-expect-error) and D16 (dprint-ignore) precedents apply to the wave-2 rule files?",
+      "ruling": "extend D15/D16 to U3 and U4 as written — the two @ts-expect-error comments in max-params.ts and init-declarations.ts and the statement-level dprint-ignore in no-duplicate-type-constituents.ts stay; no code change, and the U11 review row sees the three comments",
+      "rejected": "require D14(a) kinds only",
+      "units": [
+        "U3",
+        "U4"
+      ]
+    },
+    {
+      "id": "D23",
+      "decision": "Q9: The self-lint (jiti) throws Cannot redefine property: module.exports at util/index.ts:43 because two CommonJS modules are star-re-exported. Which fix is allowed?",
+      "ruling": "in util/astUtils.ts, replace upstream export * from \"@typescript-eslint/utils/ast-utils\" with export type * plus an explicit named export of its 62 runtime names — the exported names stay the same and util/index.ts does not change; the list must be checked again on each @typescript-eslint/utils upgrade",
+      "rejected": "the same in util/index.ts for @typescript-eslint/type-utils; change the self-lint to lint dist/",
+      "units": [
+        "U1"
+      ]
     }
   ],
   "stages": {
     "renders": {
-      "state": "pending",
-      "detail": "",
+      "state": "skipped",
+      "detail": "no covers: a change plan has no acceptance criteria or Screens contract",
       "started": "",
-      "ended": ""
+      "ended": "2026-11-23T12:35:08.286Z"
     },
     "acceptance": {
-      "state": "pending",
-      "detail": "",
+      "state": "skipped",
+      "detail": "no covers: a change plan has no acceptance criteria or Screens contract",
       "started": "",
-      "ended": ""
+      "ended": "2026-11-23T12:35:08.059Z"
     },
     "ux": {
-      "state": "pending",
-      "detail": "",
+      "state": "skipped",
+      "detail": "no covers: a change plan has no acceptance criteria or Screens contract",
       "started": "",
-      "ended": ""
+      "ended": "2026-11-23T12:35:08.171Z"
     },
     "reconcile": {
-      "state": "pending",
-      "detail": "",
+      "state": "skipped",
+      "detail": "no covers: no stamps; no code unit: nothing to persist; no Reconcile commit",
       "started": "",
-      "ended": ""
+      "ended": "2026-11-23T12:35:08.432Z"
     }
   },
-  "gaps": [],
-  "overrides": [],
+  "gaps": [
+    {
+      "id": "G1",
+      "unit": "U1",
+      "stage": "",
+      "text": "the pre-commit lint hook (eslint --fix) removed the unused eslint-disable directives U1 had left in its ported files, and trailing-whitespace/format hooks tidied the result · accepted as the repo hook output on U1 commit b0a6823; code:lint and code:check green",
+      "state": "closed"
+    },
+    {
+      "id": "G2",
+      "unit": "U3",
+      "stage": "",
+      "text": "two no-deprecated cases needed a CommonJS context for fixture moduleResolution-node16 · U3 Owns widened to tests/unit/plugins/typescript/fixtures/moduleResolution-node16/package.json per D17 (Q3)",
+      "state": "closed"
+    },
+    {
+      "id": "G3",
+      "unit": "U3",
+      "stage": "",
+      "text": "fixtures/deprecated.ts needed a CommonJS context at the fixtures root · U3 Owns widened to tests/unit/plugins/typescript/fixtures/package.json per D19 (Q5); the D17 moduleResolution-node16/package.json, created by this run, is removed as no longer needed",
+      "state": "closed"
+    },
+    {
+      "id": "G4",
+      "unit": "U5",
+      "stage": "",
+      "text": "R2 wave review: a vitest run left an untracked .vitest/json/output.json outside every Owns · removed by the orchestrator as a file this run created; .gitignore unchanged",
+      "state": "closed"
+    }
+  ],
+  "overrides": [
+    {
+      "id": "O1",
+      "text": "shared worktree: all-2026-11-23-0136"
+    }
+  ],
   "run": {
     "worktree": ".worktrees/all-2026-11-23-0136",
     "log": "~/Library/Caches/vwf/linter/2026-11-22-own-typescript-rules.jsonl"

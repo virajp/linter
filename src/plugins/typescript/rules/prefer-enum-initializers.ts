@@ -1,0 +1,72 @@
+// Ported from @typescript-eslint/eslint-plugin v8.73.0 (MIT), src/rules/prefer-enum-initializers.ts.
+import type {
+  TSESLint,
+  TSESTree,
+} from "@typescript-eslint/utils";
+
+import { createRule } from "../util/index.js";
+
+export type MessageIds = "defineInitializer" | "defineInitializerSuggestion";
+
+export default createRule<[], MessageIds>({
+  name: "prefer-enum-initializers",
+  meta: {
+    type: "suggestion",
+    docs: {
+      description: "Require each enum member value to be explicitly initialized",
+    },
+    hasSuggestions: true,
+    messages: {
+      defineInitializer: "The value of the member '{{ name }}' should be explicitly defined.",
+      defineInitializerSuggestion: "Can be fixed to {{ name }} = {{ suggested }}",
+    },
+    schema: [],
+  },
+
+  defaultOptions: [],
+  create(context) {
+    function TSEnumDeclaration(node: TSESTree.TSEnumDeclaration): void {
+      const { members } = node.body;
+
+      members.forEach((member, index) => {
+        if (member.initializer == null) {
+          const name = context.sourceCode.getText(member);
+          context.report({
+            node: member,
+            messageId: "defineInitializer",
+            data: {
+              name,
+            },
+            suggest: [
+              {
+                messageId: "defineInitializerSuggestion",
+                data: { name, suggested: index },
+                fix: (fixer): TSESLint.RuleFix => {
+                  return fixer.replaceText(member, `${name} = ${index}`);
+                },
+              },
+              {
+                messageId: "defineInitializerSuggestion",
+                data: { name, suggested: index + 1 },
+                fix: (fixer): TSESLint.RuleFix => {
+                  return fixer.replaceText(member, `${name} = ${index + 1}`);
+                },
+              },
+              {
+                messageId: "defineInitializerSuggestion",
+                data: { name, suggested: `'${name}'` },
+                fix: (fixer): TSESLint.RuleFix => {
+                  return fixer.replaceText(member, `${name} = '${name}'`);
+                },
+              },
+            ],
+          });
+        }
+      });
+    }
+
+    return {
+      TSEnumDeclaration,
+    };
+  },
+});

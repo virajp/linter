@@ -1,0 +1,40 @@
+// Ported from @typescript-eslint/eslint-plugin v8.73.0 (MIT), src/rules/prefer-optional-chain-utils/checkNullishAndReport.ts.
+import type {
+  ParserServicesWithTypeInformation,
+  TSESTree,
+} from "@typescript-eslint/utils";
+import type {
+  ReportDescriptor,
+  RuleContext,
+} from "@typescript-eslint/utils/ts-eslint";
+
+import { isTypeFlagSet } from "@typescript-eslint/type-utils";
+import { unionConstituents } from "ts-api-utils";
+import * as ts from "typescript";
+
+import type {
+  PreferOptionalChainMessageIds,
+  PreferOptionalChainOptions,
+} from "./PreferOptionalChainOptions.js";
+
+export function checkNullishAndReport(
+  context: RuleContext<
+    PreferOptionalChainMessageIds,
+    [PreferOptionalChainOptions]
+  >,
+  parserServices: ParserServicesWithTypeInformation,
+  { requireNullish }: PreferOptionalChainOptions,
+  maybeNullishNodes: TSESTree.Expression[],
+  descriptor: ReportDescriptor<PreferOptionalChainMessageIds>,
+): void {
+  if (
+    !requireNullish
+    || maybeNullishNodes.some((node) =>
+      unionConstituents(parserServices.getTypeAtLocation(node)).some((t) =>
+        isTypeFlagSet(t, ts.TypeFlags.Null | ts.TypeFlags.Undefined)
+      )
+    )
+  ) {
+    context.report(descriptor);
+  }
+}

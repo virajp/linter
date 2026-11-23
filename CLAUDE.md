@@ -29,10 +29,11 @@ This is enforced literally: every production dependency is listed in
 `bundledDependencies`, so `npm pack`/`publish` ships the full resolved tree
 **inside the tarball** (~36 MB). Consumers get exact, pre-resolved versions with
 no install-time resolution — immune to transitive version drift, regardless of
-their package manager. `typescript` is a real `dependency` (not just a
-`typescript-eslint` peer) for the same reason — TS/Astro linting needs it
-present in the bundle. Bundling requires `nodeLinker: hoisted`
-(`pnpm-workspace.yaml`); pnpm refuses to bundle its default symlinked store.
+their package manager. `typescript` is a real `dependency` (not just a peer of
+`@typescript-eslint/parser`) for the same reason — the parser and our own
+TypeScript rules need it present in the bundle. Bundling requires
+`nodeLinker: hoisted` (`pnpm-workspace.yaml`); pnpm refuses to bundle its
+default symlinked store.
 
 Bundling a **native addon** needs one more thing. `astro-eslint-parser` loads
 `@astrojs/compiler-binding`, whose per-platform `.node` binaries ship as
@@ -56,12 +57,15 @@ package that brings peer ranges or a conflicting tree into
 `src/plugins/<name>/`.
 
 - Every dependency and devDependency is pinned to an **exact** version.
-- `pnpm update --latest` excludes this package. The exclusions are in
+- `pnpm update --latest` excludes these packages. The exclusions are in
   `.config/mise/tasks/p/upgrade.py` (`p:upgrade`) and `deps-update.yml`. Keep
-  the
-  two
-  lists the same.
-  - `typescript`: hold at 6.x. `typescript-eslint` does not support 7.
+  the two lists the same.
+  - `typescript`: hold at 6.x. `@typescript-eslint/parser` has the peer
+    `typescript <6.1`, so it does not support 7.
+  - `ajv` (devDependency): hold at 6.x, the ajv-6 API that ESLint also uses.
+    The `areOptionsValid` test helper of the TypeScript rules uses it.
+  - `@types/react` (devDependency): hold at 18.x; the fixture tsconfigs of the
+    TypeScript rule tests load the `react` types.
 - Advisories with no in-range fix are ignored in three places:
   `.config/osv-scanner.toml` (CI), `.config/grype.yaml` (`code:sec`), and
   `auditConfig.ignoreGhsas` in `pnpm-workspace.yaml` (`pnpm audit`). The
@@ -152,12 +156,12 @@ example `**/AGENTS.md` and `.claude/**/*.md`) apply to every consumer repo.
 
 ### Our own plugins
 
-B08 moves the rules of third-party plugins into this package. Today the
-Tailwind rules, the YAML rules and language, the TOML rules and language, the
-HTML rules and language, and the Astro rules and processor are moved. Each
-plugin is in `src/plugins/<name>/` and compiles into `dist/` with the rest of
-`src/`. Its rules keep the rule names of the plugin they replace, so consumer
-`overrides` do not change.
+B08 moves the rules of third-party plugins into this package. Today the Tailwind
+rules, the YAML rules and language, the TOML rules and language, the HTML rules
+and language, the Astro rules and processor, and the TypeScript rules are moved.
+The parsers stay as dependencies. Each plugin is in `src/plugins/<name>/` and
+compiles into `dist/` with the rest of `src/`. Its rules keep the rule names of
+the plugin they replace, so consumer `overrides` do not change.
 
 - **`src/plugins/tailwindcss/`** — the `tailwindcss/` rules of the `css`
   preset (`index.ts`, `syntax.ts`, `types.ts`, `utils/`, `rules/`). The
@@ -206,6 +210,17 @@ plugin is in `src/plugins/<name>/` and compiles into `dist/` with the rest of
   (`src/config/presets/astro-client.ts`) lint these files. TypeScript in a
   client `<script>` is linted: the plugin loads `@typescript-eslint/parser`
   and `espree` from this package, not from the consumer repo.
+- **`src/plugins/typescript/`** — the `@typescript-eslint/` rules of the
+  `typescript` preset (`index.ts`, `meta.ts`, `rules-types.ts`, `typings/`,
+  `util/`, `rules/`). The 128 rules are ported from
+  `@typescript-eslint/eslint-plugin`; neither it nor `typescript-eslint` is a
+  dependency now. The 9 deprecated rules are not ported. 64 rules need type
+  information: they work only when a consumer sets
+  `parserOptions.projectService` or `project`, which the preset never does.
+  The plugin exports `meta` and `rules`, and no configs. The `typescript`
+  preset registers it as `@typescript-eslint` and sets the parser
+  `@typescript-eslint/parser` and the rule severities of the upstream
+  `recommended` config.
 - A ported file starts with a one-line header that names its source. Each
   source has an entry with its license text and copyright in
   `THIRD_PARTY_NOTICES.md`, which `files` of `package.json` ships in the
@@ -238,6 +253,18 @@ plugin is in `src/plugins/<name>/` and compiles into `dist/` with the rest of
   `postcss-load-config` from the consumer repo, because they are the
   consumer's own style tools. These packages are not bundled, and
   `src/plugins/astro/shims.d.ts` declares their modules and `source-map-js`.
+- The `typescript` plugin has the runtime dependencies
+  `@typescript-eslint/utils`, `@typescript-eslint/type-utils`,
+  `@typescript-eslint/scope-manager`, `@typescript-eslint/visitor-keys`,
+  `ts-api-utils`, `@eslint-community/regexpp`, `natural-compare` and
+  `typescript`. Each one is an exact-pinned dependency in
+  `bundledDependencies`. Their only peers are `eslint` and `typescript`, the
+  same as the peers of `@typescript-eslint/parser`. Its tests use the
+  exact-pinned devDependencies `@typescript-eslint/rule-tester`, `ajv` and
+  `@types/react`. `util/astUtils.ts` re-exports the runtime names of
+  `@typescript-eslint/utils/ast-utils` one by one, not with `export *`,
+  because the self-lint (jiti) cannot load the star re-export. Examine this
+  list again on each upgrade of `@typescript-eslint/utils`.
 
 ### Adding a language or plugin
 
@@ -445,19 +472,21 @@ If `main` is branch-protected, allow `github-actions[bot]` to push.
   scaffolding; helpers in `tests/helpers/run-unit.ts`.
   `tests/unit/plugins/<name>/` has the tests of our own plugins: a RuleTester
   test for each rule (`rules/<rule>.test.ts`, or `rules/<group>/<rule>.test.ts`
-  for `yml`, `toml`, `html` and `astro`), and tests of the language, the
-  syntax and the helpers. The `html` tests connect RuleTester to vitest through
-  `helpers/rule-tester.ts`. The pre-commit hooks remove trailing spaces, so a
-  trailing space in a ported test string is an escape (`\x20`, or `${" "}` in
-  a template literal).
+  for `yml`, `toml`, `html`, `astro` and `typescript`), and tests of the
+  language, the syntax and the helpers. The `html` tests connect RuleTester to
+  vitest through `helpers/rule-tester.ts`. The `typescript` tests use the
+  RuleTester of `@typescript-eslint/rule-tester`, and each test file connects it
+  to vitest. The pre-commit hooks remove trailing spaces, so a trailing space in
+  a ported test string is an escape (`\x20`, or `${" "}` in a template literal).
   A plugin can keep the upstream fixtures of its ported tests in
   `tests/unit/plugins/<name>/fixtures/`, with the upstream fixture loader in
   `helpers/` (for `yml`, `fixtures/rules/` and the copy
-  `fixtures/upstream-package.json`; for `toml` and `astro`,
-  `fixtures/rules/`). The global `exclude` of `.config/pre-commit-config.yaml`
-  is `^tests/(.*/)?fixtures/`, so
-  the hooks do not change these fixtures or `tests/fixtures/`. Change it in
-  `.config/bootstrap/tools.toml` too, so that a bootstrap sync keeps it.
+  `fixtures/upstream-package.json`; for `toml` and `astro`, `fixtures/rules/`;
+  for `typescript`, the tsconfig projects of the typed tests in `fixtures/`).
+  The global `exclude` of `.config/pre-commit-config.yaml` is
+  `^tests/(.*/)?fixtures/`, so the hooks do not change these fixtures or
+  `tests/fixtures/`. Change it in `.config/bootstrap/tools.toml` too, so that a
+  bootstrap sync keeps it.
 - **Integration** (`tests/integration/`) — spawn `dist/index.js` against fixture
   files in a temp dir (`tests/helpers/{run-cli,temp-dir,fixture-manifest}.ts`),
   asserting on real lint output, flag behavior, and `--init` file creation.
