@@ -337,7 +337,7 @@ foo
     {
       code: `<div>text {{text}} <a></a></div>`,
       output: `<div>
-text {{text}}
+text {{text}}${" "}
 <a></a>
 </div>`,
       errors: [

@@ -124,7 +124,7 @@ function createTests() {
         <div>
         should not fixed
         </div>
-
+${" "}
         </pre>
     </body>
 </html>
@@ -138,7 +138,7 @@ function createTests() {
     <div>
     should not fixed
     </div>
-
+${" "}
         </xmp>
     </body>
 </html>
@@ -157,7 +157,7 @@ function createTests() {
         <div>
       should not fixed
         </div>
-
+${"    "}
         </pre>
     </body>
 </html>
@@ -176,14 +176,14 @@ function createTests() {
         <div>
       should not fixed
         </div>
-
+${"    "}
         </pre>
         <div>
             <pre>
         <div>
       should not fixed
         </div>
-
+${"        "}
             </pre>
         </div>
     </body>
@@ -225,7 +225,7 @@ function createTests() {
         code: `
 <div>
     <pre>
-
+${"    "}
   <div
         id="foo"
         style="bar">

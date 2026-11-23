@@ -169,7 +169,7 @@ ruleTester.run("no-duplicate-attrs", rule, {
               output: `
     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
       class="feather feather-home"
-
+${"      "}
       >
       <path d="M3 919"></path>
       <polyline points="9 22"></polyline>
@@ -197,7 +197,7 @@ ruleTester.run("no-duplicate-attrs", rule, {
               messageId: "removeAttr",
               output: `
 <div id="1"
-
+${"     "}
      Id="1"
  ></div>
       `,
@@ -212,7 +212,7 @@ ruleTester.run("no-duplicate-attrs", rule, {
               output: `
 <div id="1"
      ID="1"
-
+${"     "}
  ></div>
       `,
             },
