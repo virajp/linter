@@ -50,13 +50,15 @@ increases with each repository.
 
 ### No drift from the core {#goal-no-drift}
 
-- Outcome: the tool stays current with the core checker that it includes, and
-  never blocks an upgrade of the core.
-- Metric: the number of days from a core release to a tool release that
-  includes it — target 7 days or fewer for each core release, read each
-  quarter.
-- Measured via: external package-registry release dates (of the core and of the
-  tool)
+- Outcome: the tool stays current with the packages that it bundles, and never
+  blocks an upgrade of them.
+- Metric: the number of days from a core release (a new version of any bundled
+  package; a major version that the dependency policy holds is excluded) to a
+  tool release that includes it — target 7 days or fewer for each core
+  release, read each quarter. A week that a failed gate blocks counts against
+  the target.
+- Measured via: external package-registry release dates (of the bundled package
+  and of the tool)
 
 ## Slice priority
 

@@ -16,11 +16,18 @@ status: draft # draft | reviewed | stable
 
 ## Entity catalog
 
-| Entity | Purpose (one line) |
-| ------ | ------------------ |
+| Entity                                    | Purpose (one line)                                                      |
+| ----------------------------------------- | ----------------------------------------------------------------------- |
+| [Linter Config](./linter-config/index.md) | The per-repository file `.config/linter.yaml` that customizes the tool. |
 
 ## Relationship view
 
 ```mermaid
 erDiagram
+    LINTER_CONFIG {
+        string version
+        string_list ignores
+        map overrides
+        object_list configs
+    }
 ```
