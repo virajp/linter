@@ -1,0 +1,75 @@
+$schema: https://json-schema.org/draft/2020-12/schema
+title: Linter Config
+description: The per-repository file that customizes the tool.
+type: object
+$defs:
+  severity:
+    type: [ string, integer ]
+    description: A rule severity.
+    enum: [ "off", "warn", "error", 0, 1, 2 ]
+  ruleSetting:
+    description: A severity alone, or a severity followed by rule options.
+    oneOf:
+      - $ref: "#/$defs/severity"
+      - type: array
+        description: Severity first, then the rule options.
+        prefixItems:
+          - $ref: "#/$defs/severity"
+        minItems: 1
+  presetOverride:
+    type: object
+    description: Changes for one preset.
+    properties:
+      rules:
+        type: object
+        description: Map of rule name to severity or [severity, options]. A
+          severity alone keeps the preset's options; given options replace them.
+          An unknown rule name fails the run.
+        additionalProperties:
+          $ref: "#/$defs/ruleSetting"
+    # Unknown keys in a preset entry are allowed; the tool warns once and ignores them.
+    additionalProperties: true
+properties:
+  version:
+    type: [ number, string ]
+    enum: [ 1, "1" ]
+    description: Schema version of the file. Only 1 is accepted, as the number
+      1 or the string "1". A file without it, or with any other value, is an
+      error that names the supported version.
+  ignores:
+    type: array
+    description: Extra global ignore patterns.
+    items:
+      type: string
+      description: One glob pattern, relative to the folder where the run
+        starts.
+  overrides:
+    type: object
+    description: Rule changes keyed by preset name.
+    properties:
+      javascript: { $ref: "#/$defs/presetOverride" }
+      typescript: { $ref: "#/$defs/presetOverride" }
+      astro: { $ref: "#/$defs/presetOverride" }
+      astro-client-js: { $ref: "#/$defs/presetOverride" }
+      astro-client-ts: { $ref: "#/$defs/presetOverride" }
+      json: { $ref: "#/$defs/presetOverride" }
+      jsonc: { $ref: "#/$defs/presetOverride" }
+      markdown: { $ref: "#/$defs/presetOverride" }
+      markdown-code-blocks: { $ref: "#/$defs/presetOverride" }
+      yaml: { $ref: "#/$defs/presetOverride" }
+      toml: { $ref: "#/$defs/presetOverride" }
+      html: { $ref: "#/$defs/presetOverride" }
+      css: { $ref: "#/$defs/presetOverride" }
+    # Unknown preset names are allowed; the tool warns and ignores them.
+    additionalProperties: true
+  configs:
+    type: array
+    description: Raw checker configuration objects, appended after the base
+      configuration.
+    items:
+      type: object
+      description: One raw checker configuration object.
+      additionalProperties: true
+required: [ version ]
+# Unknown top-level keys are allowed; the tool warns about them.
+additionalProperties: true

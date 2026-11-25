@@ -21,3 +21,18 @@ projects:
       frameworks: []
       dependencies: []
     cicd: github-actions
+
+blueprint:
+  coverage: partial
+  remaining: [ coherence ]
+
+enforcement:
+  rules:
+    baseline/boundary-validation/entities/linter-config:
+      waived: true
+      reason: unknown keys and preset names warn and are ignored so the config
+        stays forward-compatible; a missing version or a value of the wrong type
+        is still rejected
+    pipeline/dependency-audit/GHSA-238p-pmpm-9mq7:
+      waived: true
+      reason: "2026-10-09 — katex <0.18.2 via @eslint/markdown > micromark-extension-math, which requires katex ^0.16.0; no in-range fix"

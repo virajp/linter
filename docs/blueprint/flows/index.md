@@ -31,6 +31,15 @@ status: draft # draft | reviewed | stable
      110–890 product flows, 910 profile, 920 settings, 930 notifications,
      940 delete-account, 950 audit-history. -->
 
+### linter
+
+| #   | Flow                                                             | Platforms | Serves goal                                      | Entities touched                                    | Status   |
+| --- | ---------------------------------------------------------------- | --------- | ------------------------------------------------ | --------------------------------------------------- | -------- |
+| 110 | [Onboard a repository](./linter/110-onboard-a-repo/index.md)     |           | [Adoption](../product.md#goal-own-repo-adoption) | [linter-config](../entities/linter-config/index.md) | reviewed |
+| 120 | [Check a repository](./linter/120-check-a-repo/index.md)         |           | [Adoption](../product.md#goal-own-repo-adoption) | [linter-config](../entities/linter-config/index.md) | reviewed |
+| 130 | [Refresh dependencies](./linter/130-dependency-refresh/index.md) |           | [No drift](../product.md#goal-no-drift)          | none                                                | reviewed |
+| 140 | [Editor feedback](./linter/140-editor-feedback/index.md)         |           | [Adoption](../product.md#goal-own-repo-adoption) | [linter-config](../entities/linter-config/index.md) | reviewed |
+
 ## Inter-Service Contracts
 
 ### Events
