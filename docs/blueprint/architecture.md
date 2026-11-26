@@ -65,8 +65,9 @@ A tag starts an automated release pipeline. The pipeline:
 3. Publishes with trusted publishing.
 4. Smoke-tests the published package on each supported platform.
 
-A local publish exists as a fallback only. The weekly dependency-update pipeline
-is disabled until its redesign.
+A local publish exists as a fallback only. A weekly dependency refresh updates
+the bundled packages and releases from main
+([flow 130](./flows/linter/130-dependency-refresh/index.md)).
 
 ## Registry
 
