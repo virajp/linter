@@ -23,8 +23,8 @@ projects:
     cicd: github-actions
 
 blueprint:
-  coverage: partial
-  remaining: [ coherence ]
+  coverage: complete
+  remaining: []
 
 enforcement:
   rules:
